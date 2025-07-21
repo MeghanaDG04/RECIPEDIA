@@ -1,4 +1,4 @@
-body{
+body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
@@ -13,9 +13,9 @@ body{
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
- margin-left: auto;
- margin-right: auto;
- margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
 }
 
 /* Input Fields */
@@ -26,6 +26,15 @@ input {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+}
+
+/* For error messages */
+.error-text {
+  color: #e63946;
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  display: block;
 }
 
 /* Buttons */
@@ -76,7 +85,8 @@ input:focus {
   border: none;
 }
 
-.carousel-control-prev, .carousel-control-next {
+.carousel-control-prev,
+.carousel-control-next {
   outline: none;
   border: none;
   box-shadow: none !important;
@@ -143,7 +153,7 @@ input:focus {
 }
 
 .subscribe-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 8px 15px;
   border: none;
@@ -168,46 +178,46 @@ input:focus {
     grid-template-columns: 1fr;
     text-align: center;
   }
-  
+
   .footer-section {
     align-items: center;
   }
 }
 .bg-dark {
-    background-color: #212529 !important;
+  background-color: #212529 !important;
 }
 
 .text-light {
-    color: #f8f9fa !important;
+  color: #f8f9fa !important;
 }
 
 .footer h5 {
-    font-weight: 600;
-    margin-bottom: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
 }
 
 .footer ul li {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .footer ul li a:hover {
-    color: #0d6efd !important;
-    transition: color 0.3s ease;
+  color: #0d6efd !important;
+  transition: color 0.3s ease;
 }
 
 .footer .bi {
-    transition: transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .footer .bi:hover {
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 .footer hr {
-    opacity: 0.2;
-    margin: 1.5rem 0;
+  opacity: 0.2;
+  margin: 1.5rem 0;
 }
 
 .gap-3 {
-    gap: 1rem !important;
+  gap: 1rem !important;
 }
