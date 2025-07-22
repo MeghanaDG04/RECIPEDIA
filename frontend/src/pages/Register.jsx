@@ -19,26 +19,39 @@ const Register = ({ setIsLoggedIn }) => {
 
   const validateField = (field, value) => {
     switch (field) {
+      // Validates if username field is empty
       case "username":
         return value ? "" : "Username is required";
+
+      // Validates if email field is empty, if email format is not proper
       case "email":
         if (!value) return "Email is required";
         if (!/\S+@\S+\.\S+/.test(value)) return "Invalid email format";
         return "";
+
+      // Validates if password field is empty, password must be of at least 6 characters
       case "password":
         if (!value) return "Password is required";
         if (value.length < 6) return "Password must be at least 6 characters";
         return "";
+
+      // Validates if age field is empty, validates on age < 0
       case "age":
         if (!value) return "Age is required";
         if (Number(value) <= 0) return "Age must be greater than 0";
         return "";
+
+      // Validates if gender field is empty,
       case "gender":
         return value ? "" : "Gender is required";
+
+      // Validates if phone number field is empty, accepts only digits (not alphabets) and it should be 10 digits
       case "phone":
         if (!value) return "Phone number is required";
         if (!/^\d{10}$/.test(value)) return "Phone must be 10 digits";
         return "";
+
+      // Validates if address field is empty,
       case "address":
         return value ? "" : "Address is required";
       default:
@@ -72,6 +85,7 @@ const Register = ({ setIsLoggedIn }) => {
     }
   };
 
+  // input fields common styling (except gender field)
   const renderInput = (field, type, placeholder) => (
     <div className="input-wrapper">
       <input
@@ -104,6 +118,7 @@ const Register = ({ setIsLoggedIn }) => {
         {renderInput("password", "password", "Password")}
         {renderInput("age", "number", "Age")}
 
+        {/* Gender field dropdown */}
         <div className="input-wrapper">
           <select
             value={formData.gender}
@@ -136,7 +151,7 @@ const Register = ({ setIsLoggedIn }) => {
 
         <button className="auth-btn" onClick={handleRegister}>
           Register
-        </button> 
+        </button>
         <p>
           Already have an account? <Link to="/login">Login</Link>
         </p>
