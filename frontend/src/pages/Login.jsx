@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
+import { FaCheckCircle } from "react-icons/fa";
 
 const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
@@ -9,25 +10,41 @@ const Login = ({ setIsLoggedIn }) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const validate = () => {
-    const newErrors = {};
-    if (!email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(email))
-      newErrors.email = "Invalid email format";
+  const validate = (field, value) => {
+    let error = "";
 
-    if (!password) newErrors.password = "Password is required";
-    else if (password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
+    if (field === "email") {
+      if (!value) error = "Email is required";
+      else if (!/\S+@\S+\.\S+/.test(value)) error = "Invalid email format";
+    }
 
-    return newErrors;
+    if (field === "password") {
+      if (!value) error = "Password is required";
+      else if (value.length < 6)
+        error = "Password must be at least 6 characters";
+    }
+
+    return error;
+  };
+
+  const handleChange = (field, value) => {
+    if (field === "email") setEmail(value);
+    if (field === "password") setPassword(value);
+
+    const error = validate(field, value);
+    setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
   const handleLogin = async () => {
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    const newErrors = {};
+    newErrors.email = validate("email", email);
+    newErrors.password = validate("password", password);
+
+    if (newErrors.email || newErrors.password) {
+      setErrors(newErrors);
       return;
     }
+
     try {
       const res = await axios.post("http://localhost:5000/login", {
         email,
@@ -45,25 +62,45 @@ const Login = ({ setIsLoggedIn }) => {
     <div className="container">
       <h2>Login</h2>
 
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value.trim())}
-      />
-      {errors.email && <small style={{ color: "red" }}>{errors.email}</small>}
+      <div className="input-wrapper">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => handleChange("email", e.target.value.trim())}
+          style={{
+            borderColor: errors.email
+              ? "#e63946"
+              : email && !errors.email
+              ? "green"
+              : "#ccc",
+          }}
+        />
+        {email && !errors.email && <FaCheckCircle color="green" />}
+        {errors.email && <small className="error-text">{errors.email}</small>}
+      </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value.trim())}
-      />
-      {errors.password && (
-        <small style={{ color: "red" }}>{errors.password}</small>
-      )}
+      <div className="input-wrapper">
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => handleChange("password", e.target.value.trim())}
+          style={{
+            borderColor: errors.password
+              ? "#e63946"
+              : password && !errors.password
+              ? "green"
+              : "#ccc",
+          }}
+        />
+        {password && !errors.password && <FaCheckCircle color="green" />}
+        {errors.password && (
+          <small className="error-text">{errors.password}</small>
+        )}
+      </div>
 
-      {errors.general && (
-        <small style={{ color: "red" }}>{errors.general}</small>
-      )}
+      {errors.general && <small className="error-text">{errors.general}</small>}
 
       <button onClick={handleLogin}>Login</button>
       <p>
