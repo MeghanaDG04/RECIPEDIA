@@ -12,18 +12,15 @@ const Login = ({ setIsLoggedIn }) => {
 
   const validate = (field, value) => {
     let error = "";
-
     if (field === "email") {
       if (!value) error = "Email is required";
       else if (!/\S+@\S+\.\S+/.test(value)) error = "Invalid email format";
     }
-
     if (field === "password") {
       if (!value) error = "Password is required";
       else if (value.length < 6)
         error = "Password must be at least 6 characters";
     }
-
     return error;
   };
 
@@ -36,15 +33,14 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   const handleLogin = async () => {
-    const newErrors = {};
-    newErrors.email = validate("email", email);
-    newErrors.password = validate("password", password);
-
+    const newErrors = {
+      email: validate("email", email),
+      password: validate("password", password),
+    };
     if (newErrors.email || newErrors.password) {
       setErrors(newErrors);
       return;
     }
-
     try {
       const res = await axios.post("http://localhost:5000/login", {
         email,
@@ -59,53 +55,61 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Login</h2>
 
-      <div className="input-wrapper">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => handleChange("email", e.target.value.trim())}
-          style={{
-            borderColor: errors.email
-              ? "#e63946"
-              : email && !errors.email
-              ? "green"
-              : "#ccc",
-          }}
-        />
-        {email && !errors.email && <FaCheckCircle color="green" />}
-        {errors.email && <small className="error-text">{errors.email}</small>}
-      </div>
+        <div className="input-wrapper">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => handleChange("email", e.target.value.trim())}
+            style={{
+              borderColor: errors.email
+                ? "#e63946"
+                : email && !errors.email
+                ? "green"
+                : "#ccc",
+            }}
+          />
+          {email && !errors.email && <FaCheckCircle className="tick-icon" />}
+          {errors.email && <small className="error-text">{errors.email}</small>}
+        </div>
 
-      <div className="input-wrapper">
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => handleChange("password", e.target.value.trim())}
-          style={{
-            borderColor: errors.password
-              ? "#e63946"
-              : password && !errors.password
-              ? "green"
-              : "#ccc",
-          }}
-        />
-        {password && !errors.password && <FaCheckCircle color="green" />}
-        {errors.password && (
-          <small className="error-text">{errors.password}</small>
+        <div className="input-wrapper">
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => handleChange("password", e.target.value.trim())}
+            style={{
+              borderColor: errors.password
+                ? "#e63946"
+                : password && !errors.password
+                ? "green"
+                : "#ccc",
+            }}
+          />
+          {password && !errors.password && (
+            <FaCheckCircle className="tick-icon" />
+          )}
+          {errors.password && (
+            <small className="error-text">{errors.password}</small>
+          )}
+        </div>
+
+        {errors.general && (
+          <small className="error-text">{errors.general}</small>
         )}
+
+        <button className="auth-btn" onClick={handleLogin}>
+          Login
+        </button>
+        <p>
+          New user? <Link to="/register">Register</Link>
+        </p>
       </div>
-
-      {errors.general && <small className="error-text">{errors.general}</small>}
-
-      <button onClick={handleLogin}>Login</button>
-      <p>
-        New user? <Link to="/register">Register</Link>
-      </p>
     </div>
   );
 };
