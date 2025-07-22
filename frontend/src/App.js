@@ -1,9 +1,5 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home";
 import Veg from  "./pages/veg";
 import Dessert from "./pages/dessert";
 import Nonveg from "./pages/nonveg";
@@ -28,6 +24,10 @@ import MasalaChai from "./pages/MasalaChai";
 import UserProfile from "./pages/UserProfile";
 import AddRecipe from "./pages/AddRecipe";
 import About from "./pages/About";
+import RecipeHome from "./pages/RecipeHome";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Header from "./components/Header";
 
 
 function App() {
@@ -40,13 +40,13 @@ function App() {
 
   return (
     <Router>
-      <div className="app-container animated-bg">
-        <Navbar isLoggedIn={isLoggedIn} />
+      <div className="app-container">
+        <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<RecipeHome />} />
           <Route path="/login" element={<div className="login-bg"><Login setIsLoggedIn={setIsLoggedIn} /></div>} />
           <Route path="/register" element={<div className="register-bg"><Register setIsLoggedIn={setIsLoggedIn} /></div>} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<RecipeHome />} />
           <Route path="/veg" element={<Veg />}/>
           <Route path="/dessert" element={<Dessert />} />
           <Route path="/nonveg" element={<Nonveg />} />

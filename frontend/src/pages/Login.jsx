@@ -12,17 +12,13 @@ const Login = ({ setIsLoggedIn }) => {
 
   const validate = (field, value) => {
     let error = "";
-    // Validates if email field is empty, if email format is not proper
     if (field === "email") {
       if (!value) error = "Email is required";
       else if (!/\S+@\S+\.\S+/.test(value)) error = "Invalid email format";
     }
-
-    // Validates if password field is empty, password must be of at least 6 characters
     if (field === "password") {
       if (!value) error = "Password is required";
-      else if (value.length < 6)
-        error = "Password must be at least 6 characters";
+      else if (value.length < 6) error = "Password must be at least 6 characters";
     }
     return error;
   };
@@ -30,7 +26,6 @@ const Login = ({ setIsLoggedIn }) => {
   const handleChange = (field, value) => {
     if (field === "email") setEmail(value);
     if (field === "password") setPassword(value);
-
     const error = validate(field, value);
     setErrors((prev) => ({ ...prev, [field]: error }));
   };

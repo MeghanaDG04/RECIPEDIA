@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaHeart, FaRegHeart } from 'react-icons/fa';
-import '../styles/RecipeDetail.css';
 
 function GulabJamun() {
   const navigate = useNavigate();
@@ -22,24 +21,22 @@ function GulabJamun() {
   };
 
   return (
-    <div className="recipe-detail-container">
-      <div className="back-button" onClick={() => navigate('/dessert')}>
-        <FaArrowLeft /> Back
-      </div>
+    <div className="max-w-4xl mx-auto px-4 pt-32 pb-16">
+      <button onClick={() => navigate('/dessert')} className="flex items-center text-red-500 hover:text-red-600 mb-6">
+        <FaArrowLeft className="mr-2" /> Back
+      </button>
       
-      <h1>Gulab Jamun</h1>
+      <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6">Gulab Jamun</h1>
       
-      <div className="recipe-image">
-        <img src="/jamun.jpg" alt="Gulab Jamun" />
-      </div>
+      <img src="/jamun.jpg" alt="Gulab Jamun" className="w-full h-80 object-cover rounded-xl shadow-lg mb-8" />
 
-      <div className="recipe-info">
+      <section className="prose max-w-none">
         <h2>About</h2>
         <p>A classic Indian dessert made from deep-fried milk-based dumplings soaked in a fragrant sugar syrup.</p>
 
         <h2>Ingredients</h2>
         <h3>For the Gulab Jamun:</h3>
-        <ul>
+        <ul className="list-disc pl-6">
           <li>1 cup Milk powder</li>
           <li>1/4 cup All-purpose flour (maida)</li>
           <li>1/4 tsp Baking soda</li>
@@ -68,7 +65,7 @@ function GulabJamun() {
           <li>Add the fried gulab jamuns to the warm syrup and let them soak for at least 2 hours</li>
           <li>Serve warm or chilled, garnished with chopped nuts if desired</li>
         </ol>
-      </div>
+      </section>
 
     
 
