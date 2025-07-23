@@ -59,7 +59,7 @@ const Dessert = () => {
               className="bg-white rounded-xl shadow-lg hover:shadow-2xl overflow-hidden transform hover:-translate-y-1 transition cursor-pointer"
               onClick={() => handleCardClick(recipe.route)}
             >
-              <img src={recipe.image} alt={recipe.name} className="h-48 w-full object-cover" />
+              <img src={recipe.image} onError={(e) => { e.target.src = '/default3.jpg' }} alt={recipe.name} className="h-48 w-full object-cover" />
               <div className="p-4">
                 <h3 className="font-semibold text-lg text-gray-800 text-center">{recipe.name}</h3>
               </div>

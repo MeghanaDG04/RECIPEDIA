@@ -1,4 +1,3 @@
-
 html {
   scroll-behavior: smooth;
 }
@@ -8,6 +7,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+  background-color: #FFF8F0; /* A warm, creamy background */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -18,11 +18,6 @@ code {
 }
 
 /* Recipedia custom styles */
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #FFF8F0; /* A warm, creamy background */
-}
-
 .hero-bg {
   background-image: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url('https://placehold.co/1600x900/f87171/ffffff?text=Delicious+Food');
   background-size: cover;
