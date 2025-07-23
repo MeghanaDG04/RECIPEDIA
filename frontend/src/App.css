@@ -1,21 +1,20 @@
+/* Reset default body styles here if needed, keeping them minimal to let Tailwind drive the look */
 body{
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: yellow;
 }
 
-/* Container for Login, Register, and Home */
-.container {
+/* Container for authentication forms (Login & Register) */
+.auth-container {
   background: white;
   padding: 20px;
   width: 320px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
- margin-left: auto;
- margin-right: auto;
- margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
 }
 
 /* Input Fields */
@@ -54,7 +53,7 @@ button:hover {
 }
 
 @media screen and (max-width: 480px) {
-  .container {
+  .auth-container {
     width: 90%;
     padding: 15px;
   }

@@ -22,7 +22,7 @@ const Register = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div className="container">
+    <div className="auth-container">
       <h2>Register</h2>
       <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
       <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
