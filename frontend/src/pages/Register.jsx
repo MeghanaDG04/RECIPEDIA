@@ -30,7 +30,6 @@ const Register = ({ setIsLoggedIn }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-<<<<<<< HEAD
   const validateField = (field, value) => {
     switch (field) {
       case "username":
@@ -59,51 +58,6 @@ const Register = ({ setIsLoggedIn }) => {
         return "";
     }
   };
-=======
- const validateField = (field, value) => {
-  switch (field) {
-    // Validates if username field is empty
-    case "username":
-      return value ? "" : "Username is required";
-
-    // Validates if email field is empty, if email format is not proper
-    case "email":
-      if (!value) return "Email is required";
-      if (!/\S+@\S+\.\S+/.test(value)) return "Invalid email format";
-      return "";
-
-    // Validates if password field is empty, password must be at least 6 characters
-    case "password":
-      if (!value) return "Password is required";
-      if (value.length < 6) return "Password must be at least 6 characters";
-      return "";
-
-    // Validates if age field is empty, validates on age < 0
-    case "age":
-      if (!value) return "Age is required";
-      if (Number(value) <= 0) return "Age must be greater than 0";
-      return "";
-
-    // Validates if gender field is empty
-    case "gender":
-      return value ? "" : "Gender is required";
-
-    // Validates if phone number field is empty, accepts only digits and must be 10 digits
-    case "phone":
-      if (!value) return "Phone number is required";
-      if (!/^\d{10}$/.test(value)) return "Phone must be 10 digits";
-      return "";
-
-    // Validates if address field is empty
-    case "address":
-      return value ? "" : "Address is required";
-
-    default:
-      return "";
-  }
-};
-
->>>>>>> c5f9c0e01b49a6c45b8eb3ff8827d57149bdd401
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
