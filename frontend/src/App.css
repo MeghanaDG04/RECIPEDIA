@@ -1,154 +1,46 @@
-/* Base styles */
+/* 🎨 Design Tokens */
 :root {
-  --primary-color: #007bff;
-  --hover-color: #0056b3;
-  --shadow-color: rgba(0, 0, 0, 0.2);
-  --border-color: #ccc;
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+  --background-light: #f9fafb;
+  --background-white: #ffffff;
+  --border-light: #e5e7eb;
+  --border-focus: #3b82f6;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --border-radius: 12px;
+  --border-radius-sm: 8px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌱 Global Resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background: var(--background-light);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
-/* Auth container: center login/register beautifully */
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 90vh;
-  padding: 20px;
-}
-
-.auth-card {
-  background: #fff;
-  padding: 2rem;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.auth-card h2 {
-  margin-bottom: 20px;
-}
-
-/* Input & select styling */
-.input-wrapper {
-  position: relative;
-  margin-bottom: 15px;
-}
-
-.input-wrapper input,
-.input-wrapper select {
-  width: 100%;
-  padding: 10px 35px 10px 10px;
-  border: 1.5px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
-}
-
-.input-wrapper input:focus,
-.input-wrapper select:focus {
-  border-color: var(--primary-color);
-}
-
-/* Tick icon */
-.tick-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* Select styled to leave space for arrow at far right */
-.custom-select {
-  width: 100%;
-  padding: 10px;
-  padding-right: 50px; /* space for arrow + tick */
-  border: 1.5px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 14px;
-  height: 40px;
-  appearance: none;
-  background-color: white;
-  box-sizing: border-box;
-  transition: border-color 0.3s;
-}
-
-.input-wrapper .arrow-icon {
-  position: absolute;
-  right: 28px; /* arrow before tick */
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  font-size: 12px;
-  color: #666;
-}
-
-/* Tick icon at very right end */
-.input-wrapper .tick-icon {
-  position: absolute;
-  right: 8px; /* tick at farthest right */
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: green;
-}
-
-/* On focus */
-.custom-select:focus {
-  border-color: var(--primary-color);
-  outline: none;
-}
-
-/* Error text */
-.error-text {
-  color: #e63946;
-  font-size: 13px;
-  margin-top: 4px;
-  display: block;
-}
-
-/* Button styling */
-.auth-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 10px;
-  margin-bottom: 12px;
-}
-
-.auth-btn:hover {
-  background-color: var(--hover-color);
-}
-
-/* Responsive */
-@media screen and (max-width: 480px) {
-  .auth-card {
-    padding: 1.5rem;
-  }
-}
-
-/* Input focus shadow */
-input:focus,
-select:focus {
-  outline: 2px solid var(--primary-color);
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
+/* ✅ Carousel & Image Utilities */
 .carousel img {
   outline: none;
   border: none;
@@ -163,19 +55,17 @@ select:focus {
 
 .carousel-item img {
   width: 100%;
-  height: 500px; /* Adjust as per your requirement */
-  object-fit: cover; /* Ensures the image covers the space without distortion */
-}
-
-.carousel-item img:hover {
-  outline: none;
+  height: 500px;
+  object-fit: cover;
 }
 
 .card-img-top {
   width: 100%;
-  height: 400px; /* Adjust height as needed */
-  object-fit: cover; /* Ensures images are properly cropped to fit */
+  height: 400px;
+  object-fit: cover;
 }
+
+/* 📦 Footer */
 .recipe-footer {
   background-color: #333;
   color: white;
@@ -242,16 +132,18 @@ select:focus {
   border-top: 1px solid #555;
 }
 
+/* 📱 Footer Responsive */
 @media (max-width: 768px) {
   .footer-content {
     grid-template-columns: 1fr;
     text-align: center;
   }
-
   .footer-section {
     align-items: center;
   }
 }
+
+/* 🎛 Utility / Legacy classes */
 .bg-dark {
   background-color: #212529 !important;
 }
