@@ -1,18 +1,33 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "../App.css";
-import { FaCheckCircle } from "react-icons/fa";
+import "../auth.css";
+
+import {
+  FaCheckCircle,
+  FaEye,
+  FaEyeSlash,
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaCalendarAlt,
+  FaVenusMars,
+  FaPhone,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 
 const Register = ({ setIsLoggedIn }) => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    age: "",
+    gender: "",
+    phone: "",
+    address: "",
+  });
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const validateField = (field, value) => {
@@ -45,39 +60,14 @@ const Register = ({ setIsLoggedIn }) => {
   };
 
   const handleChange = (field, value) => {
-    switch (field) {
-      case "username":
-        setUsername(value);
-        break;
-      case "email":
-        setEmail(value);
-        break;
-      case "password":
-        setPassword(value);
-        break;
-      case "age":
-        setAge(value);
-        break;
-      case "gender":
-        setGender(value);
-        break;
-      case "address":
-        setAddress(value);
-        break;
-      case "phone":
-        setPhone(value);
-        break;
-      default:
-        break;
-    }
+    setFormData((prev) => ({ ...prev, [field]: value }));
     const errorMsg = validateField(field, value);
     setErrors((prev) => ({ ...prev, [field]: errorMsg }));
   };
 
   const handleRegister = async () => {
-    const fields = { username, email, password, age, gender, phone, address };
     const newErrors = {};
-    Object.entries(fields).forEach(([field, value]) => {
+    Object.entries(formData).forEach(([field, value]) => {
       const error = validateField(field, value);
       if (error) newErrors[field] = error;
     });
@@ -86,8 +76,8 @@ const Register = ({ setIsLoggedIn }) => {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/register", fields);
-      localStorage.setItem("username", username);
+      await axios.post("http://localhost:5000/register", formData);
+      localStorage.setItem("username", formData.username);
       setIsLoggedIn(true);
       navigate("/home");
     } catch (err) {
@@ -95,73 +85,113 @@ const Register = ({ setIsLoggedIn }) => {
     }
   };
 
-  const renderInput = (field, type, placeholder, value) => (
-    <div className="input-wrapper">
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        required
-        onChange={(e) => handleChange(field, e.target.value.trim())}
-        style={{
-          borderColor: errors[field]
-            ? "#e63946"
-            : value && !errors[field]
-            ? "green"
-            : "#ccc",
-        }}
-      />
-      {value && !errors[field] && <FaCheckCircle color="green" />}
-      {errors[field] && <small className="error-text">{errors[field]}</small>}
+  const getFieldIcon = (field) => {
+    const iconMap = {
+      username: FaUser,
+      email: FaEnvelope,
+      password: FaLock,
+      age: FaCalendarAlt,
+      gender: FaVenusMars,
+      phone: FaPhone,
+      address: FaMapMarkerAlt,
+    };
+    const IconComponent = iconMap[field];
+    return IconComponent ? <IconComponent className="input-icon" /> : null;
+  };
+
+  const renderInput = (field, type, placeholder) => (
+    <div className="modern-input-wrapper">
+      <div className="input-container">
+        {getFieldIcon(field)}
+        <input
+          type={field === "password" && showPassword ? "text" : type}
+          placeholder={placeholder}
+          value={formData[field]}
+          required
+          onChange={(e) => handleChange(field, e.target.value.trim())}
+          className={`modern-input ${
+            errors[field]
+              ? "error"
+              : formData[field] && !errors[field]
+              ? "success"
+              : ""
+          }`}
+        />
+        {field === "password" && (
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        )}
+        {formData[field] && !errors[field] && (
+          <FaCheckCircle className="success-icon" />
+        )}
+      </div>
+      {errors[field] && <div className="error-message">{errors[field]}</div>}
     </div>
   );
 
   return (
-    <div className="container">
-      <h2>Register</h2>
-      {renderInput("username", "text", "Username", username)}
-      {renderInput("email", "email", "Email", email)}
-      {renderInput("password", "password", "Password", password)}
-      {renderInput("age", "number", "Age", age)}
+    <div className="modern-auth-container">
+      <div className="modern-auth-card">
+        <div className="auth-header">
+          <h1>Create Account</h1>
+          <p>Join us and start your journey!</p>
+        </div>
+        <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+          {renderInput("username", "text", "Username")}
+          {renderInput("email", "email", "Email Address")}
+          {renderInput("password", "password", "Password")}
 
-      <div className="input-wrapper">
-        <select
-          value={gender}
-          required
-          onChange={(e) => handleChange("gender", e.target.value)}
-          style={{
-            borderColor: errors.gender
-              ? "#e63946"
-              : gender && !errors.gender
-              ? "green"
-              : "#ccc",
-            width: "100%",
-            padding: "0.5rem",
-            borderRadius: "4px",
-            fontSize: "1rem",
-            appearance: "none",
-            background: "white",
-            borderStyle: "solid",
-            borderWidth: "1px",
-            height: "40px", // Match input field height
-          }}
-        >
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-        {gender && !errors.gender && <FaCheckCircle color="green" />}
-        {errors.gender && <small className="error-text">{errors.gender}</small>}
+          <div className="input-row">
+            {renderInput("age", "number", "Age")}
+            <div className="modern-input-wrapper">
+              <div className="input-container">
+                <FaVenusMars className="input-icon" />
+                <select
+                  value={formData.gender}
+                  required
+                  onChange={(e) => handleChange("gender", e.target.value)}
+                  className={`modern-select ${
+                    errors.gender
+                      ? "error"
+                      : formData.gender && !errors.gender
+                      ? "success"
+                      : ""
+                  }`}
+                >
+                  <option value="">Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                {formData.gender && !errors.gender && (
+                  <FaCheckCircle className="success-icon" />
+                )}
+              </div>
+              {errors.gender && (
+                <div className="error-message">{errors.gender}</div>
+              )}
+            </div>
+          </div>
+
+          {renderInput("phone", "text", "Phone Number")}
+          {renderInput("address", "text", "Address")}
+
+          <button className="modern-auth-btn" onClick={handleRegister}>
+            <span>Sign Up</span>
+          </button>
+        </form>
+        <p className="auth-footer">
+          Already have an account?{" "}
+          <Link to="/login" className="auth-link">
+            Sign In
+          </Link>
+        </p>
       </div>
-
-      {renderInput("phone", "text", "Phone Number", phone)}
-      {renderInput("address", "text", "Address", address)}
-
-      <button onClick={handleRegister}>Register</button>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
     </div>
   );
 };

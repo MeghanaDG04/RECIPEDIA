@@ -1,12 +1,10 @@
 body {
   margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: yellow;
+  padding-top: 0;
+  min-height: 100vh; /* ✅ Ensures body fills the screen height */
 }
-
-/* Container for Login, Register, and Home */
-.container {
+/* Container for authentication forms (Login & Register) */
+.auth-container {
   background: white;
   padding: 20px;
   width: 320px;
@@ -15,7 +13,7 @@ body {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 20px;
+  margin-top: 264px;
 }
 
 /* Input Fields */
@@ -26,15 +24,6 @@ input {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
-}
-
-/* For error messages */
-.error-text {
-  color: #e63946;
-  font-size: 14px;
-  margin-top: 4px;
-  margin-bottom: 6px;
-  display: block;
 }
 
 /* Buttons */
@@ -63,7 +52,7 @@ button:hover {
 }
 
 @media screen and (max-width: 480px) {
-  .container {
+  .auth-container {
     width: 90%;
     padding: 15px;
   }
