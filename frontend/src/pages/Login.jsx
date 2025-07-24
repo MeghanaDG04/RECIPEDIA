@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "../auth.css";
-
 import {
   FaCheckCircle,
   FaEye,
@@ -24,13 +23,10 @@ const Login = ({ setIsLoggedIn }) => {
       if (!value) error = "Email is required";
       else if (!/\S+@\S+\.\S+/.test(value)) error = "Invalid email format";
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> c5f9c0e01b49a6c45b8eb3ff8827d57149bdd401
     if (field === "password") {
       if (!value) error = "Password is required";
-      else if (value.length < 6) error = "Password must be at least 6 characters";
+      else if (value.length < 6)
+        error = "Password must be at least 6 characters";
     }
     return error;
   };
