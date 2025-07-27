@@ -1,4 +1,4 @@
-body{
+body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
@@ -13,9 +13,9 @@ body{
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
- margin-left: auto;
- margin-right: auto;
- margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
 }
 
 /* Input Fields */
@@ -76,7 +76,8 @@ input:focus {
   border: none;
 }
 
-.carousel-control-prev, .carousel-control-next {
+.carousel-control-prev,
+.carousel-control-next {
   outline: none;
   border: none;
   box-shadow: none !important;
@@ -143,7 +144,7 @@ input:focus {
 }
 
 .subscribe-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 8px 15px;
   border: none;
@@ -168,46 +169,131 @@ input:focus {
     grid-template-columns: 1fr;
     text-align: center;
   }
-  
+
   .footer-section {
     align-items: center;
   }
 }
 .bg-dark {
-    background-color: #212529 !important;
+  background-color: #212529 !important;
 }
 
 .text-light {
-    color: #f8f9fa !important;
+  color: #f8f9fa !important;
 }
 
 .footer h5 {
-    font-weight: 600;
-    margin-bottom: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
 }
 
 .footer ul li {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .footer ul li a:hover {
-    color: #0d6efd !important;
-    transition: color 0.3s ease;
+  color: #0d6efd !important;
+  transition: color 0.3s ease;
 }
 
 .footer .bi {
-    transition: transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .footer .bi:hover {
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 .footer hr {
-    opacity: 0.2;
-    margin: 1.5rem 0;
+  opacity: 0.2;
+  margin: 1.5rem 0;
 }
 
 .gap-3 {
-    gap: 1rem !important;
+  gap: 1rem !important;
+}
+
+/* Mobile responsiveness improvements */
+
+/* Reduce carousel image height & captions font size */
+@media (max-width: 768px) {
+  .carousel-item img {
+    height: 300px;
+  }
+
+  .carousel-caption h5 {
+    font-size: 1rem;
+  }
+
+  .carousel-caption p {
+    font-size: 0.8rem;
+  }
+
+  /* Card: make shorter and adjust text */
+  .card-img-top {
+    height: 250px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-text {
+    font-size: 0.85rem;
+  }
+
+  /* Footer text smaller */
+  .footer-section h4 {
+    font-size: 1rem;
+  }
+
+  .footer-section a,
+  .footer-bottom p {
+    font-size: 0.9rem;
+  }
+
+  /* Footer newsletter input full width */
+  .footer-section input {
+    width: 100%;
+  }
+
+  .subscribe-btn {
+    width: 100%;
+  }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+  .carousel-item img {
+    height: 200px;
+  }
+
+  .carousel-caption h5 {
+    font-size: 0.9rem;
+  }
+
+  .carousel-caption p {
+    font-size: 0.75rem;
+  }
+
+  .card-img-top {
+    height: 200px;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+  }
+
+  .card-text {
+    font-size: 0.8rem;
+  }
+
+  .footer-section h4 {
+    font-size: 0.95rem;
+  }
+
+  .footer-section a,
+  .footer-bottom p {
+    font-size: 0.85rem;
+  }
 }
