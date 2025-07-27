@@ -1,45 +1,85 @@
 /* About Page Container */
 .about-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Back Button */
+.back-button {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 18px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.back-button:hover {
+  color: #222;
+}
+
+/* Heading Styles */
+h1,
+h2 {
+  color: #ff6f61;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Paragraph Styles */
+p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+/* Feature List */
+ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+ul li {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+/* -------------------- */
+/* ✅ Mobile responsiveness */
+@media (max-width: 768px) {
+  .about-container {
+    padding: 15px;
   }
-  
-  /* Back Button */
-  .back-button {
-    display: inline-block;
-    margin-bottom: 15px;
-    color: #555;
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
     font-size: 18px;
-    text-decoration: none;
-    transition: color 0.3s ease;
   }
-  .back-button:hover {
-    color: #222;
-  }
-  
-  /* Heading Styles */
-  h1, h2 {
-    color: #ff6f61;
-  }
-  
-  /* Paragraph Styles */
-  p {
-    font-size: 16px;
-    color: #333;
-    line-height: 1.5;
-  }
-  
-  /* Feature List */
-  ul {
-    list-style-type: disc;
-    margin-left: 20px;
-  }
+
+  p,
   ul li {
-    font-size: 16px;
-    margin: 5px 0;
+    font-size: 15px;
   }
-  
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 20px;
+  }
+
+  h2 {
+    font-size: 17px;
+  }
+
+  p,
+  ul li {
+    font-size: 14px;
+  }
+}
