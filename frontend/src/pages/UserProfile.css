@@ -59,7 +59,9 @@
 }
 
 /* Tags & Grid Layouts */
-.tags-container, .recipes-grid, .comments-list {
+.tags-container,
+.recipes-grid,
+.comments-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -71,7 +73,8 @@
   border-radius: 15px;
   font-size: 14px;
 }
-.recipe-card, .comment-card {
+.recipe-card,
+.comment-card {
   background: #f9f9f9;
   padding: 10px;
   border-radius: 8px;
@@ -103,8 +106,8 @@
 .recipes-grid .recipe-card {
   padding: 8px;
   font-size: 14px;
-  width: 150px; /* Adjust width */
-  height: 80px; /* Reduce height */
+  width: 150px;
+  height: 80px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -112,11 +115,72 @@
 }
 
 .recipes-grid .recipe-card h3 {
-  font-size: 14px; /* Reduce title font size */
+  font-size: 14px;
   margin-bottom: 3px;
 }
 
-.cuisine-tag {
-  font-size: 12px;
-  color: #777;
+/* -------------------- */
+/* ✅ Mobile responsiveness */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 15px;
+  }
+
+  .profile-avatar img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .profile-name {
+    font-size: 20px;
+  }
+
+  .profile-bio {
+    font-size: 14px;
+  }
+
+  .profile-section h2 {
+    font-size: 18px;
+  }
+
+  .tag {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  .recipes-grid .recipe-card {
+    width: 45%; /* two per row */
+    height: auto;
+    padding: 8px;
+  }
+
+  .recipe-card h3 {
+    font-size: 13px;
+  }
+
+  .cuisine-tag {
+    font-size: 11px;
+  }
+
+  .comments-list,
+  .tags-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .recipes-grid .recipe-card {
+    width: 100%; /* single column */
+  }
+  .profile-section h2 {
+    font-size: 16px;
+  }
+  .profile-name {
+    font-size: 18px;
+  }
+  .profile-bio {
+    font-size: 13px;
+  }
 }
