@@ -1,8 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "../App.css";  // Import CSS
-import Login from "./Login";
+import "../App.css";
 
 const Register = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState("");
@@ -15,24 +14,39 @@ const Register = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
 
   const handleRegister = async () => {
-    await axios.post("http://localhost:5000/register", { username, email, password });
-    localStorage.setItem("username", username);
-    setIsLoggedIn(true);
-    navigate("/home");
+    try {
+      await axios.post("http://localhost:3000/register", {
+        username, email, password, age, gender, address, phone
+      });
+      localStorage.setItem("username", username);
+      setIsLoggedIn(true);
+      navigate("/home");
+    } catch (err) {
+      alert("Registration failed. Please try again later.");
+      console.error("Error:", err);
+    }
   };
 
   return (
-    <div className="auth-container">
-      <h2>Register</h2>
-      <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
-      <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-      <input type="number" placeholder="Age" onChange={(e) => setAge(e.target.value)} />
-      <input type="text" placeholder="Gender" onChange={(e) => setGender(e.target.value)} />
-      <input type="text" placeholder="Phone Number" onChange={(e) => setPhone(e.target.value)} />
-      <input type="text" placeholder="Address" onChange={(e) => setAddress(e.target.value)} />
-      <button onClick={handleRegister}>Register</button>
-      <p>Already have an account? <Link to="/login">Login</Link></p>
+    <div className="register-page">
+      <div className="register-box">
+        <h2 className="register-title">Create an Account</h2>
+        <p className="register-subtitle">Join Recipedia and start sharing your recipes today!</p>
+
+        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)} />
+        <input type="text" placeholder="Gender" value={gender} onChange={(e) => setGender(e.target.value)} />
+        <input type="text" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <input type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+
+        <button className="register-btn" onClick={handleRegister}>Register</button>
+
+        <p className="login-text">
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
+      </div>
     </div>
   );
 };
