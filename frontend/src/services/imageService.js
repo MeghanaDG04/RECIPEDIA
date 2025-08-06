@@ -1,4 +1,4 @@
-const API_KEY = '319d935e3bff4512916222dd43bf18a2';
+const API_KEY = 'ADD_YOUR_API_KEY';
 
 export const fetchFoodImage = async (foodName) => {
   try {
