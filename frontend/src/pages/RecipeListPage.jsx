@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
-import RecipeCard from '../components/RecipeCard.jsx'; // Updated import
+import React, { useState, useEffect } from 'react';
+import RecipeCard from '../components/RecipeCard.jsx';
 import allRecipes from '../data/recipes.json';
-
+import { fetchFoodImage } from '../services/imageService.js'; 
 const RecipeListPage = ({ category }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [pexelsImage, setPexelsImage] = useState(null);
 
-  const filteredRecipes = allRecipes.filter(recipe =>
-    recipe.category === category &&
-    recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredRecipes = allRecipes.filter(
+    (recipe) =>
+      recipe.category === category &&
+      recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  useEffect(() => {
+    const fetchImageIfNoMatch = async () => {
+      if (searchQuery.trim() !== '' && filteredRecipes.length === 0) {
+        const image = await fetchFoodImage(searchQuery);
+        setPexelsImage(image);
+      } else {
+        setPexelsImage(null);
+      }
+    };
+    fetchImageIfNoMatch();
+  }, [searchQuery, filteredRecipes]);
 
   const pageTitle = category.charAt(0).toUpperCase() + category.slice(1);
 
@@ -33,6 +47,22 @@ const RecipeListPage = ({ category }) => {
           {filteredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
+        </div>
+      ) : pexelsImage ? (
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-full max-w-md rounded-xl overflow-hidden shadow-lg">
+            <img
+              src={pexelsImage}
+              alt={searchQuery}
+              className="w-full h-80 object-cover rounded-xl"
+            />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-700 dark:text-white text-center">
+            {searchQuery}
+          </h2>
+          <p className="text-center text-gray-400 dark:text-gray-400">
+            No recipe found in our list, but here’s what it may look like.
+          </p>
         </div>
       ) : (
         <p className="text-center text-gray-500 dark:text-gray-400 text-xl">
