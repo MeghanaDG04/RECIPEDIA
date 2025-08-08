@@ -201,11 +201,11 @@ const Login = ({ setIsLoggedIn }) => {
                 />
                 <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
                   I agree to the{" "}
-                  <Link to="/terms" className="login-link text-amber-600 hover:text-amber-500 font-medium">
+                  <Link to="/terms-of-service" className="login-link text-amber-600 hover:text-amber-500 font-medium">
                     Terms of Use
                   </Link>{" "}
                   &{" "}
-                  <Link to="/privacy" className="login-link text-amber-600 hover:text-amber-500 font-medium">
+                  <Link to="/privacy-policy" className="login-link text-amber-600 hover:text-amber-500 font-medium">
                     Privacy Policy
                   </Link>
                 </label>
@@ -263,11 +263,11 @@ const Login = ({ setIsLoggedIn }) => {
         <div className="mt-8 text-center animate-slideInUp">
           <p className="text-sm text-gray-600">
             By signing in, you agree to our{" "}
-            <Link to="/terms" className="login-link text-amber-600 hover:text-amber-500 font-medium">
+            <Link to="/terms-of-service" className="login-link text-amber-600 hover:text-amber-500 font-medium">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link to="/privacy" className="login-link text-amber-600 hover:text-amber-500 font-medium">
+            <Link to="/privacy-policy" className="login-link text-amber-600 hover:text-amber-500 font-medium">
               Privacy Policy
             </Link>
           </p>
