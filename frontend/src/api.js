@@ -27,7 +27,7 @@ const apiCall = async (endpoint, options = {}) => {
 export const recipeAPI = {
   // Get all recipes
   getAllRecipes: () => apiCall('/recipes'),
-
+ 
   // Get recipe by ID
   getRecipeById: (id) => apiCall(`/recipes/${id}`),
 
@@ -47,6 +47,8 @@ export const recipeAPI = {
   deleteRecipe: (id) => apiCall(`/recipes/${id}`, {
     method: 'DELETE',
   }),
+   
+ 
 
   // Like recipe
   likeRecipe: (id) => apiCall(`/recipes/${id}/like`, {

@@ -66,7 +66,9 @@ function AppContent() {
         {/* Auth Routes - Clean without wrapper divs */}
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} />} />
+
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
         
         {/* Protected/User Routes */}
         <Route path="/profile" element={<UserProfile />} />

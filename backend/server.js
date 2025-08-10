@@ -7,16 +7,21 @@ const User = require("./models/User");
 const Recipe = require("./models/Recipe");
 const trendingJob = require("./cron/trendingJob");
 const Like = require('./models/Like');
+
 const cors = require("cors");
 const app = express();
+
 const port = process.env.PORT || 3000;
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173']; // fallback for development
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.json());
 
 // JWT middleware for protected routes
@@ -528,6 +533,9 @@ app.get("/recipes", async (req, res) => {
     });
   }
 });
+// GET /api/recipes/search?query=paneer&category=indian
+// Example: /api/recipes/search?query=paneer&category=indian
+// GET /api/recipes/search
 
 
 app.get("/recipes/:id", async (req, res) => {
@@ -584,6 +592,7 @@ app.delete("/recipes/:id", authenticateToken, async (req, res) => {
     res.status(500).json({ message: "Error deleting recipe" });
   }
 });
+
 
 // Like recipe (protected)
 app.post('/recipes/:id/like', authenticateToken, async (req, res) => {

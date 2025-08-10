@@ -18,7 +18,7 @@ const Login = ({ setIsLoggedIn }) => {
     password: "",
   });
 
-  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false); // Added missing state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -38,7 +38,7 @@ const Login = ({ setIsLoggedIn }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return "Please enter a valid email address";
 
-    if (!agreeTerms) return "Please agree to the Terms of Use & Privacy Policy";
+    if (!agreeTerms) return "Please agree to the Terms of Use & Privacy Policy"; // Added back validation
 
     return null;
   };
@@ -208,7 +208,10 @@ const Login = ({ setIsLoggedIn }) => {
           </p>
         </motion.div>
       </AuthLayout>
+
           </div>
+
+
   );
 };
 

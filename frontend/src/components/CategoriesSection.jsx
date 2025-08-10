@@ -79,9 +79,16 @@ const CategoryCard = ({ category, index }) => {
       <div className="p-6 relative">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-gray-800 group-hover:to-gray-600 dark:group-hover:from-white dark:group-hover:to-gray-300 transition-all duration-300">
+            {/* FIXED: Better contrast in dark mode */}
+            <h3 className="text-xl font-bold 
+              text-gray-800 
+              dark:bg-gradient-to-r dark:from-red-400 dark:to-pink-400 dark:bg-clip-text dark:text-transparent
+              group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-gray-800 group-hover:to-gray-600 
+              dark:group-hover:from-red-300 dark:group-hover:to-pink-300 
+              transition-all duration-300">
               {category.name}
             </h3>
+
             <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
               <TrendingUp className="w-4 h-4" />
               <span>Trending recipes</span>
@@ -124,27 +131,27 @@ const CategoriesSection = () => {
             <span className="text-sm font-semibold text-red-600 dark:text-red-400">Explore Categories</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-800 dark:text-white mb-6">
+          <h2 data-aos="fade-up" className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-800 dark:text-white mb-6">
             Browse by{' '}
-            <span className="bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent">
+            <span data-aos="fade-up" className="bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent">
               Category
             </span>
           </h2>
           
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p data-aos="fade-up" className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Discover your next favorite dish from our carefully curated categories, each packed with authentic recipes from around the world.
           </p>
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div data-aos="fade-up" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((category, index) => (
             <CategoryCard key={index} category={category} index={index} />
           ))}
         </div>
 
         {/* Bottom Stats */}
-        <div className="mt-16 text-center">
+        <div data-aos="slide-up" className="mt-16 text-center">
           <div className="inline-flex items-center gap-8 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-2xl px-8 py-4 border border-gray-200 dark:border-gray-700">
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-800 dark:text-white">8.4K+</div>

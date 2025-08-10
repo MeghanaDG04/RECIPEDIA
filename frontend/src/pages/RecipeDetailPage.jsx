@@ -24,6 +24,7 @@ const RecipeDetailPage = () => {
   const [speechIndex, setSpeechIndex] = useState(0);
   const [spokenChars, setSpokenChars] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const utteranceRef = useRef(null);
   const contentPartsRef = useRef([]);
@@ -117,8 +118,7 @@ const RecipeDetailPage = () => {
     }
   };
   const handleSpeed = () => {
-    const el = document.getElementById('speed');
-    el.classList.toggle('hidden');
+    setShowSettings(prev => !prev);
   };
   const handleSeek = (e) => {
     const newCharIndex = parseInt(e.target.value, 10);
@@ -161,60 +161,104 @@ const RecipeDetailPage = () => {
       alt={recipe.name}
       className="w-full h-80 object-cover rounded-xl shadow-lg mb-8"
     />
-
-    {/* Voice Section */}
-    <div className="container bg-slate-400 text-black dark:text-white dark:bg-gray-500 mx-auto w-1/2 my-10 p-4 rounded-lg flex-col flex justify-center items-center">
-      <div className="flex items-center justify-center w-full">
-        <p className="text-[10px] sm:text-[15px] md:text-2xl font-bold mr-7">Audio Overview</p>
-        <div onClick={handleSpeed} className="text-xl md:text-4xl cursor-pointer hover:scale-105">
-          <IoMdSettings />
-        </div>
-      </div>
-      <div className="flex justify-center sm:justify-around">
-        <button onClick={handleSkipBack} className="text-2xl sm:text-4xl hover:scale-105">
-          <IoPlaySkipBackSharp />
-        </button>
-        <button
-          onClick={isSpeaking ? handlePause : handlePlay}
-          className="text-2xl sm:text-4xl hover:scale-105"
-        >
-          {isSpeaking ? <IoMdPause /> : <FaPlay />}
-        </button>
-        <button onClick={handleSkipForward} className="text-2xl sm:text-4xl hover:scale-105">
-          <IoPlaySkipForwardSharp />
-        </button>
-      </div>
-      <input
-        type="range"
-        min={0}
-        step={1}
-        max={contentPartsRef.current.reduce((a, b) => a + b.length, 0)}
-        value={spokenChars}
-        onChange={(e) => {
-          setIsDragging(true);
-          handleSeek(e);
-        }}
-        onMouseUp={handleSeekRelease}
-        onTouchEnd={handleSeekRelease}
-        className="w-full"
-      />
-      <div id="speed" className="hidden flex flex-col sm:flex-row w-full md:gap-2">
-        <label htmlFor="rate" className="text-xl sm:text-2xl font-medium ml-1">
-          Speed:
-        </label>
-        <input
-          id="rate"
-          type="range"
-          min="0.25"
-          max="3"
-          step="0.1"
-          value={speechRate}
-          onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
-          className="accent-pink-600 w-full"
-        />
-        <span className="text-xl">{speechRate}x</span>
-      </div>
+    
+{/* Audio overview */}
+<div className="w-full max-w-md mx-auto my-10 px-6 py-5 bg-[#F9FAFB] rounded-2xl shadow-lg flex flex-col items-center gap-4">
+  {/* Title & Settings */}
+  <div className="flex items-center justify-between w-full">
+    <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#d30303]">
+      Audio Overview
+    </p>
+    <div
+      onClick={handleSpeed}
+      className="text-2xl md:text-3xl text-[#4CAF50] hover:text-[#000] cursor-pointer transition-all duration-200"
+    >
+      <IoMdSettings />
     </div>
+  </div>
+
+  {/* Controls */}
+  <div className="flex justify-center items-center gap-6 mt-2">
+    <button
+      onClick={handleSkipBack}
+      className="text-2xl sm:text-3xl text-[#1E293B] hover:text-orange-600 focus:outline-none transition-colors"
+    >
+      <IoPlaySkipBackSharp />
+    </button>
+    <button
+      onClick={isSpeaking ? handlePause : handlePlay}
+      className="text-3xl sm:text-4xl text-[#1E293B] focus:text-orange-600 focus:outline-none transition-colors"
+    >
+      {isSpeaking ? <IoMdPause /> : <FaPlay className="w-7 h-7" />}
+    </button>
+    <button
+      onClick={handleSkipForward}
+      className="text-2xl sm:text-3xl text-[#1E293B] hover:text-orange-600 focus:outline-none transition-colors"
+    >
+      <IoPlaySkipForwardSharp />
+    </button>
+  </div>
+
+  {/* Seek Bar (radial effect using background gradient) */}
+  <input
+    type="range"
+    min={0}
+    step={1}
+    max={contentPartsRef.current.reduce((a, b) => a + b.length, 0)}
+    value={spokenChars}
+    onChange={(e) => {
+      setIsDragging(true);
+      handleSeek(e);
+    }}
+    onMouseUp={handleSeekRelease}
+    onTouchEnd={handleSeekRelease}
+    className="w-full h-2 rounded-lg cursor-pointer transition-all duration-150"
+    style={{
+      accentColor: "#1d4ed8", 
+      background: `radial-gradient(circle at 50% 50%, #F44336 0%, #FFCDD2 100%)`, // Tomato + Light Pink
+    }}
+  />
+
+  {/* Speed Control */}
+  {showSettings && (
+  <div className="flex flex-row w-full items-center justify-between mt-2">
+    <label htmlFor="rate" className="text-base sm:text-lg font-medium text-[#1E293B]">
+      Speed:
+    </label>
+    <input
+      id="rate"
+      type="range"
+      min="0.25"
+      max="3"
+      step="0.1"
+      value={speechRate}
+      onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+      className="w-full mx-3"
+      style={{ accentColor: "#d110f3ff" }} 
+    />
+    <span className="text-base sm:text-lg text-[#1E293B]">{speechRate}x</span>
+  </div>
+  )}
+</div>
+
+{/* Subtitles */}
+{showSettings && (
+<div className="w-full mt-4 px-4 py-2 bg-[#FFFFFFC9] rounded-md text-center text-[#033881] text-base sm:text-lg font-medium min-h-[48px] transition-all border border-[#E5E7EB]">
+  {
+    (() => {
+      const fullText = contentPartsRef.current.join(" ");
+      const currentIndex = spokenChars;
+      const previewLength = 80;
+
+      const start = Math.max(0, currentIndex - 40);
+      const end = Math.min(fullText.length, currentIndex + previewLength);
+
+      const subtitle = fullText.slice(start, end);
+      return subtitle;
+    })()
+  }
+</div>
+)}
 
     <section className="prose max-w-none dark:prose-invert">
       <h2 className="text-2xl font-semibold text-[#d35400] pb-2">About this Recipe</h2>

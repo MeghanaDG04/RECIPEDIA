@@ -1,7 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "../App.css";
+import { motion } from 'framer-motion';
+import { 
+  User, 
+  Mail, 
+  Lock, 
+  Calendar, 
+  Users, 
+  Phone, 
+  MapPin, 
+  ArrowRight 
+} from 'lucide-react';
+
+import AuthLayout from '../components/AuthLayout';
+import FormInput from '../components/FormInput';
+import FormSelect from '../components/FormSelect';
+import FormTextarea from '../components/FormTextarea';
+import AuthButton from '../components/AuthButton';
+import ErrorAlert from '../components/ErrorAlert';
 
 const Register = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
@@ -99,100 +116,204 @@ const Register = ({ setIsLoggedIn }) => {
     }
   };
 
+  const genderOptions = [
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+    { value: "other", label: "Other" },
+    { value: "prefer-not-to-say", label: "Prefer not to say" }
+  ];
+
   return (
-    <div className="auth-container">
-      <h2 className="heading">Register for RECIPEDIA</h2>
+    <div className="auth-page-container">
+      <AuthLayout 
+        title="Join Recipedia" 
+        subtitle="Create your account and start sharing amazing recipes"
+      >
+        <ErrorAlert error={error} onDismiss={() => setError("")} />
 
-      {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleRegister} className="space-y-3">
+          {/* Username */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
+          >
+            <FormInput
+              type="text"
+              name="username"
+              placeholder="Choose a username"
+              value={formData.username}
+              onChange={handleInputChange}
+              required
+              icon={User}
+            />
+          </motion.div>
 
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password (min 6 characters)"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-          minLength="6"
-        />
-        <input
-          type="number"
-          name="age"
-          placeholder="Age"
-          value={formData.age}
-          onChange={handleInputChange}
-          min="1"
-          max="120"
-          required
-        />
-        <select
-          name="gender"
-          value={formData.gender}
-          onChange={handleInputChange}
-          required
+          {/* Email */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.3 }}
+          >
+            <FormInput
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              icon={Mail}
+            />
+          </motion.div>
+
+          {/* Password */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+          >
+            <FormInput
+              type="password"
+              name="password"
+              placeholder="Create a password (min 6 characters)"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              minLength="6"
+              icon={Lock}
+            />
+          </motion.div>
+
+          {/* Age and Gender Row */}
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.3 }}
+          >
+            <FormInput
+              type="number"
+              name="age"
+              placeholder="Your age"
+              value={formData.age}
+              onChange={handleInputChange}
+              min="1"
+              max="120"
+              required
+              icon={Calendar}
+            />
+            <FormSelect
+              name="gender"
+              value={formData.gender}
+              onChange={handleInputChange}
+              options={genderOptions}
+              placeholder="Select gender"
+              required
+              icon={Users}
+            />
+          </motion.div>
+
+          {/* Phone */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.3 }}
+          >
+            <FormInput
+              type="tel"
+              name="phone"
+              placeholder="Phone number"
+              value={formData.phone}
+              onChange={handleInputChange}
+              required
+              icon={Phone}
+            />
+          </motion.div>
+
+          {/* Address */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.3 }}
+          >
+            <FormTextarea
+              name="address"
+              placeholder="Enter your address"
+              value={formData.address}
+              onChange={handleInputChange}
+              rows={2}
+              required
+              icon={MapPin}
+            />
+          </motion.div>
+
+          {/* Terms and Conditions */}
+          <motion.div 
+            className="flex items-start gap-3 py-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.3 }}
+          >
+            <motion.input
+              type="checkbox"
+              id="terms"
+              checked={agreeTerms}
+              onChange={(e) => setAgreeTerms(e.target.checked)}
+              className="w-4 h-4 text-red-500 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded focus:ring-red-500 focus:ring-2 mt-0.5 flex-shrink-0"
+              whileTap={{ scale: 0.9 }}
+            />
+            <label htmlFor="terms" className="text-xs text-gray-600 dark:text-gray-300 leading-tight">
+              I agree to the{" "}
+              <span className="text-red-500 hover:text-red-600 cursor-pointer font-medium">
+                Terms of Use
+              </span>{" "}
+              &{" "}
+              <span className="text-red-500 hover:text-red-600 cursor-pointer font-medium">
+                Privacy Policy
+              </span>
+            </label>
+          </motion.div>
+
+          {/* Submit Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.3 }}
+            className="pt-2"
+          >
+            <AuthButton 
+              type="submit" 
+              loading={loading}
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : (
+                <>
+                  Create Account
+                  <ArrowRight className="w-5 h-5" />
+                </>
+              )}
+            </AuthButton>
+          </motion.div>
+        </form>
+
+        {/* Sign In Link */}
+        <motion.div 
+          className="text-center mt-6 pt-4 border-t border-gray-200 dark:border-slate-600"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.3 }}
         >
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-          <option value="prefer-not-to-say">Prefer not to say</option>
-        </select>
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleInputChange}
-          required
-        />
-        <textarea
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleInputChange}
-          rows="3"
-          required
-        />
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
-
-      <p className="swap_state">
-        Already have an account?{" "}
-        <span className="link">
-          <Link to="/login">Login</Link>
-        </span>
-      </p>
-
-      <div className="termsandconditions">
-        <input
-          type="checkbox"
-          id="terms"
-          checked={agreeTerms}
-          onChange={(e) => setAgreeTerms(e.target.checked)}
-        />
-        <label htmlFor="terms">
-          <h6>By continuing, I agree to the Terms of Use & Privacy Policy</h6>
-        </label>
-      </div>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">
+            Already have an account?{" "}
+            <Link 
+              to="/login" 
+              className="text-red-500 hover:text-red-600 font-semibold transition-colors duration-200"
+            >
+              Sign In
+            </Link>
+          </p>
+        </motion.div>
+      </AuthLayout>
     </div>
   );
 };
