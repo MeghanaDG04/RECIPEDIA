@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import RecipeCard from '../components/RecipeCard.jsx';
 import allRecipes from '../data/recipes.json';
-import { fetchFoodImage } from '../services/imageService.js'; 
+import { fetchFoodImage } from '../services/imageService.js';
+
+const FALLBACK_IMAGE = '/fallback-image.jpg'; // Add a fallback image in /public
 
 const RecipeListPage = ({ category }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [pexelsImage, setPexelsImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const filteredRecipes = allRecipes.filter(
     (recipe) =>
@@ -14,15 +17,24 @@ const RecipeListPage = ({ category }) => {
   );
 
   useEffect(() => {
-    const fetchImageIfNoMatch = async () => {
+    const timeout = setTimeout(async () => {
       if (searchQuery.trim() !== '' && filteredRecipes.length === 0) {
-        const image = await fetchFoodImage(searchQuery);
-        setPexelsImage(image);
+        setLoading(true);
+        try {
+          const image = await fetchFoodImage(searchQuery);
+          setPexelsImage(image || FALLBACK_IMAGE);
+        } catch (error) {
+          console.error('Image fetch failed:', error);
+          setPexelsImage(FALLBACK_IMAGE);
+        } finally {
+          setLoading(false);
+        }
       } else {
         setPexelsImage(null);
       }
-    };
-    fetchImageIfNoMatch();
+    }, 500); // debounce
+
+    return () => clearTimeout(timeout);
   }, [searchQuery, filteredRecipes]);
 
   const pageTitle = category.charAt(0).toUpperCase() + category.slice(1);
@@ -49,6 +61,10 @@ const RecipeListPage = ({ category }) => {
             <RecipeCard key={recipe.id} recipe={recipe} searchQuery={searchQuery} />
           ))}
         </div>
+      ) : loading ? (
+        <p className="text-center text-gray-500 dark:text-gray-400 text-xl">
+          Loading image...
+        </p>
       ) : pexelsImage ? (
         <div className="flex flex-col items-center gap-4">
           <div className="w-full max-w-md rounded-xl overflow-hidden shadow-lg">
