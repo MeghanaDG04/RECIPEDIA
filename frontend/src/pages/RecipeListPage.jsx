@@ -1,14 +1,27 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import RecipeCard from "../components/RecipeCard.jsx";
 import allRecipes from "../data/recipes.json";
 import { fetchFoodImage } from "../services/imageService.js";
 
 const FALLBACK_IMAGE = "/fallback.jpg"; // Put a default image in public/
+=======
+import React, { useState, useEffect } from 'react';
+import RecipeCard from '../components/RecipeCard.jsx';
+import allRecipes from '../data/recipes.json';
+import { fetchFoodImage } from '../services/imageService.js';
+
+const FALLBACK_IMAGE = '/fallback-image.jpg'; // Add a fallback image in /public
+>>>>>>> 640103c50142a7e990c5c02051bc568009a7912e
 
 const RecipeListPage = ({ category }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [pexelsImage, setPexelsImage] = useState(null);
+<<<<<<< HEAD
   const [loadingImage, setLoadingImage] = useState(false);
+=======
+  const [loading, setLoading] = useState(false);
+>>>>>>> 640103c50142a7e990c5c02051bc568009a7912e
 
   const filteredRecipes = allRecipes.filter(
     (recipe) =>
@@ -17,28 +30,45 @@ const RecipeListPage = ({ category }) => {
   );
 
   useEffect(() => {
+<<<<<<< HEAD
     const fetchImageIfNoMatch = async () => {
       if (searchQuery.trim() !== "" && filteredRecipes.length === 0) {
         setLoadingImage(true);
+=======
+    const timeout = setTimeout(async () => {
+      if (searchQuery.trim() !== '' && filteredRecipes.length === 0) {
+        setLoading(true);
+>>>>>>> 640103c50142a7e990c5c02051bc568009a7912e
         try {
           const image = await fetchFoodImage(searchQuery);
           setPexelsImage(image || FALLBACK_IMAGE);
         } catch (error) {
+<<<<<<< HEAD
           console.error("Image fetch failed:", error);
           setPexelsImage(FALLBACK_IMAGE);
         } finally {
           setLoadingImage(false);
         }
+=======
+          console.error('Image fetch failed:', error);
+          setPexelsImage(FALLBACK_IMAGE);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setPexelsImage(null);
+>>>>>>> 640103c50142a7e990c5c02051bc568009a7912e
       }
-    };
-    fetchImageIfNoMatch();
+    }, 500); // debounce
+
+    return () => clearTimeout(timeout);
   }, [searchQuery, filteredRecipes]);
 
   const pageTitle = category.charAt(0).toUpperCase() + category.slice(1);
 
   return (
     <div className="max-w-6xl mx-auto px-4 pt-32 pb-16">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-10">
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-black text-center mb-10">
         {pageTitle} Recipes
       </h1>
 
@@ -49,7 +79,7 @@ const RecipeListPage = ({ category }) => {
           placeholder={`Search for ${category} recipes...`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full md:w-1/2 px-5 py-3 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 !bg-white dark:!bg-black !text-black dark:!text-white"
+          className="w-full md:w-1/2 px-5 py-3 border border-gray-300 !text-black rounded-full shadow-sm focus:outline-none placeholder:text-black dark:placeholder:text-white focus:ring-2 focus:ring-red-500 !bg-white dark:!bg-black dark:!text-white"
         />
       </div>
 
@@ -57,10 +87,14 @@ const RecipeListPage = ({ category }) => {
       {filteredRecipes.length > 0 ? (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard key={recipe.id} recipe={recipe} searchQuery={searchQuery} />
           ))}
         </div>
+<<<<<<< HEAD
       ) : loadingImage ? (
+=======
+      ) : loading ? (
+>>>>>>> 640103c50142a7e990c5c02051bc568009a7912e
         <p className="text-center text-gray-500 dark:text-gray-400 text-xl">
           Loading image...
         </p>
