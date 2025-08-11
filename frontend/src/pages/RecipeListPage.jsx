@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import RecipeCard from '../components/RecipeCard.jsx';
-import allRecipes from '../data/recipes.json';
-import { fetchFoodImage } from '../services/imageService.js'; 
+import React, { useState, useEffect } from "react";
+import RecipeCard from "../components/RecipeCard.jsx";
+import allRecipes from "../data/recipes.json";
+import { fetchFoodImage } from "../services/imageService.js";
+
+const FALLBACK_IMAGE = "/fallback.jpg"; // Put a default image in public/
+
 const RecipeListPage = ({ category }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [pexelsImage, setPexelsImage] = useState(null);
+  const [loadingImage, setLoadingImage] = useState(false);
 
   const filteredRecipes = allRecipes.filter(
     (recipe) =>
@@ -14,11 +18,17 @@ const RecipeListPage = ({ category }) => {
 
   useEffect(() => {
     const fetchImageIfNoMatch = async () => {
-      if (searchQuery.trim() !== '' && filteredRecipes.length === 0) {
-        const image = await fetchFoodImage(searchQuery);
-        setPexelsImage(image);
-      } else {
-        setPexelsImage(null);
+      if (searchQuery.trim() !== "" && filteredRecipes.length === 0) {
+        setLoadingImage(true);
+        try {
+          const image = await fetchFoodImage(searchQuery);
+          setPexelsImage(image || FALLBACK_IMAGE);
+        } catch (error) {
+          console.error("Image fetch failed:", error);
+          setPexelsImage(FALLBACK_IMAGE);
+        } finally {
+          setLoadingImage(false);
+        }
       }
     };
     fetchImageIfNoMatch();
@@ -32,6 +42,7 @@ const RecipeListPage = ({ category }) => {
         {pageTitle} Recipes
       </h1>
 
+      {/* Search bar */}
       <div className="mb-10 flex justify-center">
         <input
           type="text"
@@ -42,12 +53,17 @@ const RecipeListPage = ({ category }) => {
         />
       </div>
 
+      {/* Show recipes */}
       {filteredRecipes.length > 0 ? (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
+      ) : loadingImage ? (
+        <p className="text-center text-gray-500 dark:text-gray-400 text-xl">
+          Loading image...
+        </p>
       ) : pexelsImage ? (
         <div className="flex flex-col items-center gap-4">
           <div className="w-full max-w-md rounded-xl overflow-hidden shadow-lg">
