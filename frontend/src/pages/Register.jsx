@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
-
+import { signInWithGoogle } from "../auth";
 const Register = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
 
@@ -25,7 +25,17 @@ const Register = ({ setIsLoggedIn }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) setError("");
   };
-
+  //sign in with google
+  const handleGoogleLogin = async () => {
+    try {
+      const user = await signInWithGoogle();
+      console.log("User Info:", user);
+      alert(`Welcome ${user.displayName}`);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Login failed");
+    }
+  };
   const validateForm = () => {
     const { username, email, password, age, gender, address, phone } = formData;
 
@@ -169,6 +179,14 @@ const Register = ({ setIsLoggedIn }) => {
           rows="3"
           required
         />
+        {/* /google sign in */}
+        <button
+          type="button" // <-- important
+          onClick={handleGoogleLogin}
+          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+        >
+          Sign In with Google
+        </button>
 
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
