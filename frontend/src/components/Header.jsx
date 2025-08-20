@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import {
   FaBars,
   FaTimes,
@@ -32,7 +33,7 @@ ThemeToggle.propTypes = {
   toggleTheme: PropTypes.func.isRequired,
 };
 
-const Navbar = ({ isAuthenticated, onLogout }) => {
+const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [theme, setTheme] = useState(
@@ -48,12 +49,21 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
   const toggleProfileDropdown = () => setProfileDropdownOpen((prev) => !prev);
   const closeProfileDropdown = () => setProfileDropdownOpen(false);
 
-  const handleLogout = () => {
-    onLogout();
-    closeProfileDropdown();
-    closeMobileMenu();
-    navigate("/");
+   const handleLogout = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/logout`);
+
+      // Clear session storage
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+
+      onLogout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
+
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -288,7 +298,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
 
 Navbar.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  onLogout: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
 };
 
 export default Navbar;

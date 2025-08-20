@@ -37,12 +37,11 @@ const Veg = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-32 pb-16">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-10">
+    <div className="max-w-6xl mx-auto px-4 pt-16 pb-16 dark:bg-slate-800 ">
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-black text-center mb-10">
         Vegetarian Recipes
       </h1>
-
-      <div className="mb-10 flex justify-center">
+   <div className="mb-10 flex justify-center ">
         <input
           type="text"
           placeholder="Search for vegetarian recipes..."

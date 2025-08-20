@@ -86,14 +86,14 @@ const AboutHeroSection = () => {
         >
           <Link
             to="/home"
-            className="group inline-flex items-center gap-2 mb-6 text-white hover:text-red-200 transition-all duration-300"
+            className="group inline-flex items-center gap-2 mb-6 text-white hover:text-red-200 transition-all duration-300 mt-8"
             aria-label="Back to Home"
           >
             <motion.div
               whileHover={{ x: -5 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 " />
             </motion.div>
             Back to Home
           </Link>

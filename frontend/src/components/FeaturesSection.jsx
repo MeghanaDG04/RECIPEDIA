@@ -157,14 +157,14 @@ const FeaturesSection = () => {
                 <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">Powerful Features</span>
               </div>
               
-              <h2 className="text-4xl md:text-5xl font-black text-gray-800 dark:text-white leading-tight">
+              <h2 data-aos="fade-left" className="text-4xl md:text-5xl font-black text-gray-800 dark:text-white leading-tight">
                 All The Tools{' '}
                 <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                   You Need
                 </span>
               </h2>
               
-              <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p data-aos="fade-left" className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 Experience the power of our comprehensive recipe management platform with cutting-edge features designed for food enthusiasts.
               </p>
             </div>
@@ -182,7 +182,7 @@ const FeaturesSection = () => {
             </ul>
 
             {/* Bottom Stats */}
-            <div className="grid grid-cols-3 gap-4 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <div data-aos="fade-up-left" className="grid grid-cols-3 gap-4 pt-8 border-t border-gray-200 dark:border-gray-700">
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-800 dark:text-white">99.9%</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">Uptime</div>
