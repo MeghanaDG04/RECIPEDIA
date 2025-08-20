@@ -180,17 +180,43 @@ const Register = ({ setIsLoggedIn }) => {
           required
         />
         {/* /google sign in */}
-        <button
+        {/* <button
           type="button" // <-- important
           onClick={handleGoogleLogin}
           className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
         >
           Sign In with Google
-        </button>
+        </button> */}
+        
 
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
+        
+<div className="flex flex-col items-center space-y-4">
+  {/* Default Sign In button */}
+ 
+  {/* "Other ways" separator */}
+  <div className="flex items-center w-full my-2">
+    <div className="flex-grow h-px bg-gray-300 mt-2"></div>
+    <span className="px-4 text-gray-500 text-sm mt-2">Other ways to sign in</span>
+    <div className="flex-grow h-px bg-gray-300 mt-2"></div>
+  </div>
+
+  {/* Google Sign In */}
+  <button
+  onclick="signInWithGoogle()"
+  class="p-3 border border-gray-300 rounded-full bg-white hover:bg-gray-100 transition"
+>
+  <img
+    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    alt="Google"
+    class="w-6 h-6 ml-32"
+  />
+</button>
+
+</div>
+
       </form>
 
       <p className="swap_state">
