@@ -391,7 +391,7 @@ const Register = ({ onAuthSuccess }) => {
   {/* Google Sign In */}
   <button
   onclick="signInWithGoogle()"
-  class="p-3 border border-gray-300 rounded-full bg-white hover:bg-gray-100 transition"
+  class="p-3  rounded-full bg-white hover:bg-gray-100 transition"
 >
   <img
     src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
