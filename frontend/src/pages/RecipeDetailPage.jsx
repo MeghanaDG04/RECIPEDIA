@@ -6,9 +6,13 @@ import NotFoundPage from './NotFound.jsx';
 import '../styles/RecipeDetail.css';
 import { v4 as uuidv4 } from 'uuid';
 import AudioOverview from '../components/AudioOverview.jsx';
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
+import Typography from '@mui/material/Typography';
 
 const RecipeDetailPage = () => {
   const { category, recipeId } = useParams();
+const [value, setValue] = React.useState(3);
   const navigate = useNavigate();
 
   const [recipe, setRecipe] = useState(null);
@@ -167,6 +171,17 @@ const RecipeDetailPage = () => {
             placeholder="Add a comment..."
             className="w-full border rounded-lg p-4 min-h-[120px] text-black bg-white dark:bg-slate-700 dark:text-white"
           />
+           <Box sx={{ '& > legend': { mt: 2 } }}>
+      <Typography component="legend" className='!text-2xl dark:!text-white !text-red-500'>Rating:</Typography>
+      <Rating
+        name="simple-controlled"
+        value={value}
+          sx={{ fontSize: 40 }}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+      />
+    </Box>
           {error && <p className="text-red-600 mt-2 font-semibold">{error}</p>}
           <button
             type="submit"

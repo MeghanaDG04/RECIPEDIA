@@ -28,8 +28,12 @@ const RecipeCard = ({ recipe, searchQuery }) => {
     >
       <img 
         src={recipe.image} 
-        onError={(e) => { e.target.src = '/default.jpg' }} 
-        alt={recipe.name} 
+        onError={(e) => {
+        if (e.target.src !== '/default.jpg') {
+        e.target.src = '/default.jpg';
+        e.target.alt = 'Recipe image not available';
+       }
+      }}
         className="h-48 w-full object-cover" 
       />
       <div className="p-4 !bg-white dark:!bg-slate-800">

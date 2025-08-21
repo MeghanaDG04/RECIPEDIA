@@ -1,5 +1,4 @@
-
-// axiosConfig.js - Axios interceptor for automatic token handling
+// src/services/axiosConfig.js - Axios interceptor for automatic token handling
 import axios from 'axios';
 import { authService } from './authService';
 
@@ -22,7 +21,15 @@ axios.interceptors.response.use(
     if (error.response?.status === 401) {
       // Token expired or invalid
       authService.clearAuth();
-      window.location.href = '/login';
+      
+      // Trigger a custom event to notify the app about logout
+      window.dispatchEvent(new CustomEvent('auth-logout'));
+      
+      // Redirect to login only if not already on login/register page
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/login' && currentPath !== '/register') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

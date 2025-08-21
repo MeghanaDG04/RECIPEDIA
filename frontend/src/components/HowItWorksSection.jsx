@@ -49,21 +49,23 @@ const HowItWorksSection = () => {
         {/* Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {steps.map((step, index) => (
-            <StepCard 
-              key={index} 
-              step={step} 
-              index={index}
-              isActive={activeStep === index || currentStep === index}
-              onHover={setActiveStep}
-              onIconClick={
-                step.title === "Create an Account"
-                  ? () => navigate('/register')
-                  : step.title === "Add Your Recipes"
-                  ? () => navigate('/recipes')
-                  : undefined
-              }
-            />
-          ))}
+  <StepCard 
+    key={index} 
+    step={step} 
+    index={index}
+    isActive={activeStep === index || currentStep === index}
+    onHover={setActiveStep}
+    onIconClick={
+      step.title === "Create an Account"
+        ? () => navigate('/register')
+        : step.title === "Add Your Recipes"
+        ? () => navigate('/recipes')
+        : step.title === "Explore & Interact"
+        ? () => navigate('/explore')
+        : undefined
+    }
+  />
+))}
         </div>
 
         {/* Bottom CTA */}

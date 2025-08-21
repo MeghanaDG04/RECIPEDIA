@@ -10,8 +10,11 @@ import {
   FaUserCircle,
   FaSignOutAlt,
   FaMoon,
+  FaUser,
+  FaCog,
 } from "react-icons/fa";
 import { IoSunnySharp } from "react-icons/io5";
+import { authService } from '../services/authService';
 
 // ThemeToggle extracted
 const ThemeToggle = ({ theme, toggleTheme }) => (
@@ -39,6 +42,7 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
   const [theme, setTheme] = useState(
     () => localStorage.getItem("mode") || "light"
   );
+  const [username, setUsername] = useState("");
 
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -49,19 +53,33 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
   const toggleProfileDropdown = () => setProfileDropdownOpen((prev) => !prev);
   const closeProfileDropdown = () => setProfileDropdownOpen(false);
 
-   const handleLogout = async () => {
-    try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/logout`);
-
-      // Clear session storage
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("user");
-
-      onLogout();
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
+  // Get username when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      const user = authService.getUser();
+      setUsername(user ? user.username : "User");
+    } else {
+      setUsername("");
     }
+  }, [isAuthenticated]);
+
+  // Listen for auth logout events (from axios interceptor)
+  useEffect(() => {
+    const handleAuthLogout = () => {
+      if (onLogout) {
+        onLogout();
+      }
+    };
+
+    window.addEventListener('auth-logout', handleAuthLogout);
+    return () => window.removeEventListener('auth-logout', handleAuthLogout);
+  }, [onLogout]);
+
+  const handleLogout = () => {
+    onLogout();
+    closeProfileDropdown();
+    closeMobileMenu();
+    navigate("/");
   };
 
 
@@ -104,17 +122,11 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
       isActive ? "text-amber-500 font-semibold" : ""
     }`;
 
-  const getMobileNavLinkClass = ({ isActive }) =>
-    `block px-3 py-2 rounded-md text-base font-medium transition-all duration-200 dark:text-white text-center hover:scale-105 ${
-      isActive
-        ? "bg-amber-400 text-amber-600 font-semibold"
-        : "text-gray-700 hover:text-white hover:bg-amber-500"
-    }`;
-
   return (
     <header className="fixed top-0 left-0 w-full bg-white/80 dark:bg-slate-800 backdrop-blur-md shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
+          {/* Logo */}
           <Link
             to="/"
             className="text-3xl font-bold text-red-500 hover:text-red-600 transition-colors duration-300"
@@ -122,6 +134,7 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
             Recipedia
           </Link>
 
+          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <NavLink
@@ -135,8 +148,10 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
             ))}
           </nav>
 
+          {/* Desktop Right Section */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
+              // Authenticated User Section
               <>
                 <Link
                   to="/add-recipe"
@@ -144,65 +159,65 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
                 >
                   <FaPlus className="mr-2" /> Add Recipe
                 </Link>
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={toggleProfileDropdown}
-                    aria-label="Open user menu"
-                    className="text-gray-700 hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 rounded-full"
-                  >
-                    <FaUserCircle size={32} />
-                  </button>
-                  <div
-                    className={`absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20 py-1 origin-top-right transition-all duration-200 ease-out ${
-                      profileDropdownOpen
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-95 pointer-events-none"
-                    }`}
-                  >
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-100"
-                      onClick={closeProfileDropdown}
-                    >
-                      Profile
-                    </Link>
+                
+                {/* Profile Section with Username and Profile Picture */}
+                <div className="flex items-center space-x-3">
+                  <span className="text-gray-700 dark:text-white font-medium">
+                    {username}
+                  </span>
+                  <div className="relative" ref={dropdownRef}>
                     <button
-                      onClick={handleLogout}
-                      className="w-full text-left flex items-center px-4 py-2 text-sm text-red-500 hover:bg-amber-100"
+                      onClick={toggleProfileDropdown}
+                      aria-label="Open user menu"
+                      className="text-gray-700 dark:text-white hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 rounded-full transition-colors duration-200"
                     >
-                      <FaSignOutAlt className="mr-2" /> Logout
+                      <FaUserCircle size={32} />
                     </button>
+                    <div
+                      className={`absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-xl z-20 py-1 origin-top-right transition-all duration-200 ease-out ${
+                        profileDropdownOpen
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-95 pointer-events-none"
+                      }`}
+                    >
+                      <Link
+                        to="/profile"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
+                        onClick={closeProfileDropdown}
+                      >
+                        <FaUser className="mr-2" /> Profile
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
+                        onClick={closeProfileDropdown}
+                      >
+                        <FaCog className="mr-2" /> Settings
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left flex items-center px-4 py-2 text-sm text-red-500 hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
+                      >
+                        <FaSignOutAlt className="mr-2" /> Logout
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
               </>
             ) : (
+              // Non-Authenticated User Section
               <>
                 <Link
                   to="/login"
-                  className="
-    px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2.5
-    text-sm md:text-base lg:text-lg
-    hover:underline text-gray-700 hover:text-amber-500
-    font-medium transition-colors
-    rounded-md dark:text-white
-  "
+                  className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2.5 text-sm md:text-base lg:text-lg hover:underline text-gray-700 hover:text-amber-500 font-medium transition-colors rounded-md dark:text-white"
                 >
                   Login
                 </Link>
 
                 <Link
                   to="/register"
-                  className="
-    bg-amber-400 text-white
-    px-4 py-2 md:px-5 md:py-2.5 lg:px-6 lg:py-3
-    text-sm md:text-base lg:text-lg
-    rounded-full font-semibold
-    hover:bg-amber-500 transition-all duration-300
-    shadow-sm hover:shadow-md
-    transform hover:-translate-y-0.5 hover:scale-105
-    whitespace-nowrap
-  "
+                  className="bg-amber-400 text-white px-4 py-2 md:px-5 md:py-2.5 lg:px-6 lg:py-3 text-sm md:text-base lg:text-lg rounded-full font-semibold hover:bg-amber-500 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 hover:scale-105 whitespace-nowrap"
                 >
                   Sign Up
                 </Link>
@@ -212,6 +227,7 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
             )}
           </div>
 
+          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-3">
             <button
               onClick={toggleMobileMenu}
@@ -225,7 +241,7 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
         </div>
       </div>
 
-      {/* Updated mobile menu: translate + opacity */}
+      {/* Mobile Menu */}
       <div
         id="mobile-menu"
         className={`md:hidden fixed top-20 left-0 w-full bg-white dark:bg-slate-800 shadow-lg transition-transform duration-300 ease-in-out ${
@@ -235,6 +251,7 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
         }`}
       >
         <div className="flex flex-col px-4 py-4 space-y-4">
+          {/* Navigation Links */}
           {navLinks.map((link) => (
             <NavLink
               key={link.title}
@@ -247,43 +264,62 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
                     : "text-gray-700 dark:text-white bg-gray-100 dark:bg-slate-700 hover:bg-amber-400 hover:text-white"
                 }`
               }
+              onClick={closeMobileMenu}
             >
               {link.title}
             </NavLink>
           ))}
+
+          {/* Mobile Auth Section */}
           <div className="pt-4 border-t border-gray-300 dark:border-gray-600 flex flex-col gap-3">
             {isAuthenticated ? (
+              // Mobile Authenticated Section
               <>
+                <div className="text-center text-gray-700 dark:text-white font-medium mb-2">
+                  Welcome, {username}!
+                </div>
                 <Link
                   to="/profile"
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   My Profile
                 </Link>
                 <Link
+                  to="/settings"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white transition-colors duration-200"
+                  onClick={closeMobileMenu}
+                >
+                  Settings
+                </Link>
+                <Link
                   to="/add-recipe"
-                  className="block text-center bg-red-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-red-600"
+                  className="block text-center bg-red-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-red-600 transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   Add Recipe
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-red-500 px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-red-500 px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors duration-200"
                 >
                   Logout
                 </button>
               </>
             ) : (
+              // Mobile Non-Authenticated Section
               <>
                 <Link
                   to="/login"
-                  className="block text-center bg-amber-400 text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-500"
+                  className="block text-center bg-amber-400 text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-500 transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   Sign Up
                 </Link>
