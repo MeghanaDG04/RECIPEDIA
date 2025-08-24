@@ -1,0 +1,57 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    # ---------- Frontend ----------
+    - name: Install Frontend Dependencies
+      run: npm ci
+      working-directory: ./frontend
+
+    - name: Run Frontend Tests
+      env:
+        NODE_ENV: test
+        VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        NODE_OPTIONS: --openssl-legacy-provider
+      run: npm test
+      working-directory: ./frontend
+
+    - name: Build Frontend
+      env:
+        NODE_ENV: production
+        VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        NODE_OPTIONS: --openssl-legacy-provider
+      run: npm run build
+      working-directory: ./frontend
+
+    # ---------- Backend ----------
+    - name: Install Backend Dependencies
+      run: npm ci
+      working-directory: ./backend
+
+    - name: Run Backend Tests
+      env:
+        NODE_ENV: test
+      run: npm test
+      working-directory: ./backend
