@@ -1,46 +1,44 @@
-// authService.js - Centralized authentication service
-class AuthService {
-  constructor() {
-    this.token = this.getToken();
-    this.user = this.getUser();
-  }
-
-  // Get token from secure httpOnly cookie (preferred) or sessionStorage
+// src/services/authService.js
+export const authService = {
+  // Get auth token from sessionStorage
   getToken() {
     return sessionStorage.getItem('token');
-  }
+  },
 
-  // Get user data from memory or sessionStorage
+  // Get user data from sessionStorage
   getUser() {
-    const userData = sessionStorage.getItem('user');
-    return userData ? JSON.parse(userData) : null;
-  }
-
-  // Set authentication data
-  setAuth(token, user) {
-    this.token = token;
-    this.user = user;
-    sessionStorage.setItem('token', token);
-    sessionStorage.setItem('user', JSON.stringify(user));
-  }
-
-  // Clear authentication data
-  clearAuth() {
-    this.token = null;
-    this.user = null;
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('user');
-  }
+    const userStr = sessionStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  },
 
   // Check if user is authenticated
   isAuthenticated() {
-    return !!this.token && !!this.user;
-  }
+    const token = this.getToken();
+    const user = this.getUser();
+    return !!(token && user);
+  },
 
-  // Get authorization header
+  // Get auth headers for API requests
   getAuthHeader() {
-    return this.token ? { Authorization: `Bearer ${this.token}` } : {};
-  }
-}
+    const token = this.getToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  },
 
-export const authService = new AuthService();
+  // Store auth data
+  setAuth(token, user) {
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('user', JSON.stringify(user));
+  },
+
+  // Clear auth data (logout)
+  clearAuth() {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+  },
+
+  // Get username
+  getUsername() {
+    const user = this.getUser();
+    return user ? user.username : '';
+  }
+};

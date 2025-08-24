@@ -1,28 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { 
-  User, 
-  Mail, 
-  Lock, 
-  Calendar, 
-  Users, 
-  Phone, 
-  MapPin, 
-  ArrowRight 
-} from 'lucide-react';
+import { User, Mail, Lock, Phone, MapPin, Calendar, ArrowRight } from 'lucide-react';
 
 import AuthLayout from '../components/AuthLayout';
 import FormInput from '../components/FormInput';
-import FormSelect from '../components/FormSelect';
-import FormTextarea from '../components/FormTextarea';
 import AuthButton from '../components/AuthButton';
 import ErrorAlert from '../components/ErrorAlert';
+import { authService } from '../services/authService';
 
-const Register = ({ setIsLoggedIn }) => {
+const Register = ({ onAuthSuccess }) => {
   const navigate = useNavigate();
 
+  // Form state
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -37,43 +28,50 @@ const Register = ({ setIsLoggedIn }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError("");
+    if (error) setError(""); // clear error when user types
   };
 
+  // Form validation
   const validateForm = () => {
     const { username, email, password, age, gender, address, phone } = formData;
-
-    if (
-      !username ||
-      !email ||
-      !password ||
-      !age ||
-      !gender ||
-      !address ||
-      !phone
-    ) {
+    
+    if (!username || !email || !password || !age || !gender || !address || !phone) {
       return "Please fill in all fields";
     }
-    if (password.length < 6) return "Password must be at least 6 characters";
-    if (isNaN(age) || age < 1 || age > 120) return "Please enter a valid age";
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return "Please enter a valid email address";
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address";
+    }
 
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    if (!phoneRegex.test(phone) || phone.length < 10)
-      return "Please enter a valid phone number";
+    if (password.length < 6) {
+      return "Password must be at least 6 characters long";
+    }
 
-    if (!agreeTerms) return "Please agree to the Terms of Use & Privacy Policy";
+    if (isNaN(age) || age < 1 || age > 120) {
+      return "Please enter a valid age between 1 and 120";
+    }
+
+    const validGenders = ["male", "female", "other", "prefer-not-to-say"];
+    if (!validGenders.includes(gender)) {
+      return "Please select a valid gender option";
+    }
+
+    if (!agreeTerms) {
+      return "Please agree to the Terms of Use & Privacy Policy";
+    }
 
     return null;
   };
 
+  // Handle form submit
   const handleRegister = async (e) => {
     e.preventDefault();
+
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
@@ -84,7 +82,12 @@ const Register = ({ setIsLoggedIn }) => {
     setError("");
 
     try {
-      const res = await axios.post(
+      console.log("Attempting registration:", { 
+        username: formData.username, 
+        email: formData.email 
+      });
+
+      const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/register`,
         {
           username: formData.username.trim(),
@@ -97,13 +100,19 @@ const Register = ({ setIsLoggedIn }) => {
         }
       );
 
-      const { token, user } = res.data;
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("user", JSON.stringify(user));
+      const { token, user } = response.data;
 
-      setIsLoggedIn(true);
+      // Store auth info using authService
+      authService.setAuth(token, user);
+
+      // Notify parent component about successful authentication
+      if (onAuthSuccess) {
+        onAuthSuccess();
+      }
+
       navigate("/home");
     } catch (err) {
+      console.error("Registration error:", err);
       if (err.response) {
         setError(err.response.data?.message || "Registration failed");
       } else if (err.request) {
@@ -116,32 +125,25 @@ const Register = ({ setIsLoggedIn }) => {
     }
   };
 
-  const genderOptions = [
-    { value: "male", label: "Male" },
-    { value: "female", label: "Female" },
-    { value: "other", label: "Other" },
-    { value: "prefer-not-to-say", label: "Prefer not to say" }
-  ];
-
   return (
     <div className="auth-page-container">
       <AuthLayout 
-        title="Join Recipedia" 
-        subtitle="Create your account and start sharing amazing recipes"
+        title="Join Recipedia!" 
+        subtitle="Create your account and start your culinary adventure"
       >
         <ErrorAlert error={error} onDismiss={() => setError("")} />
 
-        <form onSubmit={handleRegister} className="space-y-3">
+        <form onSubmit={handleRegister} className="space-y-6">
           {/* Username */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.3 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
           >
             <FormInput
               type="text"
               name="username"
-              placeholder="Choose a username"
+              placeholder="Enter your username"
               value={formData.username}
               onChange={handleInputChange}
               required
@@ -153,7 +155,7 @@ const Register = ({ setIsLoggedIn }) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.3 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
             <FormInput
               type="email"
@@ -162,6 +164,7 @@ const Register = ({ setIsLoggedIn }) => {
               value={formData.email}
               onChange={handleInputChange}
               required
+              autoComplete="email"
               icon={Mail}
             />
           </motion.div>
@@ -170,7 +173,7 @@ const Register = ({ setIsLoggedIn }) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.3 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
           >
             <FormInput
               type="password"
@@ -179,50 +182,62 @@ const Register = ({ setIsLoggedIn }) => {
               value={formData.password}
               onChange={handleInputChange}
               required
-              minLength="6"
+              autoComplete="new-password"
               icon={Lock}
             />
           </motion.div>
 
           {/* Age and Gender Row */}
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.3 }}
-          >
-            <FormInput
-              type="number"
-              name="age"
-              placeholder="Your age"
-              value={formData.age}
-              onChange={handleInputChange}
-              min="1"
-              max="120"
-              required
-              icon={Calendar}
-            />
-            <FormSelect
-              name="gender"
-              value={formData.gender}
-              onChange={handleInputChange}
-              options={genderOptions}
-              placeholder="Select gender"
-              required
-              icon={Users}
-            />
-          </motion.div>
+          <div className="grid grid-cols-2 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <FormInput
+                type="number"
+                name="age"
+                placeholder="Age"
+                value={formData.age}
+                onChange={handleInputChange}
+                required
+                min="1"
+                max="120"
+                icon={Calendar}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+            >
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-3 pl-12 border-2 border-gray-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200"
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </motion.div>
+          </div>
 
           {/* Phone */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.3 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
           >
             <FormInput
               type="tel"
               name="phone"
-              placeholder="Phone number"
+              placeholder="Enter your phone number"
               value={formData.phone}
               onChange={handleInputChange}
               required
@@ -234,14 +249,14 @@ const Register = ({ setIsLoggedIn }) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.3 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <FormTextarea
+            <FormInput
+              type="text"
               name="address"
               placeholder="Enter your address"
               value={formData.address}
               onChange={handleInputChange}
-              rows={2}
               required
               icon={MapPin}
             />
@@ -249,20 +264,20 @@ const Register = ({ setIsLoggedIn }) => {
 
           {/* Terms and Conditions */}
           <motion.div 
-            className="flex items-start gap-3 py-2"
+            className="flex items-start gap-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.3 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
           >
             <motion.input
               type="checkbox"
               id="terms"
               checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="w-4 h-4 text-red-500 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded focus:ring-red-500 focus:ring-2 mt-0.5 flex-shrink-0"
+              className="w-5 h-5 text-red-500 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded focus:ring-red-500 focus:ring-2 mt-0.5"
               whileTap={{ scale: 0.9 }}
             />
-            <label htmlFor="terms" className="text-xs text-gray-600 dark:text-gray-300 leading-tight">
+            <label htmlFor="terms" className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               I agree to the{" "}
               <span className="text-red-500 hover:text-red-600 cursor-pointer font-medium">
                 Terms of Use
@@ -278,8 +293,7 @@ const Register = ({ setIsLoggedIn }) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.3 }}
-            className="pt-2"
+            transition={{ delay: 0.9, duration: 0.5 }}
           >
             <AuthButton 
               type="submit" 
@@ -296,14 +310,14 @@ const Register = ({ setIsLoggedIn }) => {
           </motion.div>
         </form>
 
-        {/* Sign In Link */}
+        {/* Login Link */}
         <motion.div 
-          className="text-center mt-6 pt-4 border-t border-gray-200 dark:border-slate-600"
+          className="text-center mt-8 pt-6 border-t border-gray-200 dark:border-slate-600"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.3 }}
+          transition={{ delay: 1, duration: 0.5 }}
         >
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
+          <p className="text-gray-600 dark:text-gray-300">
             Already have an account?{" "}
             <Link 
               to="/login" 

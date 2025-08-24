@@ -1,27 +1,37 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const User = require("./models/User");
-const Recipe = require("./models/Recipe");
-const trendingJob = require("./cron/trendingJob");
-const Like = require('./models/Like');
+// backend/server.js
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-const cors = require("cors");
+const errorHandler = require('./middlewares/errorhandler.middleware');
+
+// Routes
+const authRoutes = require('./routes/auth.routes');
+const userRoutes = require('./routes/user.routes');
+const recipeRoutes = require('./routes/recipe.routes'); // ensure file name matches exactly
+
 const app = express();
 
-const port = process.env.PORT || 3000;
-
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:5173']; // fallback for development
+// ----- CORS -----
+const defaultAllowedOrigins = ['http://localhost:3001'];
+const allowedOrigins = new Set(
+  (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [])
+    .map(s => s.trim())
+    .filter(Boolean)
+    .concat(defaultAllowedOrigins)
+);
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, cb) => {
+    // Allow non-browser requests or those from allowed origins
+    if (!origin || allowedOrigins.has(origin)) return cb(null, true);
+    return cb(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true
 }));
 
+// Parse JSON
 app.use(express.json());
 
 // JWT middleware for protected routes
@@ -57,15 +67,6 @@ const errorHandler = (err, req, res, next) => {
 // Home
 app.get("/", (req, res) => {
   res.send("Welcome to RECIPEDIA");
-});
-
-// Project Info API
-app.get("/api/project-info", (req, res) => {
-  res.json({
-    name: "RECIPEDIA",
-    version: "1.0",
-    description: "A comprehensive recipe management application."
-  });
 });
 
 // Register
@@ -540,6 +541,7 @@ app.delete("/recipes/:id", authenticateToken, async (req, res) => {
   }
 });
 
+
 // Like recipe (protected)
 app.post('/recipes/:id/like', authenticateToken, async (req, res) => {
   const session = await mongoose.startSession(); 
@@ -582,6 +584,7 @@ app.post('/recipes/:id/like', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error liking recipe' });
   }
 });
+
 
 app.get('/recipes/featured', async (req, res) => {
   try {

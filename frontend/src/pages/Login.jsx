@@ -8,8 +8,9 @@ import AuthLayout from '../components/AuthLayout';
 import FormInput from '../components/FormInput';
 import AuthButton from '../components/AuthButton';
 import ErrorAlert from '../components/ErrorAlert';
+import { authService } from '../services/authService';
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = ({ onAuthSuccess }) => {
   const navigate = useNavigate();
 
   // Form state
@@ -18,7 +19,7 @@ const Login = ({ setIsLoggedIn }) => {
     password: "",
   });
 
-  const [agreeTerms, setAgreeTerms] = useState(false); // Added missing state
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -37,7 +38,7 @@ const Login = ({ setIsLoggedIn }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return "Please enter a valid email address";
 
-    if (!agreeTerms) return "Please agree to the Terms of Use & Privacy Policy"; // Added back validation
+    if (!agreeTerms) return "Please agree to the Terms of Use & Privacy Policy";
 
     return null;
   };
@@ -68,11 +69,14 @@ const Login = ({ setIsLoggedIn }) => {
 
       const { token, user } = response.data;
 
-      // Store auth info
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("user", JSON.stringify(user));
+      // Store auth info using authService
+      authService.setAuth(token, user);
 
-      setIsLoggedIn(true);
+      // Notify parent component about successful authentication
+      if (onAuthSuccess) {
+        onAuthSuccess();
+      }
+
       navigate("/home");
     } catch (err) {
       console.error("Login error:", err);

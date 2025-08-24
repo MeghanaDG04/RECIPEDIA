@@ -83,11 +83,12 @@ const CategoryCard = ({ category, index }) => {
             <h3 className="text-xl font-bold 
               text-gray-800 
               dark:bg-gradient-to-r dark:from-red-400 dark:to-pink-400 dark:bg-clip-text dark:text-transparent
-              group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-gray-800 group-hover:to-gray-600 
               dark:group-hover:from-red-300 dark:group-hover:to-pink-300 
-              transition-all duration-300">
+              transition-all duration-300 transform group-hover:scale-110">
               {category.name}
             </h3>
+
+
 
             <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
               <TrendingUp className="w-4 h-4" />

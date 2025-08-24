@@ -21,11 +21,14 @@
 }
 
 .footer-section {
-  flex: 1 1 280px;
-  margin: 10px 20px;
+  flex: 1 1 240px;
+  gap: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: 28px;
+  margin-right: 28px;
+
 }
 
 .footer-section h3,
@@ -61,12 +64,15 @@
   color: #e53e3e;
   transform: translateX(5px);
 }
-
+.social h4{
+  margin-top: 62px;
+}
 .social-icons {
   display: flex;
   gap: 20px;
   justify-content: center;
   width: 100%;
+ 
 }
 
 .social-icons a {

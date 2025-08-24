@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import {
   FaBars,
   FaTimes,
@@ -9,20 +10,23 @@ import {
   FaUserCircle,
   FaSignOutAlt,
   FaMoon,
+  FaUser,
+  FaCog,
 } from "react-icons/fa";
 import { IoSunnySharp } from "react-icons/io5";
+import { authService } from '../services/authService';
 
 // ThemeToggle extracted
 const ThemeToggle = ({ theme, toggleTheme }) => (
   <button
     onClick={toggleTheme}
     aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-    className="flex items-center justify-center w-10 h-10 text-white rounded-full hover:bg-gray-700 transition border border-amber-500 bg-slate-800"
+    className="text-white rounded-full hover:bg-gray-700 transition border border-amber-500 mb-2 bg-slate-800"
   >
     {theme === "dark" ? (
-      <IoSunnySharp className="text-yellow-400 text-xl" />
+      <IoSunnySharp className="text-yellow-400 text-2xl my-1 mx-1" />
     ) : (
-      <FaMoon className="text-yellow-400 text-lg" />
+      <FaMoon className="text-yellow-400 text-xl my-2 mx-2" />
     )}
   </button>
 );
@@ -32,12 +36,13 @@ ThemeToggle.propTypes = {
   toggleTheme: PropTypes.func.isRequired,
 };
 
-const Navbar = ({ isAuthenticated, onLogout }) => {
+const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [theme, setTheme] = useState(
     () => localStorage.getItem("mode") || "light"
   );
+  const [username, setUsername] = useState("");
 
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -48,12 +53,35 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
   const toggleProfileDropdown = () => setProfileDropdownOpen((prev) => !prev);
   const closeProfileDropdown = () => setProfileDropdownOpen(false);
 
+  // Get username when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      const user = authService.getUser();
+      setUsername(user ? user.username : "User");
+    } else {
+      setUsername("");
+    }
+  }, [isAuthenticated]);
+
+  // Listen for auth logout events (from axios interceptor)
+  useEffect(() => {
+    const handleAuthLogout = () => {
+      if (onLogout) {
+        onLogout();
+      }
+    };
+
+    window.addEventListener('auth-logout', handleAuthLogout);
+    return () => window.removeEventListener('auth-logout', handleAuthLogout);
+  }, [onLogout]);
+
   const handleLogout = () => {
     onLogout();
     closeProfileDropdown();
     closeMobileMenu();
     navigate("/");
   };
+
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -106,7 +134,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             Recipedia
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <NavLink
@@ -120,9 +148,10 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             ))}
           </nav>
 
-          {/* Desktop buttons */}
+          {/* Desktop Right Section */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
+              // Authenticated User Section
               <>
                 <Link
                   to="/add-recipe"
@@ -130,59 +159,76 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
                 >
                   <FaPlus className="mr-2" /> Add Recipe
                 </Link>
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={toggleProfileDropdown}
-                    aria-label="Open user menu"
-                    className="text-gray-700 hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 rounded-full"
-                  >
-                    <FaUserCircle size={32} />
-                  </button>
-                  <div
-                    className={`absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20 py-1 origin-top-right transition-all duration-200 ease-out ${
-                      profileDropdownOpen
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-95 pointer-events-none"
-                    }`}
-                  >
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-100"
-                      onClick={closeProfileDropdown}
-                    >
-                      Profile
-                    </Link>
+                
+                {/* Profile Section with Username and Profile Picture */}
+                <div className="flex items-center space-x-3">
+                  <span className="text-gray-700 dark:text-white font-medium">
+                    {username}
+                  </span>
+                  <div className="relative" ref={dropdownRef}>
                     <button
-                      onClick={handleLogout}
-                      className="w-full text-left flex items-center px-4 py-2 text-sm text-red-500 hover:bg-amber-100"
+                      onClick={toggleProfileDropdown}
+                      aria-label="Open user menu"
+                      className="text-gray-700 dark:text-white hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 rounded-full transition-colors duration-200"
                     >
-                      <FaSignOutAlt className="mr-2" /> Logout
+                      <FaUserCircle size={32} />
                     </button>
+                    <div
+                      className={`absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-xl z-20 py-1 origin-top-right transition-all duration-200 ease-out ${
+                        profileDropdownOpen
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-95 pointer-events-none"
+                      }`}
+                    >
+                      <Link
+                        to="/profile"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
+                        onClick={closeProfileDropdown}
+                      >
+                        <FaUser className="mr-2" /> Profile
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
+                        onClick={closeProfileDropdown}
+                      >
+                        <FaCog className="mr-2" /> Settings
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left flex items-center px-4 py-2 text-sm text-red-500 hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
+                      >
+                        <FaSignOutAlt className="mr-2" /> Logout
+                      </button>
+                    </div>
                   </div>
                 </div>
+                <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
               </>
             ) : (
+              // Non-Authenticated User Section
               <>
                 <Link
                   to="/login"
-                  className="px-4 py-2 hover:underline text-gray-700 hover:text-amber-500 font-medium transition-colors rounded-md dark:text-white"
+                  className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2.5 text-sm md:text-base lg:text-lg hover:underline text-gray-700 hover:text-amber-500 font-medium transition-colors rounded-md dark:text-white"
                 >
                   Login
                 </Link>
+
                 <Link
                   to="/register"
-                  className="bg-amber-400 text-white px-5 py-2.5 rounded-full font-semibold hover:bg-amber-500 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 hover:scale-105 whitespace-nowrap"
+                  className="bg-amber-400 text-white px-4 py-2 md:px-5 md:py-2.5 lg:px-6 lg:py-3 text-sm md:text-base lg:text-lg rounded-full font-semibold hover:bg-amber-500 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 hover:scale-105 whitespace-nowrap"
                 >
                   Sign Up
                 </Link>
+
+                <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
               </>
             )}
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-3">
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             <button
               onClick={toggleMobileMenu}
               aria-label="Open main menu"
@@ -190,11 +236,12 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             >
               {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       <div
         id="mobile-menu"
         className={`md:hidden fixed top-20 left-0 w-full bg-white dark:bg-slate-800 shadow-lg transition-transform duration-300 ease-in-out ${
@@ -204,6 +251,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
         }`}
       >
         <div className="flex flex-col px-4 py-4 space-y-4">
+          {/* Navigation Links */}
           {navLinks.map((link) => (
             <NavLink
               key={link.title}
@@ -216,43 +264,62 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
                     : "text-gray-700 dark:text-white bg-gray-100 dark:bg-slate-700 hover:bg-amber-400 hover:text-white"
                 }`
               }
+              onClick={closeMobileMenu}
             >
               {link.title}
             </NavLink>
           ))}
+
+          {/* Mobile Auth Section */}
           <div className="pt-4 border-t border-gray-300 dark:border-gray-600 flex flex-col gap-3">
             {isAuthenticated ? (
+              // Mobile Authenticated Section
               <>
+                <div className="text-center text-gray-700 dark:text-white font-medium mb-2">
+                  Welcome, {username}!
+                </div>
                 <Link
                   to="/profile"
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   My Profile
                 </Link>
                 <Link
+                  to="/settings"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white transition-colors duration-200"
+                  onClick={closeMobileMenu}
+                >
+                  Settings
+                </Link>
+                <Link
                   to="/add-recipe"
-                  className="block text-center bg-red-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-red-600"
+                  className="block text-center bg-red-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-red-600 transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   Add Recipe
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-red-500 px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-red-500 px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors duration-200"
                 >
                   Logout
                 </button>
               </>
             ) : (
+              // Mobile Non-Authenticated Section
               <>
                 <Link
                   to="/login"
-                  className="block text-center bg-amber-400 text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-500"
+                  className="block text-center bg-amber-400 text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-500 transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600"
+                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors duration-200"
+                  onClick={closeMobileMenu}
                 >
                   Sign Up
                 </Link>
@@ -267,7 +334,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
 
 Navbar.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  onLogout: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
 };
 
 export default Navbar;

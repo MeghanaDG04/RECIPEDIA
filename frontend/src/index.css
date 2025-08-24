@@ -27,6 +27,35 @@ code {
     monospace;
 }
 
+
+/* globals.css */
+
+/* Base style */
+.scrollbar-base::-webkit-scrollbar {
+  height: 8px;
+}
+.scrollbar-base::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-base::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  transition: background-color 0.3s;
+}
+
+/* Section-specific variants */
+.scrollbar-emerald::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #10b981, #059669); /* from-emerald-500 to-green-600 */
+}
+.scrollbar-rose::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #f43f5e, #dc2626); /* from-rose-500 to-red-600 */
+}
+.scrollbar-amber::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #f59e0b, #ea580c); /* from-amber-500 to-orange-600 */
+}
+.scrollbar-sky::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #0ea5e9, #4338ca); /* from-sky-500 to-indigo-600 */
+}
+
 /* Recipedia custom styles */
 .hero-bg {
   background-image: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url('https://placehold.co/1600x900/f87171/ffffff?text=Delicious+Food');
