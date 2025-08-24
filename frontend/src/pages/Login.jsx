@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
@@ -6,7 +6,6 @@ import { Mail, Lock, ArrowRight } from 'lucide-react';
 
 import AuthLayout from '../components/AuthLayout';
 import FormInput from '../components/FormInput';
-import AuthButton from '../components/AuthButton';
 import ErrorAlert from '../components/ErrorAlert';
 import { authService } from '../services/authService';
 
@@ -57,8 +56,6 @@ const Login = ({ onAuthSuccess }) => {
     setError("");
 
     try {
-      console.log("Attempting login:", { email: formData.email });
-
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/login`,
         {
@@ -162,25 +159,17 @@ const Login = ({ onAuthSuccess }) => {
             </label>
           </motion.div>
 
-          {/* Submit Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+          {/* Sign In Button */}
+          <motion.button
+            type="submit"
+            className="w-full bg-gradient-to-r from-red-400 to-pink-500 text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition"
+            initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+            disabled={loading}
           >
-            <AuthButton 
-              type="submit" 
-              loading={loading}
-              disabled={loading}
-            >
-              {loading ? "Signing In..." : (
-                <>
-                  Sign In
-                  <ArrowRight className="w-5 h-5" />
-                </>
-              )}
-            </AuthButton>
-          </motion.div>
+            {loading ? "Signing In..." : "Sign In"}
+            <ArrowRight className="text-white font-bold" />
+          </motion.button>
         </form>
 
         {/* Sign Up Link */}
