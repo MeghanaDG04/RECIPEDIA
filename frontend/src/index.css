@@ -58,7 +58,12 @@ code {
 
 /* Recipedia custom styles */
 .hero-bg {
-  background-image: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url('https://placehold.co/1600x900/f87171/ffffff?text=Delicious+Food');
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.2)
+    ),
+    url('https://placehold.co/1600x900/f87171/ffffff?text=Delicious+Food');
   background-size: cover;
   background-position: center;
 }
@@ -69,7 +74,8 @@ code {
 
 .recipe-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .gradient-text {
@@ -83,15 +89,19 @@ a {
   text-decoration: none;
 }
 
-.ingrdientsDiv{
-  @apply dark:bg-slate-800 !text-black dark:!text-white
+/* Tailwind apply directives */
+.ingredientsDiv {
+  @apply dark:bg-slate-800 !text-black dark:!text-white;
 }
-.ingredientsH{
-  @apply  text-xl
+
+.ingredientsH {
+  @apply text-xl;
 }
-.ingredientsH2{
-  @apply !text-red-500 text-xl
+
+.ingredientsH2 {
+  @apply !text-red-500 text-xl;
 }
-.ingredientsUl{
-  @apply list-disc ml-6 marker:text-black dark:marker:text-white
+
+.ingredientsUl {
+  @apply list-disc ml-6 marker:text-black dark:marker:text-white;
 }

@@ -380,6 +380,7 @@ app.post("/recipes", authenticateToken, async (req, res) => {
       image,
       user: req.user.user  
     });
+main
 
     await recipe.save();
 
@@ -631,3 +632,6 @@ app.listen(port, (err) => {
   }
   console.log(`Server is running on port ${port}`);
 });
+
+}
+main
