@@ -59,6 +59,15 @@ app.get("/", (req, res) => {
   res.send("Welcome to RECIPEDIA");
 });
 
+// Project Info API
+app.get("/api/project-info", (req, res) => {
+  res.json({
+    name: "RECIPEDIA",
+    version: "1.0",
+    description: "A comprehensive recipe management application."
+  });
+});
+
 // Register
 app.post("/register", async (req, res) => {
   console.log("Registration request received:", req.body);
@@ -531,7 +540,6 @@ app.delete("/recipes/:id", authenticateToken, async (req, res) => {
   }
 });
 
-
 // Like recipe (protected)
 app.post('/recipes/:id/like', authenticateToken, async (req, res) => {
   const session = await mongoose.startSession(); 
@@ -574,7 +582,6 @@ app.post('/recipes/:id/like', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error liking recipe' });
   }
 });
-
 
 app.get('/recipes/featured', async (req, res) => {
   try {
