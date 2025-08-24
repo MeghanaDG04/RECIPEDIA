@@ -29,45 +29,90 @@ const Register = ({ onAuthSuccess }) => {
   const [error, setError] = useState("");
 
   // Handle input change
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError(""); // clear error when user types
-  };
+ // Updated input change handler with real-time validation
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({ ...prev, [name]: value }));
+  
+  // Real-time validation for already touched fields
+  if (touchedFields[name]) {
+    const fieldError = validateField(name, value);
+    setFieldErrors(prev => ({ ...prev, [name]: fieldError }));
+  }
+  
+  if (error) setError("");
+};
 
-  // Form validation
-  const validateForm = () => {
-    const { username, email, password, age, gender, address, phone } = formData;
-    
-    if (!username || !email || !password || !age || !gender || !address || !phone) {
-      return "Please fill in all fields";
-    }
+// Add new blur handler (add this function)
+const handleFieldBlur = (e) => {
+  const { name, value } = e.target;
+  setTouchedFields(prev => ({ ...prev, [name]: true }));
+  
+  const fieldError = validateField(name, value);
+  setFieldErrors(prev => ({ ...prev, [name]: fieldError }));
+};
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return "Please enter a valid email address";
-    }
+// Form validation
+const [fieldErrors, setFieldErrors] = useState({});
+const [touchedFields, setTouchedFields] = useState({});
 
-    if (password.length < 6) {
-      return "Password must be at least 6 characters long";
-    }
+// Individual field validation function
+const validateField = (name, value) => {
+  switch (name) {
+    case 'username':
+      if (!value?.trim()) return "Username is required";
+      if (value.length < 3) return "Username must be at least 3 characters";
+      if (!/^[a-zA-Z0-9_]+$/.test(value)) return "Username can only contain letters, numbers, and underscores";
+      return "";
+    case 'email':
+      if (!value?.trim()) return "Email is required";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Please enter a valid email address";
+      return "";
+    case 'password':
+      if (!value) return "Password is required";
+      if (value.length < 8) return "Password must be at least 8 characters long";
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) return "Password must contain uppercase, lowercase, and number";
+      return "";
+    case 'age':
+      if (!value) return "Age is required";
+      const ageNum = parseInt(value);
+      if (isNaN(ageNum) || ageNum < 13 || ageNum > 120) return "Age must be between 13 and 120";
+      return "";
+    case 'gender':
+      if (!value) return "Please select your gender";
+      const validGenders = ["male", "female", "other", "prefer-not-to-say"];
+      if (!validGenders.includes(value)) return "Please select a valid gender option";
+      return "";
+    case 'phone':
+      if (!value?.trim()) return "Phone number is required";
+      const cleanPhone = value.replace(/\s/g, '');
+      if (!/^[\+]?[1-9][\d]{9,15}$/.test(cleanPhone)) return "Please enter a valid phone number (10-16 digits)";
+      return "";
+    case 'address':
+      if (!value?.trim()) return "Address is required";
+      if (value.trim().length < 10) return "Please enter a complete address";
+      return "";
+    default:
+      return "";
+  }
+};
 
-    if (isNaN(age) || age < 1 || age > 120) {
-      return "Please enter a valid age between 1 and 120";
-    }
+// Updated form validation for final submit
+const validateForm = () => {
+  const errors = {};
+  
+  Object.keys(formData).forEach(field => {
+    const error = validateField(field, formData[field]);
+    if (error) errors[field] = error;
+  });
 
-    const validGenders = ["male", "female", "other", "prefer-not-to-say"];
-    if (!validGenders.includes(gender)) {
-      return "Please select a valid gender option";
-    }
+  if (!agreeTerms) {
+    errors.terms = "Please agree to the Terms of Use & Privacy Policy";
+  }
 
-    if (!agreeTerms) {
-      return "Please agree to the Terms of Use & Privacy Policy";
-    }
-
-    return null;
-  };
-
+  setFieldErrors(errors);
+  return Object.keys(errors).length === 0;
+};
   // Handle form submit
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -141,14 +186,22 @@ const Register = ({ onAuthSuccess }) => {
             transition={{ delay: 0.1, duration: 0.5 }}
           >
             <FormInput
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
-              icon={User}
+            type="text"
+            name="username"
+            placeholder="Enter your username"
+            value={formData.username}
+            onChange={handleInputChange}
+            onBlur={handleFieldBlur} 
+            required
+            icon={User}
+            aria-describedby={fieldErrors.username ? "username-error" : undefined} 
+            aria-invalid={!!fieldErrors.username} 
             />
+            {touchedFields.username && fieldErrors.username && ( //error display
+            <p id="username-error" className="mt-1 text-sm text-red-600" role="alert">
+            {fieldErrors.username}
+            </p>
+            )}
           </motion.div>
 
           {/* Email */}
@@ -163,10 +216,18 @@ const Register = ({ onAuthSuccess }) => {
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleInputChange}
+              onBlur={handleFieldBlur} 
               required
               autoComplete="email"
               icon={Mail}
+              aria-describedby={fieldErrors.email ? "email-error" : undefined} 
+              aria-invalid={!!fieldErrors.email} 
             />
+            {touchedFields.email && fieldErrors.email && ( //error display
+            <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+            {fieldErrors.email}
+            </p>
+            )}
           </motion.div>
 
           {/* Password */}
@@ -181,10 +242,18 @@ const Register = ({ onAuthSuccess }) => {
               placeholder="Create a password (min 6 characters)"
               value={formData.password}
               onChange={handleInputChange}
+              onBlur={handleFieldBlur}
               required
               autoComplete="new-password"
               icon={Lock}
+              aria-describedby={fieldErrors.password ? "password-error" : undefined} 
+              aria-invalid={!!fieldErrors.password} 
             />
+            {touchedFields.password && fieldErrors.password && ( //error display
+            <p id="password-error" className="mt-1 text-sm text-red-600" role="alert">
+            {fieldErrors.password}
+            </p>
+            )}
           </motion.div>
 
           {/* Age and Gender Row */}
@@ -200,11 +269,19 @@ const Register = ({ onAuthSuccess }) => {
                 placeholder="Age"
                 value={formData.age}
                 onChange={handleInputChange}
+                onBlur={handleFieldBlur}
                 required
                 min="1"
                 max="120"
                 icon={Calendar}
+                aria-describedby={fieldErrors.age ? "age-error" : undefined} 
+                aria-invalid={!!fieldErrors.age} 
               />
+            {touchedFields.age && fieldErrors.age && ( //error display
+            <p id="age-error" className="mt-1 text-sm text-red-600" role="alert">
+            {fieldErrors.age}
+            </p>
+            )}
             </motion.div>
 
             <motion.div
@@ -240,9 +317,17 @@ const Register = ({ onAuthSuccess }) => {
               placeholder="Enter your phone number"
               value={formData.phone}
               onChange={handleInputChange}
+              onBlur={handleFieldBlur}
               required
               icon={Phone}
+              aria-describedby={fieldErrors.phone ? "phone-error" : undefined} 
+              aria-invalid={!!fieldErrors.phone} 
             />
+            {touchedFields.phone && fieldErrors.phone && ( //error display
+            <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
+            {fieldErrors.phone}
+            </p>
+            )}
           </motion.div>
 
           {/* Address */}
@@ -257,9 +342,17 @@ const Register = ({ onAuthSuccess }) => {
               placeholder="Enter your address"
               value={formData.address}
               onChange={handleInputChange}
+              onBlur={handleFieldBlur} 
               required
               icon={MapPin}
+              aria-describedby={fieldErrors.address ? "address-error" : undefined} 
+              aria-invalid={!!fieldErrors.address} 
             />
+            {touchedFields.address && fieldErrors.address && ( //error display
+            <p id="address-error" className="mt-1 text-sm text-red-600" role="alert">
+            {fieldErrors.address}
+            </p>
+            )}
           </motion.div>
 
           {/* Terms and Conditions */}
