@@ -1,188 +1,209 @@
 // Explore.jsx
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useMemo, useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { FiSearch, FiArrowRight } from "react-icons/fi";
+import { GiKnifeFork, GiRoastChicken, GiCakeSlice, GiMartini } from "react-icons/gi";
+import recipes from "../data/recipes.json"; // Adjust path as necessary
 
+// --- Animation Variants ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+// --- Reusable Components ---
+
+const RecipeCard = ({ recipe, accent, onClick }) => (
+  <motion.div
+    layout
+    variants={itemVariants}
+    onClick={onClick}
+    whileHover={{ y: -8 }}
+    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    className="group relative flex-shrink-0 w-[280px] md:w-[320px] h-[400px] snap-start cursor-pointer"
+  >
+    <div className={`absolute inset-0 rounded-2xl ${accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg`} />
+    <div className="relative w-full h-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 dark:border-slate-700/50 shadow-xl group-hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+      <div className="w-full h-1/2 overflow-hidden">
+        <img
+          src={recipe.imageUrl}
+          alt={recipe.title}
+          className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+        />
+      </div>
+      <div className="p-5 flex flex-col flex-grow">
+        <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2 truncate">{recipe.title}</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 flex-grow">{recipe.description}</p>
+        <div className="mt-4">
+          <span className="inline-flex items-center text-sm font-semibold text-slate-700 dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r from-pink-500 to-violet-500">
+            View Recipe
+            <FiArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </motion.div>
+);
+
+const NoResults = () => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className="flex flex-col items-center justify-center py-12 w-full text-center"
+  >
+    <div className="p-8 bg-white/50 dark:bg-white/10 rounded-2xl shadow-md backdrop-blur-sm">
+      <GiKnifeFork className="mx-auto text-5xl text-gray-400 dark:text-gray-500 mb-4" />
+      <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">
+        No recipes found.
+      </p>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Try a different search term!</p>
+    </div>
+  </motion.div>
+);
+
+const RecipeSection = ({ config, searchQuery, navigate }) => {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  const filteredData = useMemo(() =>
+    config.data.filter((recipe) =>
+      recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
+    ), [config.data, searchQuery]);
+
+  return (
+    <motion.section
+      ref={sectionRef}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+      className="mb-16"
+    >
+      <motion.div variants={itemVariants} className="flex items-center mb-6">
+        <config.Icon className={`text-4xl mr-3 bg-clip-text text-transparent bg-gradient-to-br ${config.accent}`} />
+        <h2 className="text-3xl font-extrabold text-slate-800 dark:text-white">{config.title}</h2>
+        <div className={`h-1 flex-grow ml-6 rounded-full bg-gradient-to-r ${config.accent} opacity-30`} />
+      </motion.div>
+
+      <div className="relative">
+        <div
+          className={`flex overflow-x-auto space-x-6 py-4 px-1 snap-x snap-mandatory scrollbar-base ${config.scrollbar}`}
+        >
+          <AnimatePresence>
+            {filteredData.length > 0 ? (
+              filteredData.map((recipe) => (
+                <RecipeCard
+                  key={recipe.slug}
+                  recipe={recipe}
+                  accent={config.accent}
+                  onClick={() => navigate(`/recipes/${recipe.category}/${recipe.slug}`)}
+                />
+              ))
+            ) : (
+              !isInView && <div/> // Prevents NoResults from showing before section is in view
+            )}
+          </AnimatePresence>
+          {/* Add a spacer at the end for better scrolling UX */}
+          <div className="flex-shrink-0 w-1 h-1" />
+        </div>
+        {filteredData.length === 0 && isInView && <NoResults />}
+      </div>
+    </motion.section>
+  );
+};
+
+// --- Main Page Component ---
 const ExplorePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const vegetarianRecipes = [
-    { id: 1, title: "Paneer Butter Masala", description: "Rich and creamy paneer curry.", imageUrl: "/paneer.jpg",category: "veg", slug: "paneer-butter-masala" },
-    { id: 2, title: "Vegetable Biryani", description: "Fragrant rice with mixed vegetables.", imageUrl: "/vegbiriyani.jpg",category: "veg", slug: "vegetable-biryani" },
-    { id: 3, title: "Palak Soup", description: "Healthy spinach soup.", imageUrl: "/palak.jpg", category: "veg", slug: "palak-soup" },
-    { id: 4, title: "Dal Makhani", description: "Slow-cooked creamy lentils.", imageUrl: "/dal.jpg", category: "veg", slug: "dal-makhani" },
-    { id: 5, title: "Rajma Chawal", description: "Kidney beans curry with rice.", imageUrl: "/rajmaChawal.jpg", category: "veg", slug: "rajma-chawal" },
-    { id: 6, title: "Chole Bhature", description: "Spicy chickpeas with fried bread.", imageUrl: "/choleBhature.webp", category: "veg", slug: "chole-bhature" },
-    { id: 7, title: "Masala Dosa", description: "Crispy crepe with potato filling.", imageUrl: "/masalaDosa.jpg", category: "veg", slug: "masala-dosa" },
-    { id: 8, title: "Pav Bhaji", description: "Spiced mashed vegetables with bread.", imageUrl: "/pavBhaji.jpg", category: "veg", slug: "pav-bhaji" },
-    { id: 9, title: "Dhokla", description: "Steamed gram flour snack.", imageUrl: "/dhokla.jpg", category: "veg", slug: "dhokla" },
-    { id: 10, title: "Veg Momos", description: "Steamed dumplings with spicy chutney.", imageUrl: "/momos.jpg", category: "veg", slug: "veg-momos" },
-  ];
+  const sectionConfigs = useMemo(() => {
+    const mapRecipes = (category) =>
+      recipes
+        .filter((r) => r.category === category)
+        .map((r) => ({
+          title: r.name,
+          description: r.about,
+          imageUrl: r.image,
+          category: r.category,
+          slug: r.id,
+        }));
 
-  const nonVegRecipes = [
-    { id: 1, title: "Butter Chicken", description: "Juicy chicken in creamy tomato sauce.", imageUrl: "/chicken.jpg", category: "nonveg", slug: "butter-chicken" },
-    { id: 2, title: "Chicken Biryani", description: "Spiced rice with tender chicken.", imageUrl: "/chickenBiryani.jpg", category: "nonveg", slug: "chicken-biryani" },
-    { id: 3, title: "Mutton Rogan Josh", description: "Flavorful Kashmiri mutton curry.", imageUrl: "/muttonRoganJosh.jpg", category: "nonveg", slug: "mutton-rogan-josh" },
-    { id: 4, title: "Fish Curry", description: "Tangy fish curry with coconut milk.", imageUrl: "/fish.jpg", category: "nonveg", slug: "fish-curry" },
-    { id: 5, title: "Tandoori Chicken", description: "Grilled chicken with spices.", imageUrl: "/tandooriChicken.webp", category: "nonveg", slug: "tandoori-chicken" },
-    { id: 6, title: "Prawn Masala", description: "Spicy prawns with masala gravy.", imageUrl: "/prawn.jpg", category: "nonveg", slug: "prawn-masala" },
-    { id: 7, title: "Egg Curry", description: "Boiled eggs in spicy gravy.", imageUrl: "/eggCurry.jpg", category: "nonveg", slug: "egg-curry" },
-    { id: 8, title: "Keema Pav", description: "Minced meat curry with bread.", imageUrl: "/keemaPav.webp", category: "nonveg", slug: "keema-pav" },
-    { id: 9, title: "Grilled Salmon", description: "Perfectly grilled salmon fillet.", imageUrl: "/grilledSalmon.webp", category: "nonveg", slug: "grilled-salmon" },
-    { id: 10, title: "Chicken Shawarma", description: "Middle Eastern chicken wrap.", imageUrl: "/chickenShawarna.jpg", category: "nonveg", slug: "chicken-shawarma" },
-  ];
-
-  const dessertRecipes = [
-    { id: 1, title: "Gulab Jamun", description: "Fried dough balls in syrup.", imageUrl: "/jamun.jpg", category: "dessert", slug: "gulab-jamun" },
-    { id: 2, title: "Kheer", description: "Creamy rice pudding.", imageUrl: "/kheer.webp", category: "dessert", slug: "kheer" },
-    { id: 3, title: "Rasgulla", description: "Soft cottage cheese balls in syrup.", imageUrl: "/rasgulla.jpg", category: "dessert", slug: "rasgulla" },
-    { id: 4, title: "Jalebi", description: "Sweet crispy spirals.", imageUrl: "/jalebi.jpg", category: "dessert", slug: "jalebi" },
-    { id: 5, title: "Ladoo", description: "Sweet round balls of goodness.", imageUrl: "/laddo.webp", category: "dessert", slug: "ladoo" },
-    { id: 6, title: "Barfi", description: "Milk-based sweet fudge.", imageUrl: "/barfi.jpg", category: "dessert", slug: "barfi" },
-    { id: 7, title: "Kulfi", description: "Traditional Indian ice cream.", imageUrl: "/kulfi.webp", category: "dessert", slug: "kulfi" },
-    { id: 8, title: "Chocolate Cake", description: "Rich chocolate dessert.", imageUrl: "/chocolateCake.jpg", category: "dessert", slug: "chocolate-cake" },
-    { id: 9, title: "Fruit Custard", description: "Chilled custard with fruits.", imageUrl: "/fruitCustard.webp", category: "dessert", slug: "fruit-custard" },
-    { id: 10, title: "Peda", description: "Milk fudge from Mathura.", imageUrl: "/peda.jpg", category: "dessert", slug: "peda" },
-  ];
-
-  const beverageRecipes = [
-    { id: 1, title: "Masala Chai", description: "Spiced Indian tea.", imageUrl: "/chai.jpg", category: "beverages", slug: "masala-chai" },
-    { id: 2, title: "Cold Coffee", description: "Iced coffee with cream.", imageUrl: "/coffee.jpg", category: "beverages", slug: "cold-coffee" },
-    { id: 3, title: "Lassi", description: "Sweet yogurt drink.", imageUrl: "/lassi.jpg", category: "beverages", slug: "lassi" },
-    { id: 4, title: "Nimbu Pani", description: "Refreshing lemonade.", imageUrl: "/nimbuPani.jpg", category: "beverages", slug: "nimbu-pani" },
-    { id: 5, title: "Mango Shake", description: "Mango-flavored milkshake.", imageUrl: "/mangoShake.jpg", category: "beverages", slug: "mango-shake" },
-    { id: 6, title: "Hot Chocolate", description: "Creamy cocoa drink.", imageUrl: "/hotChocolate.webp", category: "beverages", slug: "hot-chocolate" },
-    { id: 7, title: "Green Tea", description: "Healthy herbal tea.", imageUrl: "/greenTea.avif", category: "beverages", slug: "green-tea" },
-    { id: 8, title: "Rose Milk", description: "Milk flavored with rose syrup.", imageUrl: "/roseMilk.jpg", category: "beverages", slug: "rose-milk" },
-    { id: 9, title: "Coconut Water", description: "Natural refreshing drink.", imageUrl: "/coconutWater.jpg", category: "beverages", slug: "coconut-water" },
-    { id: 10, title: "Thandai", description: "Festive milk-based drink.", imageUrl: "/thandai.jpg", category: "beverages", slug: "thandai" },
-  ];
-
-  const allSections = [
-    { title: "Vegetarian Recipes 🥗", data: vegetarianRecipes },
-    { title: "Non-Vegetarian Recipes 🍗", data: nonVegRecipes },
-    { title: "Desserts 🍨", data: dessertRecipes },
-    { title: "Beverages 🥤", data: beverageRecipes },
-  ];
-
-  const filteredSections = allSections.map((section) => ({
-    ...section,
-    data: section.data.filter((recipe) =>
-      recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-  }));
-
-  const accentByTitle = {
-    "Vegetarian Recipes 🥗": "from-emerald-500 to-green-600",
-    "Non-Vegetarian Recipes 🍗": "from-rose-500 to-red-600",
-    "Desserts 🍨": "from-amber-500 to-orange-600",
-    "Beverages 🥤": "from-sky-500 to-indigo-600",
-  };
+    return [
+      { title: "Vegetarian Delights", data: mapRecipes("veg"), Icon: GiKnifeFork, accent: "from-emerald-500 to-green-600" },
+      { title: "Hearty Non-Vegetarian", data: mapRecipes("nonveg"), Icon: GiRoastChicken, accent: "from-rose-500 to-red-600" },
+      { title: "Sweet Desserts", data: mapRecipes("dessert"), Icon: GiCakeSlice, accent: "from-amber-500 to-orange-600" },
+      { title: "Cool Beverages", data: mapRecipes("beverages"), Icon: GiMartini, accent: "from-sky-500 to-indigo-600" },
+    ];
+  }, []);
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <main className="relative min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 overflow-x-hidden">
+      {/* Animated Aurora Background */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob dark:opacity-40"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 dark:opacity-40"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000 dark:opacity-40"></div>
+      </div>
+      
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="text-center">
-          <h1 className="text-4xl mt-5 sm:text-5xl lg:text-6xl font-black leading-tight text-white">
-            Explore Recipes 
-          </h1>
-        </div>
+        {/* Header */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          // --- CHANGE HERE ---
+          // Increased top padding from pt-8 to pt-24 to ensure the heading is visible below a fixed navbar.
+          className="text-center pt-24 pb-12"
+        >
+          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-br from-yellow-500 to-red-600 dark:from-white dark:to-slate-400">
+            World of Flavors
+          </motion.h1>
+          <motion.p variants={itemVariants} className="text-lg text-slate-600 dark:text-slate-300 mt-4 max-w-2xl mx-auto">
+            Find your next favorite meal. Search our curated collections and start cooking today.
+          </motion.p>
+        </motion.div>
 
-        <div className="max-w-2xl mx-auto mt-8">
+        {/* Search Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="max-w-xl mx-auto mb-16"
+        >
           <div className="relative">
+            <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-xl pointer-events-none" />
             <input
               type="text"
-              placeholder="Search recipes..."
+              placeholder="Search for Pad Thai, Brownies, etc..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-6 py-3 rounded-full bg-white/10 text-white placeholder-white/60 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40"
+              className="w-full pl-14 pr-6 py-4 rounded-full bg-white/60 dark:bg-slate-800/60 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-transparent dark:border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 dark:focus:ring-offset-slate-900 focus:ring-indigo-500 transition-all duration-300 shadow-lg backdrop-blur-md"
             />
           </div>
+        </motion.div>
+
+        {/* Recipe Sections */}
+        <div className="space-y-12">
+          {sectionConfigs.map((config) => (
+            <RecipeSection
+              key={config.title}
+              config={config}
+              searchQuery={searchQuery}
+              navigate={navigate}
+            />
+          ))}
         </div>
       </div>
-
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        {filteredSections.map((section) => {
-          const accent = accentByTitle[section.title] || "from-orange-500 to-red-600";
-
-          return (
-            <div key={section.title} className="mb-12">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                  <span
-                    className={`bg-clip-text text-transparent bg-gradient-to-r ${accent}`}
-                  >
-                    {section.title}
-                  </span>
-                </h2>
-                <div
-                  className={`hidden sm:block h-1 w-24 rounded-full bg-gradient-to-r ${accent} opacity-70`}
-                />
-              </div>
-
-              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {section.data.length > 0 ? (
-                  section.data.map((recipe) => (
-                    <motion.div
-                      key={recipe.id}
-                      whileHover={{ y: -6 }}
-                      transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                      onClick={() =>
-                        navigate(`/recipes/${recipe.category}/${recipe.slug}`)
-                      }
-                      className="group cursor-pointer rounded-2xl overflow-hidden bg-white/10 backdrop-blur-lg border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-lg hover:shadow-2xl flex flex-col"
-                    >
-                      <div className="relative">
-                        <img
-                          src={`${recipe.imageUrl}?auto=format&fit=crop&w=800&h=450&q=80`}
-                          alt={recipe.title}
-                          className="w-full h-44 md:h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <span
-                          className={`absolute top-3 left-3 px-3 py-1 text-xs font-semibold rounded-full text-white shadow-md bg-gradient-to-r ${accent}`}
-                        >
-                          {recipe.category}
-                        </span>
-                      </div>
-                      <div className="p-5 flex flex-col flex-grow">
-                        <h3 className="text-lg font-bold text-white mb-1">
-                          {recipe.title}
-                        </h3>
-                        <p className="text-sm text-gray-200 line-clamp-2 flex-grow">
-                          {recipe.description}
-                        </p>
-
-                        <div className="mt-4">
-                          <span
-                            className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r ${accent} border border-white/10 group-hover:shadow-xl transition`}
-                          >
-                            View Recipe
-                            <svg
-                              className="ml-2 w-4 h-4 transform group-hover:translate-x-0.5 transition-transform"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                            </svg>
-                          </span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <p className="text-gray-300 col-span-full text-center">
-                    No recipes found in this category.
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+    </main>
   );
 };
 
