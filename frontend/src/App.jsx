@@ -26,6 +26,8 @@ import Navbar from "./components/Header.jsx"; // Changed from Header to Navbar
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollReset from "./components/ScrollReset.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import TermsConditions from "./pages/TermsConditions.jsx";
 
 // AppContent handles all routes and layout
 function AppContent() {
@@ -113,6 +115,8 @@ function AppContent() {
         <Route path="/add-recipe" element={<AddRecipe />} />
         <Route path="/about" element={<About />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
 
         {/* Category Pages */}
         <Route path="/veg" element={<RecipeListPage category="veg" />} />

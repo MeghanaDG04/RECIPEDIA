@@ -243,91 +243,89 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
 
       {/* Mobile Menu */}
       <div
-        id="mobile-menu"
-        className={`md:hidden fixed top-20 left-0 w-full bg-white dark:bg-slate-800 shadow-lg transition-transform duration-300 ease-in-out ${
-          mobileMenuOpen
-            ? "translate-y-0 opacity-100"
-            : "-translate-y-[150%] opacity-0"
-        }`}
+  id="mobile-menu"
+  className={`md:hidden fixed top-20 left-0 w-full shadow-2xl border-t-4 border-red-600 rounded-b-3xl transform transition-all duration-300 ease-in-out
+    ${mobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-[150%] opacity-0"}
+    bg-white dark:bg-gradient-to-b dark:from-slate-900/95 dark:to-slate-800/95 dark:backdrop-blur-lg`}
+>
+  <div className="flex flex-col px-6 py-6 space-y-5">
+    {/* Navigation Links */}
+    {navLinks.map((link) => (
+      <NavLink
+        key={link.title}
+        to={link.path}
+        end={link.path === "/"}
+        className={({ isActive }) =>
+          `block text-center px-5 py-3 text-lg font-semibold rounded-xl border shadow-sm transition-all duration-300
+          ${
+            isActive
+              ? "bg-red-600 text-white border-red-600 shadow-md scale-[1.02]"
+              : "text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-slate-800/70 border-gray-300 dark:border-slate-700 hover:bg-red-500 hover:text-white hover:border-red-500 hover:shadow-lg hover:scale-[1.02]"
+          }`
+        }
+        onClick={closeMobileMenu}
       >
-        <div className="flex flex-col px-4 py-4 space-y-4">
-          {/* Navigation Links */}
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.title}
-              to={link.path}
-              end={link.path === "/"}
-              className={({ isActive }) =>
-                `block text-center rounded-full px-4 py-2 text-base font-semibold transition-colors ${
-                  isActive
-                    ? "bg-amber-400 text-white"
-                    : "text-gray-700 dark:text-white bg-gray-100 dark:bg-slate-700 hover:bg-amber-400 hover:text-white"
-                }`
-              }
-              onClick={closeMobileMenu}
-            >
-              {link.title}
-            </NavLink>
-          ))}
+        {link.title}
+      </NavLink>
+    ))}
 
-          {/* Mobile Auth Section */}
-          <div className="pt-4 border-t border-gray-300 dark:border-gray-600 flex flex-col gap-3">
-            {isAuthenticated ? (
-              // Mobile Authenticated Section
-              <>
-                <div className="text-center text-gray-700 dark:text-white font-medium mb-2">
-                  Welcome, {username}!
-                </div>
-                <Link
-                  to="/profile"
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white transition-colors duration-200"
-                  onClick={closeMobileMenu}
-                >
-                  My Profile
-                </Link>
-                <Link
-                  to="/settings"
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-400 hover:text-white transition-colors duration-200"
-                  onClick={closeMobileMenu}
-                >
-                  Settings
-                </Link>
-                <Link
-                  to="/add-recipe"
-                  className="block text-center bg-red-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-red-600 transition-colors duration-200"
-                  onClick={closeMobileMenu}
-                >
-                  Add Recipe
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-red-500 px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors duration-200"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              // Mobile Non-Authenticated Section
-              <>
-                <Link
-                  to="/login"
-                  className="block text-center bg-amber-400 text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-500 transition-colors duration-200"
-                  onClick={closeMobileMenu}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="block text-center bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-white px-4 py-2 rounded-full font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors duration-200"
-                  onClick={closeMobileMenu}
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
+    {/* Mobile Auth Section */}
+    <div className="pt-5 border-t border-gray-300 dark:border-gray-700 flex flex-col gap-3">
+      {isAuthenticated ? (
+        <>
+          <div className="text-center text-gray-700 dark:text-gray-100 font-medium mb-2">
+            👋 Welcome, <span className="font-bold text-red-500">{username}</span>!
           </div>
-        </div>
-      </div>
+          <Link
+            to="/profile"
+            className="block text-center bg-gray-100 dark:bg-slate-700/70 text-gray-800 dark:text-white px-4 py-2 rounded-xl font-semibold hover:bg-amber-400 hover:text-white transition-all duration-200"
+            onClick={closeMobileMenu}
+          >
+            My Profile
+          </Link>
+          <Link
+            to="/settings"
+            className="block text-center bg-gray-100 dark:bg-slate-700/70 text-gray-800 dark:text-white px-4 py-2 rounded-xl font-semibold hover:bg-amber-400 hover:text-white transition-all duration-200"
+            onClick={closeMobileMenu}
+          >
+            Settings
+          </Link>
+          <Link
+            to="/add-recipe"
+            className="block text-center bg-red-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-red-600 transition-all duration-200 shadow-md"
+            onClick={closeMobileMenu}
+          >
+            ➕ Add Recipe
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="block text-center bg-gray-100 dark:bg-slate-700/70 text-red-500 px-4 py-2 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200"
+          >
+            🚪 Logout
+          </button>
+        </>
+      ) : (
+        <>
+          <Link
+            to="/login"
+            className="block text-center bg-amber-400 text-white px-4 py-2 rounded-xl font-semibold hover:bg-amber-500 transition-all duration-200 shadow-md"
+            onClick={closeMobileMenu}
+          >
+             Login
+          </Link>
+          <Link
+            to="/register"
+            className="block text-center bg-gray-100 dark:bg-slate-700/70 text-gray-800 dark:text-white px-4 py-2 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200"
+            onClick={closeMobileMenu}
+          >
+             Sign Up
+          </Link>
+        </>
+      )}
+    </div>
+  </div>
+</div>
+
     </header>
   );
 };
