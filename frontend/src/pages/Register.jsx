@@ -23,9 +23,9 @@ const Register = ({ onAuthSuccess }) => {
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Mail, Lock, Phone, MapPin, Calendar, ArrowRight, Eye, EyeOff, User, ChefHat, XCircle, Sparkles } from "lucide-react";
+import { Mail, Lock, Phone, MapPin, Calendar, ArrowRight, Eye, EyeOff, User, ChefHat, XCircle, Sparkles, ChevronLeft, House } from "lucide-react";
 
-const CustomFormInput = ({ icon: Icon, type = "text", name, value, onChange,onBlur, placeholder, required, autoComplete, min, max, minLength, error, ...props }) => {
+const CustomFormInput = ({ icon: Icon, type = "text", name, value, onChange, onBlur, placeholder, required, autoComplete, min, max, minLength, error, ...props }) => {
   const [isFocused, setIsFocused] = useState(false);
   const handleBlur = (e) => {
     setIsFocused(false);
@@ -411,6 +411,10 @@ const validateField = (name, value, formData) => {
     })
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
 
     <div className="auth-page-container">
@@ -713,6 +717,38 @@ const validateField = (name, value, formData) => {
         zIndex: 9999
       }}
     >
+      {/* Back Button Container - Positioned at top-left */}
+      <div className="absolute top-4 left-4 z-50">
+        {/* Mobile Version: Only Home Icon (visible on mobile, hidden on desktop) */}
+        <motion.button
+          onClick={handleBack}
+          aria-label="Go home"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 150, damping: 20, delay: 0.1 }}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex sm:hidden items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg shadow-red-500/40 hover:shadow-xl hover:shadow-red-500/50 transition-all duration-300 ease-in-out"
+        >
+          <House className="w-5 h-5" />
+        </motion.button>
+
+        {/* Desktop Version: Full Button with Back Arrow and Text (hidden on mobile, visible on desktop) */}
+        <motion.button
+          onClick={handleBack}
+          aria-label="Go back"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 150, damping: 20, delay: 0.1 }}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          className="hidden sm:flex group items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-semibold text-base shadow-lg shadow-red-500/40 hover:shadow-xl hover:shadow-red-500/50 transition-all duration-300 ease-in-out"
+        >
+          <ChevronLeft className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" />
+          <span>Back</span>
+        </motion.button>
+      </div>
+
       {/* Background Decorative Elements from AuthLayout */}
       <motion.div 
         className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-red-200/30 to-pink-200/30 rounded-full blur-3xl"
@@ -963,7 +999,6 @@ const validateField = (name, value, formData) => {
                 name="agreeTerms"
                 checked={formData.agreeTerms}
                 onChange={handleInputChange}
-
                 onBlur={handleFieldBlur}
                 className={`mr-2 w-4 h-4 mt-0.5 rounded accent-red-500 cursor-pointer ${fieldErrors.agreeTerms ? 'border-red-500' : 'border-gray-300'}`}
               />

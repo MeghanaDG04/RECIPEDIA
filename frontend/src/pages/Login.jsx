@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { Mail, Lock, ArrowRight, XCircle, ChefHat, Sparkles, Eye, EyeOff } from 'lucide-react'; // Added Eye and EyeOff for password toggle
+import { Mail, Lock, ArrowRight, XCircle, ChefHat, Sparkles, Eye, EyeOff, ChevronLeft, House } from 'lucide-react';
 
-import ErrorAlert from '../components/ErrorAlert'; // Assuming this is updated for dark mode
+import ErrorAlert from '../components/ErrorAlert';
 import { authService } from '../services/authService';
 
 const Login = ({ onAuthSuccess }) => {
@@ -18,8 +18,8 @@ const Login = ({ onAuthSuccess }) => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // For password visibility toggle
   const [loading, setLoading] = useState(false);
-  const [generalError, setGeneralError] = useState(""); // For network/server/general form errors
-  const [fieldErrors, setFieldErrors] = useState({}); // For input-specific validation errors
+  const [generalError, setGeneralError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Focus states for inputs to match Register's behavior
   const [isEmailFocused, setIsEmailFocused] = useState(false);
@@ -148,6 +148,10 @@ const Login = ({ onAuthSuccess }) => {
     })
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div 
       className="fixed inset-0 bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 overflow-hidden font-sans antialiased"
@@ -162,7 +166,39 @@ const Login = ({ onAuthSuccess }) => {
         zIndex: 9999
       }}
     >
-      {/* Background Decorative Elements from AuthLayout */}
+      {/* Back Button Container - Positioned at top-left */}
+      <div className="absolute top-4 left-4 z-50">
+        {/* Mobile Version: Only Home Icon (visible on mobile, hidden on desktop) */}
+        <motion.button
+          onClick={handleBack}
+          aria-label="Go home"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 150, damping: 20, delay: 0.1 }}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex sm:hidden items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg shadow-red-500/40 hover:shadow-xl hover:shadow-red-500/50 transition-all duration-300 ease-in-out"
+        >
+          <House className="w-5 h-5" />
+        </motion.button>
+
+        {/* Desktop Version: Full Button with Back Arrow and Text (hidden on mobile, visible on desktop) */}
+        <motion.button
+          onClick={handleBack}
+          aria-label="Go back"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 150, damping: 20, delay: 0.1 }}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          className="hidden sm:flex group items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-semibold text-base shadow-lg shadow-red-500/40 hover:shadow-xl hover:shadow-red-500/50 transition-all duration-300 ease-in-out"
+        >
+          <ChevronLeft className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" />
+          <span>Back</span>
+        </motion.button>
+      </div>
+
+      {/* Background Decorative Elements */}
       <motion.div 
         className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-red-200/30 to-pink-200/30 rounded-full blur-3xl"
         variants={floatingVariants}
@@ -188,7 +224,7 @@ const Login = ({ onAuthSuccess }) => {
         custom={3}
       />
 
-      {/* Floating Icons from AuthLayout */}
+      {/* Floating Icons */}
       <motion.div
         className="absolute top-16 right-16 text-red-300/50"
         animate={{ 
@@ -218,11 +254,11 @@ const Login = ({ onAuthSuccess }) => {
         <Sparkles className="w-6 h-6" />
       </motion.div>
 
-      {/* Main Content Container - with dark mode */}
+      {/* Main Content Container */}
       <motion.div
         className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md space-y-5 p-8 border-t-8 border-red-500 transform transition-all duration-300 hover:shadow-2xl"
       >
-        {/* Header Section from AuthLayout - replicated with animations and dark mode */}
+        {/* Header Section */}
         <motion.div 
           className="text-center pb-4"
           initial={{ opacity: 0, y: -20 }}
@@ -279,7 +315,7 @@ const Login = ({ onAuthSuccess }) => {
           initial="hidden"
           animate="visible"
         >
-          {/* Email Input - matched to Register's style with focus state */}
+          {/* Email Input */}
           <motion.div variants={childVariants} className="relative w-full">
             <Mail
               className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-200
@@ -318,7 +354,7 @@ const Login = ({ onAuthSuccess }) => {
             )}
           </motion.div>
 
-          {/* Password Input - matched to Register's style with focus state and toggle */}
+          {/* Password Input */}
           <motion.div variants={childVariants} className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -369,12 +405,12 @@ const Login = ({ onAuthSuccess }) => {
             <div className="flex items-start flex-grow">
               <input
                 type="checkbox"
-                id="agreeTerms" // Renamed from 'terms' to 'agreeTerms' for consistency
+                id="agreeTerms"
                 name="agreeTerms"
                 checked={agreeTerms}
                 onChange={(e) => {
                   setAgreeTerms(e.target.checked);
-                  setFieldErrors((prev) => ({ ...prev, agreeTerms: "" })); // Clear error on change
+                  setFieldErrors((prev) => ({ ...prev, agreeTerms: "" }));
                 }}
                 className={`mr-2 w-4 h-4 mt-0.5 rounded accent-red-500 cursor-pointer transition-colors duration-200
                   ${fieldErrors.agreeTerms ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'}`}

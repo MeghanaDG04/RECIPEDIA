@@ -1,13 +1,11 @@
 // Explore.jsx
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { FiSearch } from "react-icons/fi"; // FiArrowRight is now in Card.jsx
+import { FiSearch, FiArrowRight, FiClock, FiStar } from "react-icons/fi";
 import { GiKnifeFork, GiRoastChicken, GiCakeSlice, GiMartini } from "react-icons/gi";
+import { HiSparkles } from "react-icons/hi"; // ✨ NEW: Added sparkles icon
 import recipes from "../data/recipes.json"; // Adjust path as necessary
-
-// Import the RecipeCard component
-import RecipeCard from "../components/RecipeCard"; // Adjust this path if your folder structure is different
 
 // --- Animation Variants ---
 const containerVariants = {
@@ -18,25 +16,202 @@ const containerVariants = {
   },
 };
 
-const itemVariants = { // Keep itemVariants here if other components like NoResults and section titles use it
+const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-// --- Reusable Components (NoResults is still specific to ExplorePage for now) ---
+// ✨ NEW: Added floating animation variants
+const floatingVariants = {
+  initial: { y: 0 },
+  animate: { 
+    y: [-10, 10, -10],
+    transition: {
+      duration: 4,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }
+};
 
+// ✨ NEW: Added sparkle animation variants
+const sparkleVariants = {
+  initial: { scale: 0, rotate: 0 },
+  animate: { 
+    scale: [0, 1, 0],
+    rotate: [0, 180, 360],
+    transition: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }
+};
+
+// --- Reusable Components ---
+
+const RecipeCard = ({ recipe, accent, onClick }) => (
+  <motion.div
+    layout
+    variants={itemVariants}
+    onClick={onClick}
+    whileHover={{ y: -8 }}
+    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    className="group relative flex-shrink-0 w-[280px] md:w-[320px] h-[400px] snap-start cursor-pointer"
+  >
+    <div className={`absolute inset-0 rounded-2xl ${accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg`} />
+    <div className="relative w-full h-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 dark:border-slate-700/50 shadow-xl group-hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+      <div className="w-full h-1/2 overflow-hidden relative">
+        {/* ✨ NEW: Added difficulty badge */}
+        <div className="absolute top-3 left-3 z-10 px-2 py-1 bg-black/20 backdrop-blur-md rounded-full text-xs text-white font-medium">
+          Easy
+        </div>
+        {/* ✨ NEW: Added rating badge */}
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2 py-1 bg-black/20 backdrop-blur-md rounded-full text-xs text-white font-medium">
+          <FiStar className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+          4.8
+        </div>
+        <img
+          src={recipe.imageUrl}
+          alt={recipe.title}
+          className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+        />
+        {/* ✨ NEW: Added gradient overlay for better text readability */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/30 to-transparent" />
+      </div>
+      <div className="p-5 flex flex-col flex-grow">
+        <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2 truncate">{recipe.title}</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 flex-grow">{recipe.description}</p>
+        
+        {/* ✨ NEW: Added cooking time and servings info */}
+        <div className="flex items-center gap-4 mt-3 text-xs text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-1">
+            <FiClock className="w-3 h-3" />
+            30 min
+          </div>
+          <div className="flex items-center gap-1">
+            <GiKnifeFork className="w-3 h-3" />
+            4 servings
+          </div>
+        </div>
+        
+        <div className="mt-4">
+          <span className="inline-flex items-center text-sm font-semibold text-slate-700 dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r from-pink-500 to-violet-500">
+            View Recipe
+            <FiArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </motion.div>
+);
+
+// ✨ NEW: Enhanced NoResults component with better animations
 const NoResults = () => (
   <motion.div
     initial={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: 1, scale: 1 }}
     className="flex flex-col items-center justify-center py-12 w-full text-center"
   >
-    <div className="p-8 bg-white/50 dark:bg-white/10 rounded-2xl shadow-md backdrop-blur-sm">
+    <motion.div 
+      variants={floatingVariants}
+      initial="initial"
+      animate="animate"
+      className="p-8 bg-white/50 dark:bg-white/10 rounded-2xl shadow-md backdrop-blur-sm relative"
+    >
+      {/* ✨ NEW: Added animated sparkles around no results */}
+      <motion.div
+        variants={sparkleVariants}
+        initial="initial"
+        animate="animate"
+        className="absolute -top-2 -right-2 text-yellow-400"
+      >
+        <HiSparkles className="w-4 h-4" />
+      </motion.div>
+      <motion.div
+        variants={sparkleVariants}
+        initial="initial"
+        animate="animate"
+        style={{ animationDelay: '1s' }}
+        className="absolute -bottom-2 -left-2 text-pink-400"
+      >
+        <HiSparkles className="w-4 h-4" />
+      </motion.div>
+      
       <GiKnifeFork className="mx-auto text-5xl text-gray-400 dark:text-gray-500 mb-4" />
       <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">
         No recipes found.
       </p>
       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Try a different search term!</p>
+    </motion.div>
+  </motion.div>
+);
+
+// ✨ NEW: Added featured recipe component - COMPACT VERSION
+const FeaturedRecipe = ({ recipe, navigate }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, delay: 0.5 }}
+    className="relative mb-12 overflow-hidden rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 p-0.5"
+  >
+    <div className="relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-2xl p-6">
+      <div className="flex flex-col md:flex-row gap-6 items-center">
+        {/* Image Section - Smaller */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.7 }}
+          className="relative flex-shrink-0"
+        >
+          <div className="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg">
+            <img
+              src={recipe?.imageUrl || "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300"}
+              alt={recipe?.title || "Featured Recipe"}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {/* Smaller floating elements */}
+          <motion.div
+            variants={floatingVariants}
+            initial="initial"
+            animate="animate"
+            className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow-md"
+          >
+            <HiSparkles className="text-white w-3 h-3" />
+          </motion.div>
+        </motion.div>
+        
+        {/* Content Section - More Compact */}
+        <div className="flex-1 text-center md:text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="flex items-center justify-center md:justify-start gap-2 mb-2"
+          >
+            <HiSparkles className="text-yellow-500 w-4 h-4" />
+            <span className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+              FEATURED RECIPE
+            </span>
+          </motion.div>
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white mb-2">
+            {recipe?.title || "Chef's Special Pasta"}
+          </h2>
+          <p className="text-slate-600 dark:text-slate-300 mb-4 text-sm line-clamp-2">
+            {recipe?.description || "A delightful fusion of flavors that will transport your taste buds to culinary heaven."}
+          </p>
+          <motion.button
+            onClick={() => navigate(`/recipes/${recipe?.category || 'featured'}/${recipe?.slug || 'special'}`)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            Try This Recipe
+            <FiArrowRight className="w-3 h-3" />
+          </motion.button>
+        </div>
+      </div>
     </div>
   </motion.div>
 );
@@ -61,6 +236,10 @@ const RecipeSection = ({ config, searchQuery, navigate }) => {
       <motion.div variants={itemVariants} className="flex items-center mb-6">
         <config.Icon className={`text-4xl mr-3 bg-clip-text text-transparent bg-gradient-to-br ${config.accent}`} />
         <h2 className="text-3xl font-extrabold text-slate-800 dark:text-white">{config.title}</h2>
+        {/* ✨ NEW: Enhanced section header with recipe count */}
+        <span className="ml-4 px-3 py-1 bg-slate-200/50 dark:bg-slate-700/50 rounded-full text-sm font-medium text-slate-600 dark:text-slate-300">
+          {filteredData.length} recipes
+        </span>
         <div className={`h-1 flex-grow ml-6 rounded-full bg-gradient-to-r ${config.accent} opacity-30`} />
       </motion.div>
 
@@ -94,7 +273,22 @@ const RecipeSection = ({ config, searchQuery, navigate }) => {
 // --- Main Page Component ---
 const ExplorePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [featuredRecipe, setFeaturedRecipe] = useState(null); // ✨ NEW: Added featured recipe state
   const navigate = useNavigate();
+
+  // ✨ NEW: Set featured recipe on component mount
+  useEffect(() => {
+    if (recipes.length > 0) {
+      const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+      setFeaturedRecipe({
+        title: randomRecipe.name,
+        description: randomRecipe.about,
+        imageUrl: randomRecipe.image,
+        category: randomRecipe.category,
+        slug: randomRecipe.id,
+      });
+    }
+  }, []);
 
   const sectionConfigs = useMemo(() => {
     const mapRecipes = (category) =>
@@ -109,20 +303,47 @@ const ExplorePage = () => {
         }));
 
     return [
-      { title: "Vegetarian Delights", data: mapRecipes("veg"), Icon: GiKnifeFork, accent: "from-emerald-500 to-green-600" },
-      { title: "Hearty Non-Vegetarian", data: mapRecipes("nonveg"), Icon: GiRoastChicken, accent: "from-rose-500 to-red-600" },
-      { title: "Sweet Desserts", data: mapRecipes("dessert"), Icon: GiCakeSlice, accent: "from-amber-500 to-orange-600" },
-      { title: "Cool Beverages", data: mapRecipes("beverages"), Icon: GiMartini, accent: "from-sky-500 to-indigo-600" },
+      { 
+        title: "Vegetarian Delights", 
+        data: mapRecipes("veg"), 
+        Icon: GiKnifeFork, 
+        accent: "from-emerald-500 to-green-600",
+        scrollbar: "scrollbar-green" // ✨ NEW: Added themed scrollbars
+      },
+      { 
+        title: "Hearty Non-Vegetarian", 
+        data: mapRecipes("nonveg"), 
+        Icon: GiRoastChicken, 
+        accent: "from-rose-500 to-red-600",
+        scrollbar: "scrollbar-red"
+      },
+      { 
+        title: "Sweet Desserts", 
+        data: mapRecipes("dessert"), 
+        Icon: GiCakeSlice, 
+        accent: "from-amber-500 to-orange-600",
+        scrollbar: "scrollbar-orange"
+      },
+      { 
+        title: "Cool Beverages", 
+        data: mapRecipes("beverages"), 
+        Icon: GiMartini, 
+        accent: "from-sky-500 to-indigo-600",
+        scrollbar: "scrollbar-blue"
+      },
     ];
   }, []);
 
   return (
     <main className="relative min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 overflow-x-hidden">
-      {/* Animated Aurora Background */}
+      {/* ✨ ENHANCED: More dynamic animated aurora background */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob dark:opacity-40"></div>
         <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 dark:opacity-40"></div>
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000 dark:opacity-40"></div>
+        {/* ✨ NEW: Added more floating background elements */}
+        <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-6000 dark:opacity-30"></div>
+        <div className="absolute bottom-1/3 right-10 w-64 h-64 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-8000 dark:opacity-35"></div>
       </div>
       
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -133,32 +354,88 @@ const ExplorePage = () => {
           variants={containerVariants}
           className="text-center pt-24 pb-12"
         >
-          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-br from-yellow-500 to-red-600 dark:from-white dark:to-slate-400">
-            World of Flavors
-          </motion.h1>
+          <motion.div
+            variants={itemVariants}
+            className="relative inline-block"
+          >
+            <h1 className="text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-br from-yellow-500 to-red-600 dark:from-white dark:to-slate-400">
+              World of Flavors
+            </h1>
+            {/* ✨ NEW: Added floating sparkles around the title */}
+            <motion.div
+              variants={sparkleVariants}
+              initial="initial"
+              animate="animate"
+              className="absolute -top-4 -right-4 text-yellow-400"
+            >
+              <HiSparkles className="w-8 h-8" />
+            </motion.div>
+            <motion.div
+              variants={sparkleVariants}
+              initial="initial"
+              animate="animate"
+              style={{ animationDelay: '1s' }}
+              className="absolute -bottom-2 -left-4 text-pink-400"
+            >
+              <HiSparkles className="w-6 h-6" />
+            </motion.div>
+          </motion.div>
+          
           <motion.p variants={itemVariants} className="text-lg text-slate-600 dark:text-slate-300 mt-4 max-w-2xl mx-auto">
             Find your next favorite meal. Search our curated collections and start cooking today.
           </motion.p>
+          
+          {/* ✨ NEW: Added quick stats */}
+          <motion.div 
+            variants={itemVariants}
+            className="flex justify-center gap-8 mt-8 text-sm font-medium"
+          >
+            <div className="text-center">
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{recipes.length}+</div>
+              <div className="text-slate-600 dark:text-slate-400">Recipes</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">4</div>
+              <div className="text-slate-600 dark:text-slate-400">Categories</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">5★</div>
+              <div className="text-slate-600 dark:text-slate-400">Rated</div>
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Search Bar */}
+        {/* ✨ ENHANCED: Better search bar with more animations */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           className="max-w-xl mx-auto mb-16"
         >
-          <div className="relative">
-            <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-xl pointer-events-none" />
+          <div className="relative group">
+            <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-xl pointer-events-none transition-colors duration-300 group-focus-within:text-indigo-500" />
             <input
               type="text"
               placeholder="Search for Pad Thai, Brownies, etc..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-14 pr-6 py-4 rounded-full bg-white/60 dark:bg-slate-800/60 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-transparent dark:border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 dark:focus:ring-offset-slate-900 focus:ring-indigo-500 transition-all duration-300 shadow-lg backdrop-blur-md"
+              className="w-full pl-14 pr-6 py-4 rounded-full bg-white/60 dark:bg-slate-800/60 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-transparent dark:border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 dark:focus:ring-offset-slate-900 focus:ring-indigo-500 transition-all duration-300 shadow-lg backdrop-blur-md hover:bg-white/80 dark:hover:bg-slate-800/80"
             />
+            {/* ✨ NEW: Added search suggestions indicator */}
+            {searchQuery && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-slate-500"
+              >
+                {recipes.filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase())).length} found
+              </motion.div>
+            )}
           </div>
         </motion.div>
+
+        {/* ✨ NEW: Added Featured Recipe Section */}
+        {featuredRecipe && <FeaturedRecipe recipe={featuredRecipe} navigate={navigate} />}
 
         {/* Recipe Sections */}
         <div className="space-y-12">

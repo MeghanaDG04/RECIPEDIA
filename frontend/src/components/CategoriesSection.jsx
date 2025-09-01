@@ -41,7 +41,7 @@ const CategoryCard = ({ category, index }) => {
 
   return (
     <div 
-      className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500"
+      className="group relative overflow-hidden rounded-2xl bg-slate-900 shadow-lg hover:shadow-2xl transform hover:-translate-y-3 hover:rotate-[1deg] hover:scale-[1.01] transition-all duration-500 border border-slate-700 hover:ring-4 hover:ring-slate-300/40"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{ animationDelay: `${index * 150}ms` }}
@@ -51,24 +51,24 @@ const CategoryCard = ({ category, index }) => {
         <img 
           src={category.image} 
           alt={category.name} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.15]" 
         />
-        <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} opacity-60 group-hover:opacity-40 transition-opacity duration-500`} />
+        <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} opacity-60 group-hover:opacity-40 transition-opacity duration-500 dark:opacity-70`} />
         
         {/* Floating Elements */}
         <div className="absolute top-4 right-4">
-          <div className={`bg-white/20 backdrop-blur-sm rounded-full p-2 ${isHovered ? 'animate-bounce' : ''}`}>
+          <div className={`bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-full p-2 ${isHovered ? 'animate-bounce' : ''}`}>
             <Sparkles className="w-4 h-4 text-white" />
           </div>
         </div>
 
         {/* Recipe Count Badge */}
-        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
-          <span className="text-sm font-bold text-gray-800">{category.recipes}</span>
+        <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/70 backdrop-blur-sm rounded-full px-3 py-1 border border-white/60 dark:border-slate-700">
+          <span className="text-sm font-bold text-gray-800 dark:text-gray-100">{category.recipes}</span>
         </div>
 
         {/* Hover Overlay */}
-        <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`absolute inset-0 bg-black/20 dark:bg-black/50 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
           <div className="absolute bottom-4 left-4 right-4">
             <p className="text-white text-sm opacity-90">{category.description}</p>
           </div>
@@ -76,22 +76,14 @@ const CategoryCard = ({ category, index }) => {
       </div>
 
       {/* Content */}
-      <div className="p-6 relative">
+      <div className="p-6 relative border-t border-slate-700 bg-slate-900 text-white">
         <div className="flex items-center justify-between">
           <div>
-            {/* FIXED: Better contrast in dark mode */}
-            <h3 className="text-xl font-bold 
-              text-gray-800 
-              dark:bg-gradient-to-r dark:from-red-400 dark:to-pink-400 dark:bg-clip-text dark:text-transparent
-              dark:group-hover:from-red-300 dark:group-hover:to-pink-300 
-              transition-all duration-300 transform group-hover:scale-110">
+            <h3 className="text-xl font-bold text-white transition-all duration-300">
               {category.name}
             </h3>
-
-
-
-            <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
-              <TrendingUp className="w-4 h-4" />
+            <div className="flex items-center gap-2 mt-2 text-sm text-gray-200 font-medium">
+              <TrendingUp className="w-4 h-4 text-gray-200" />
               <span>Trending recipes</span>
             </div>
           </div>
@@ -108,7 +100,12 @@ const CategoryCard = ({ category, index }) => {
       {/* Animated Border */}
       <div className={`absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r ${category.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10`} 
            style={{ padding: '2px' }}>
-        <div className="w-full h-full rounded-2xl bg-white dark:bg-slate-800" />
+        <div className="w-full h-full rounded-2xl bg-slate-900" />
+      </div>
+
+      {/* Sheen sweep on hover */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -inset-y-12 -left-1/2 w-2/3 rotate-12 bg-gradient-to-r from-white/20 via-white/10 to-transparent opacity-0 group-hover:opacity-100 -translate-x-1/2 group-hover:translate-x-[160%] transition-all duration-900 ease-out" />
       </div>
     </div>
   );

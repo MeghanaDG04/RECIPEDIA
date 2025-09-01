@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./styles/animations.css";
@@ -7,7 +6,6 @@ import "./styles/animations.css";
 import "./services/axiosConfig.js";
 import { authService } from "./services/authService.js";
 
-// Reusable and Core Page Imports with .jsx extension
 // Page Imports
 import RecipeListPage from "./pages/RecipeListPage.jsx";
 import RecipeDetailPage from "./pages/RecipeDetailPage.jsx";
@@ -21,15 +19,15 @@ import NotFound from "./pages/NotFound.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import Explore from "./pages/Explore.jsx";
 
-// Component Imports with .jsx extension
-import Navbar from "./components/Header.jsx"; // Changed from Header to Navbar
+// Components
+import Navbar from "./components/Header.jsx"; // header component is named Navbar in the import
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollReset from "./components/ScrollReset.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsConditions from "./pages/TermsConditions.jsx";
 
-// AppContent handles all routes and layout
+// AppContent handles all routes and layout (must be rendered INSIDE a Router)
 function AppContent() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,14 +43,14 @@ function AppContent() {
     };
 
     checkAuth();
-    
+
     // Listen for storage changes (in case user logs out in another tab)
     const handleStorageChange = () => {
       checkAuth();
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, [location.pathname]);
 
   // Handle logout
@@ -83,42 +81,34 @@ function AppContent() {
   }, [isAuthPage]);
 
   return (
-    <div className="app-container">
+    <div className="app-container min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
       <ScrollToTop />
-      
-      {/* Only show Navbar if NOT on auth pages */}
-      {!isAuthPage && (
-        <Navbar 
-          isAuthenticated={isAuthenticated} 
-          onLogout={handleLogout}
-        />
-      )}
-      
+      <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       <Routes>
         {/* Core Routes */}
         <Route path="/" element={<RecipeHome />} />
         <Route path="/home" element={<RecipeHome />} />
-        
-        {/* Auth Routes - Clean without wrapper divs */}
-        <Route 
-          path="/login" 
-          element={<Login onAuthSuccess={handleAuthSuccess} />} 
+        <Route
+          path="/login"
+          element={
+            <div className="login-bg">
+              <Login onAuthSuccess={handleAuthSuccess} />
+            </div>
+          }
         />
-        <Route 
-          path="/register" 
-          element={<Register onAuthSuccess={handleAuthSuccess} />} 
+        <Route
+          path="/register"
+          element={
+            <div className="register-bg">
+              <Register onAuthSuccess={handleAuthSuccess} />
+            </div>
+          }
         />
-        
-        {/* Protected/User Routes */}
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="/settings" element={<UserProfile />} /> {/* You can create a separate Settings component */}
         <Route path="/add-recipe" element={<AddRecipe />} />
         <Route path="/about" element={<About />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms-conditions" element={<TermsConditions />} />
 
-        {/* Category Pages */}
+        {/* Dynamic Category List Pages */}
         <Route path="/veg" element={<RecipeListPage category="veg" />} />
         <Route path="/nonveg" element={<RecipeListPage category="nonveg" />} />
         <Route path="/dessert" element={<RecipeListPage category="dessert" />} />
@@ -126,6 +116,11 @@ function AppContent() {
 
         {/* Dynamic Recipe Detail Page */}
         <Route path="/recipes/:category/:recipeId" element={<RecipeDetailPage />} />
+
+        {/* Static / legal */}
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsConditions />} />
 
         {/* Error and Fallback Routes */}
         <Route path="/error" element={<ErrorPage />} />
@@ -138,7 +133,7 @@ function AppContent() {
   );
 }
 
-// Main App Component
+// Main App Component: provide the Router here (single source of truth)
 function App() {
   return (
     <Router>

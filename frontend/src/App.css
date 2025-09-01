@@ -6,82 +6,151 @@
   --auth-border-color: #ccc;
 }
 
-/* === Auth Page Fixes === */
-.auth-page-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  overflow: hidden;
+/* === Auth Forms (Login & Register) === */
+.auth-container {
+  background: #fff;
+  padding: 30px;
+  max-width: 380px;
+  margin: 50px auto;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-/* Hide navbar and other elements on auth pages */
-body.auth-page .navbar,
-body.auth-page nav,
-body.auth-page header,
-body.auth-page .header,
-body.auth-page footer,
-body.auth-page .footer {
-  display: none !important;
-  visibility: hidden !important;
+/* Dark mode support for auth container */
+.dark .auth-container {
+  background: #1e293b;
+  color: #f1f5f9;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
-/* Prevent scrolling on auth pages */
-body.auth-page {
-  overflow: hidden !important;
-  position: fixed !important;
-  width: 100% !important;
-  height: 100% !important;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-/* Ensure auth page takes full viewport */
-body.auth-page .auth-page-container {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 9999 !important;
+.auth-container .heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--auth-primary-color);
+  margin-bottom: 15px;
+  margin-top: 24px;
 }
 
-/* Hide all other page content when on auth pages */
-body.auth-page > *:not(.auth-page-container) {
-  display: none !important;
+.auth-container input[type="text"],
+.auth-container input[type="email"],
+.auth-container input[type="password"],
+.auth-container input[type="number"],
+.auth-container input[type="tel"],
+.auth-container select,
+.auth-container textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: 1px solid var(--auth-border-color);
+  border-radius: 5px;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #000;
 }
 
-/* Ensure auth components have highest z-index */
-.auth-page-container * {
-  position: relative;
-  z-index: 10000;
+/* Dark mode support for auth inputs */
+.dark .auth-container input[type="text"],
+.dark .auth-container input[type="email"],
+.dark .auth-container input[type="password"],
+.dark .auth-container input[type="number"],
+.dark .auth-container input[type="tel"],
+.dark .auth-container select,
+.dark .auth-container textarea {
+  background-color: #334155;
+  color: #f1f5f9;
+  border-color: #475569;
 }
 
-/* Custom Scrollbar for Auth Forms */
-.scrollbar-thin {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 transparent;
+.auth-container input:focus,
+.auth-container select:focus,
+.auth-container textarea:focus {
+  outline: none;
+  border-color: var(--auth-primary-color);
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
 }
 
-.scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
+.auth-container button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--auth-primary-color);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
+.auth-container button:hover {
+  background-color: var(--auth-hover-color);
 }
 
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: #cbd5e0;
-  border-radius: 2px;
+.auth-container button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background-color: #a0aec0;
+.auth-container .error-message {
+  background: #ffd2d2;
+  color: #d8000c;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.auth-container .termsandconditions {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #444;
+  text-align: left;
+}
+
+/* Dark mode support for terms and conditions */
+.dark .auth-container .termsandconditions {
+  color: #cbd5e1;
+}
+
+.auth-container .termsandconditions input[type="checkbox"] {
+  margin-right: 6px;
+  margin-top: 2px;
+  accent-color: var(--auth-primary-color);
+}
+
+.auth-container .termsandconditions h6 {
+  margin: 0;
+  font-weight: normal;
+}
+
+.auth-container .swap_state {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #444;
+}
+
+/* Dark mode support for swap state */
+.dark .auth-container .swap_state {
+  color: #cbd5e1;
 }
 
 .dark .scrollbar-thin::-webkit-scrollbar-thumb {
