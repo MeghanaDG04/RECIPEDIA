@@ -53,12 +53,12 @@ const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
 //error handling
-app.use((err,req,res)=>{
-  res.status(500).send('Something broke!')
+app.use((req,res,next)=>{
+  res.status(404).send({message:'Something broke!'});
 });
 app.use((err,req,res,next)=>{
   console.log(err.stack);
-  res.status(500).send('Something broke!')
+  res.status(500).send({message:'internal server error'});
 });
 
 if (!MONGO_URI) {
