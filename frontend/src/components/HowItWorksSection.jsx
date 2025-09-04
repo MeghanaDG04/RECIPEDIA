@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlusSquare, Search, UserPlus, CheckCircle, ArrowRight } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const steps = [
   {
@@ -30,8 +31,10 @@ const StepCard = ({ step, index, isActive, onHover }) => {
   
   return (
     <div 
-      className={`relative p-8 rounded-2xl transition-all duration-700 transform hover:-translate-y-4 ${
-        isActive ? 'bg-white dark:bg-slate-800 shadow-2xl scale-105' : 'bg-white/50 dark:bg-slate-800/50 shadow-lg hover:shadow-xl'
+      className={`group relative p-8 rounded-2xl transition-all duration-700 transform hover:-translate-y-4 cursor-pointer ${
+        isActive
+          ? 'bg-gray-100 dark:!bg-gray-200 shadow-2xl scale-105 border border-gray-300 dark:border-gray-400'
+          : 'bg-gray-100 dark:!bg-gray-200 shadow-lg hover:bg-gray-200 dark:hover:!bg-gray-300 hover:shadow-xl border border-transparent dark:hover:border-gray-400 dark:hover:ring-1 dark:hover:ring-gray-400/60'
       }`}
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(-1)}
@@ -43,7 +46,7 @@ const StepCard = ({ step, index, isActive, onHover }) => {
       </div>
 
       {/* Animated Background */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${step.bgColor} opacity-0 ${isActive ? 'opacity-5' : ''} rounded-2xl transition-opacity duration-500`} />
+      <div className={`absolute inset-0 bg-gradient-to-br ${step.bgColor} opacity-0 ${isActive ? 'opacity-5' : ''} dark:hidden rounded-2xl transition-opacity duration-500`} />
       
       {/* Icon */}
       <div className={`relative mb-6 mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br ${step.bgColor} shadow-lg flex items-center justify-center transform transition-all duration-500 ${isActive ? 'scale-110 rotate-3' : ''}`}>
@@ -55,17 +58,17 @@ const StepCard = ({ step, index, isActive, onHover }) => {
 
       {/* Content */}
       <div className="relative z-10 text-center">
-        <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:!text-gray-900 group-hover:!text-gray-900">
           {step.title}
         </h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+        <p className="text-gray-600 dark:!text-gray-700 group-hover:!text-gray-700 mb-6 leading-relaxed">
           {step.description}
         </p>
 
         {/* Features List */}
         <div className="space-y-2">
           {step.features.map((feature, featureIndex) => (
-            <div key={featureIndex} className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <div key={featureIndex} className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:!text-gray-700 group-hover:!text-gray-700">
               <CheckCircle className="w-4 h-4 text-green-500" />
               <span>{feature}</span>
             </div>
@@ -82,6 +85,7 @@ const StepCard = ({ step, index, isActive, onHover }) => {
 };
 
 const HowItWorksSection = () => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(-1);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -94,7 +98,7 @@ const HowItWorksSection = () => {
 
   return (
     <section id="about" className="py-20 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-32 left-16 w-64 h-64 bg-gradient-to-r from-red-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" />
         <div className="absolute bottom-32 right-16 w-80 h-80 bg-gradient-to-r from-yellow-200 to-orange-200 rounded-full blur-3xl opacity-15 animate-bounce" style={{ animationDelay: '1s' }} />
@@ -108,7 +112,6 @@ const HowItWorksSection = () => {
             <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-600 animate-pulse mr-3" />
             <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">How It Works</span>
           </div>
-          
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-800 dark:text-white mb-6">
             Get Cooking in{' '}
             <span className="relative">
@@ -118,7 +121,6 @@ const HowItWorksSection = () => {
               <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
             </span>
           </h2>
-          
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
             Join our vibrant community and start your culinary journey today. It's simple, fun, and completely free!
           </p>
@@ -127,23 +129,23 @@ const HowItWorksSection = () => {
         {/* Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {steps.map((step, index) => (
-            <StepCard 
-              key={index} 
-              step={step} 
-              index={index}
-              isActive={activeStep === index || currentStep === index}
-              onHover={setActiveStep}
-            />
-          ))}
-        </div>
-
-        {/* Connecting Lines (Desktop) */}
-        <div className="hidden md:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl pointer-events-none">
-          <div className="relative">
-            <div className="absolute top-0 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-red-300 via-yellow-300 to-green-300 opacity-30" />
-            <div className="absolute top-0 left-1/6 w-8 h-0.5 bg-gradient-to-r from-red-500 to-yellow-500 animate-pulse" />
-            <div className="absolute top-0 right-1/6 w-8 h-0.5 bg-gradient-to-r from-yellow-500 to-green-500 animate-pulse" style={{ animationDelay: '1s' }} />
-          </div>
+  <StepCard 
+    key={index} 
+    step={step} 
+    index={index}
+    isActive={activeStep === index || currentStep === index}
+    onHover={setActiveStep}
+    onIconClick={
+      step.title === "Create an Account"
+        ? () => navigate('/register')
+        : step.title === "Add Your Recipes"
+        ? () => navigate('/recipes')
+        : step.title === "Explore & Interact"
+        ? () => navigate('/explore')
+        : undefined
+    }
+  />
+))}
         </div>
 
         {/* Bottom CTA */}
@@ -154,7 +156,7 @@ const HowItWorksSection = () => {
               <div className="text-sm text-gray-600 dark:text-gray-400">Join thousands of food lovers</div>
             </div>
             <a 
-              href="/register"
+              onClick={() => navigate('/register')}
               className="bg-gradient-to-r from-red-500 to-pink-600 text-white font-bold px-6 py-3 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
             >
               Get Started Free

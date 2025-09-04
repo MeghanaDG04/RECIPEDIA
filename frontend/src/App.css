@@ -18,6 +18,13 @@
   animation: fadeIn 0.6s ease-in-out;
 }
 
+/* Dark mode support for auth container */
+.dark .auth-container {
+  background: #1e293b;
+  color: #f1f5f9;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -60,6 +67,21 @@
   font-size: 15px;
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
+  background-color: #fff;
+  color: #000;
+}
+
+/* Dark mode support for auth inputs */
+.dark .auth-container input[type="text"],
+.dark .auth-container input[type="email"],
+.dark .auth-container input[type="password"],
+.dark .auth-container input[type="number"],
+.dark .auth-container input[type="tel"],
+.dark .auth-container select,
+.dark .auth-container textarea {
+  background-color: #334155;
+  color: #f1f5f9;
+  border-color: #475569;
 }
 
 .auth-container input:focus,
@@ -112,6 +134,11 @@
   text-align: left;
 }
 
+/* Dark mode support for terms and conditions */
+.dark .auth-container .termsandconditions {
+  color: #cbd5e1;
+}
+
 .auth-container .termsandconditions input[type="checkbox"] {
   margin-right: 6px;
   margin-top: 2px;
@@ -129,16 +156,19 @@
   color: #444;
 }
 
-.auth-container .link a {
-  color: var(--auth-primary-color);
-  text-decoration: none;
-  font-weight: 500;
+/* Dark mode support for swap state */
+.dark .auth-container .swap_state {
+  color: #cbd5e1;
 }
 
-.auth-container .link a:hover {
-  text-decoration: underline;
-  color: var(--auth-hover-color);
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #4a5568;
 }
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #2d3748;
+}
+
 
 /* === Carousel - scoped to specific carousel classes === */
 .recipe-carousel img {

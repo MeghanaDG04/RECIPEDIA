@@ -1,23 +1,33 @@
 {
-  "name": "recipedia_backend",
+  "name": "recipedia-backend",
   "version": "1.0.0",
+  "description": "Backend for Recipedia - Recipe management and recommendation system",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "recipedia",
+    "backend",
+    "express",
+    "mongodb",
+    "api"
+  ],
+  "author": "Your Name",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.12.1",
-    "node-cron": "^4.2.1",
-    "nodemon": "^3.1.9"
+    "mongoose": "^8.18.0",
+    "node-cron": "^4.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   },
   "repository": {
     "type": "git",
@@ -26,6 +36,5 @@
   "bugs": {
     "url": "https://github.com/MeghanaDG04/RECIPEDIA_BACKEND/issues"
   },
-  "homepage": "https://github.com/MeghanaDG04/RECIPEDIA_BACKEND#readme",
-  "description": ""
+  "homepage": "https://github.com/MeghanaDG04/RECIPEDIA_BACKEND#readme"
 }

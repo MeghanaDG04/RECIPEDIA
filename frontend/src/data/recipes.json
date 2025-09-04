@@ -108,6 +108,222 @@
     ]
   },
   {
+    "id": "rajma-chawal",
+    "name": "Rajma Chawal",
+    "category": "veg",
+    "image": "/rajmaChawal.jpg",
+    "about": "A comforting North Indian dish made with red kidney beans cooked in a spiced tomato-onion gravy, served with steamed rice.",
+    "ingredients": [
+      "1 cup Rajma (red kidney beans), soaked overnight",
+      "3 cups Water (for pressure cooking)",
+      "2 tbsp Oil or ghee",
+      "2 large Onions, finely chopped",
+      "2 large Tomatoes, pureed",
+      "1 tbsp Ginger-garlic paste",
+      "2 tsp Coriander powder",
+      "1 tsp Cumin powder",
+      "1 tsp Red chili powder",
+      "1/2 tsp Turmeric powder",
+      "1 tsp Garam masala",
+      "Salt to taste",
+      "Fresh coriander leaves for garnish"
+    ],
+    "preparationSteps": [
+      "Soak rajma overnight and drain the water.",
+      "Pressure cook rajma with 3 cups water and a little salt until soft (about 6–7 whistles).",
+      "Heat oil or ghee in a pan, sauté onions until golden brown.",
+      "Add ginger-garlic paste and cook for 1 minute.",
+      "Add tomato puree and cook until oil separates.",
+      "Add coriander powder, cumin powder, chili powder, turmeric, and salt. Cook for 2–3 minutes.",
+      "Add the cooked rajma along with its water and simmer for 15–20 minutes.",
+      "Add garam masala, mix well, and cook for 2 more minutes.",
+      "Garnish with fresh coriander leaves and serve hot with steamed rice."
+    ]
+  },
+  {
+    "id": "chole-bhature",
+    "name": "Chole Bhature",
+    "category": "veg",
+    "image": "/choleBhature.webp",
+    "about": "A popular North Indian dish consisting of spicy chickpea curry (chole) served with deep-fried, fluffy bread (bhature).",
+    "ingredients": [
+      "1 cup Chickpeas (chole), soaked overnight",
+      "3 cups Water (for pressure cooking)",
+      "2 tbsp Oil",
+      "2 large Onions, finely chopped",
+      "2 large Tomatoes, pureed",
+      "1 tbsp Ginger-garlic paste",
+      "2 tsp Coriander powder",
+      "1 tsp Cumin powder",
+      "1 tsp Red chili powder",
+      "1/2 tsp Turmeric powder",
+      "1 tsp Garam masala",
+      "1 tsp Chole masala",
+      "Salt to taste",
+      "Fresh coriander leaves for garnish",
+      "2 cups All-purpose flour (for bhature)",
+      "2 tbsp Semolina (sooji)",
+      "1/2 cup Yogurt",
+      "1/2 tsp Baking powder",
+      "Oil for deep frying"
+    ],
+    "preparationSteps": [
+      "Soak chickpeas overnight and drain the water.",
+      "Pressure cook chickpeas with 3 cups water and salt until soft (about 6–7 whistles).",
+      "Heat oil in a pan, sauté onions until golden brown.",
+      "Add ginger-garlic paste and cook for 1 minute.",
+      "Add tomato puree and cook until oil separates.",
+      "Add coriander powder, cumin powder, chili powder, turmeric, chole masala, and salt. Cook for 2–3 minutes.",
+      "Add cooked chickpeas along with their water and simmer for 15 minutes.",
+      "Add garam masala, mix well, and cook for 2 more minutes.",
+      "For bhature: Mix flour, semolina, baking powder, and salt. Add yogurt and knead into a soft dough, adding water as needed.",
+      "Cover the dough and let it rest for 2 hours.",
+      "Divide dough into balls, roll into discs, and deep fry until puffed and golden.",
+      "Serve hot chole with fluffy bhature and sliced onions."
+    ]
+  },
+  {
+    "id": "masala-dosa",
+    "name": "Masala Dosa",
+    "category": "veg",
+    "image": "/masala.jpg",
+    "about": "A crispy South Indian crepe made from fermented rice and lentil batter, stuffed with a spiced potato filling and served with chutneys and sambar.",
+    "ingredients": [
+      "2 cups Dosa rice",
+      "1/2 cup Urad dal",
+      "1/4 cup Chana dal",
+      "1/4 tsp Fenugreek seeds",
+      "Salt to taste",
+      "Oil for cooking dosa",
+      "4–5 large Potatoes, boiled and mashed",
+      "1 large Onion, thinly sliced",
+      "2 Green chilies, chopped",
+      "1/2 tsp Mustard seeds",
+      "1/2 tsp Cumin seeds",
+      "8–10 Curry leaves",
+      "1/2 tsp Turmeric powder",
+      "1 tbsp Oil",
+      "Salt to taste",
+      "Fresh coriander leaves, chopped"
+    ],
+    "preparationSteps": [
+      "Wash and soak rice, urad dal, chana dal, and fenugreek seeds for 6–8 hours.",
+      "Grind to a smooth batter, adding water as needed.",
+      "Add salt and ferment batter overnight or 8–10 hours until fluffy.",
+      "For masala filling: Heat oil in a pan, add mustard seeds, cumin seeds, curry leaves, and green chilies.",
+      "Add sliced onions and sauté until soft.",
+      "Add turmeric powder and boiled potatoes. Mix well and season with salt.",
+      "Cook for 2–3 minutes and garnish with coriander leaves.",
+      "Heat a non-stick pan, pour a ladle of batter, and spread thin in a circular motion.",
+      "Drizzle some oil around edges and cook until golden and crispy.",
+      "Place potato masala in the center, fold dosa, and serve with coconut chutney and sambar."
+    ]
+  },
+
+  {
+    "id": "pav-bhaji",
+    "name": "Pav Bhaji",
+    "category": "veg",
+    "image": "/pavBhaji.jpg",
+    "about": "A popular Mumbai street food consisting of a spicy vegetable mash served with butter-toasted bread rolls.",
+    "ingredients": [
+      "4 Pav bread rolls",
+      "2 tbsp Butter (plus more for toasting pav)",
+      "1 large Onion, finely chopped",
+      "1 large Tomato, finely chopped",
+      "1/2 cup Green peas (boiled)",
+      "2 medium Potatoes (boiled and mashed)",
+      "1/2 cup Cauliflower florets (boiled and mashed)",
+      "1/2 cup Capsicum, finely chopped",
+      "2–3 Green chilies, chopped",
+      "2 tsp Ginger-garlic paste",
+      "2 tsp Pav bhaji masala",
+      "1/2 tsp Turmeric powder",
+      "1/2 tsp Red chili powder",
+      "Salt to taste",
+      "Fresh coriander leaves, chopped",
+      "Lemon wedges for serving"
+    ],
+    "preparationSteps": [
+      "Heat butter in a large pan. Add onions and sauté until golden brown.",
+      "Add ginger-garlic paste and green chilies, sauté for a minute.",
+      "Add tomatoes and cook until soft and mushy.",
+      "Add pav bhaji masala, turmeric, and red chili powder. Mix well.",
+      "Add boiled potatoes, cauliflower, capsicum, and green peas. Mash everything with a potato masher.",
+      "Add salt and water to adjust consistency. Let it simmer for 5–7 minutes.",
+      "Garnish with coriander leaves and a knob of butter.",
+      "For pav: Slice pav rolls, toast with butter on a hot tawa until golden.",
+      "Serve bhaji hot with butter-toasted pav, lemon wedges, and chopped onions."
+    ]
+  },
+  {
+    "id": "dhokla",
+    "name": "Dhokla",
+    "category": "veg",
+    "image": "/dhokla.jpg",
+    "about": "A soft, spongy steamed snack from Gujarat made with fermented gram flour batter, seasoned with mustard seeds and green chilies.",
+    "ingredients": [
+      "1 cup Gram flour (besan)",
+      "1/2 cup Yogurt (curd)",
+      "1/2 cup Water",
+      "1 tsp Ginger-green chili paste",
+      "1/2 tsp Turmeric powder",
+      "1 tsp Lemon juice",
+      "1 tsp Eno fruit salt",
+      "Salt to taste",
+      "1 tbsp Oil",
+      "1 tsp Mustard seeds",
+      "2-3 Green chilies, slit",
+      "Few curry leaves",
+      "Fresh coriander leaves, chopped",
+      "Grated coconut (optional)"
+    ],
+    "preparationSteps": [
+      "In a mixing bowl, combine gram flour, yogurt, water, ginger-green chili paste, turmeric, lemon juice, and salt to make a smooth batter.",
+      "Just before steaming, add Eno fruit salt and mix gently. The batter will become fluffy.",
+      "Pour batter into a greased steaming tray and steam for 15–20 minutes until a toothpick comes out clean.",
+      "Heat oil in a small pan, add mustard seeds, curry leaves, and slit green chilies. Let them splutter.",
+      "Pour this tempering over the steamed dhokla.",
+      "Garnish with chopped coriander leaves and grated coconut if desired.",
+      "Cut into squares and serve with green chutney."
+    ]
+  },
+
+  {
+    "id": "veg-momos",
+    "name": "Veg Momo",
+    "category": "veg",
+    "image": "/momos.jpg",
+    "about": "Soft dumplings stuffed with finely chopped vegetables, a popular street food in India with origins in Tibet and Nepal.",
+    "ingredients": [
+      "1 cup All-purpose flour (maida)",
+      "1/4 tsp Salt",
+      "Water as needed (for dough)",
+      "1 cup Cabbage, finely chopped",
+      "1/2 cup Carrot, grated",
+      "1/4 cup Capsicum, finely chopped",
+      "1/4 cup Spring onion greens, chopped",
+      "1 tbsp Oil",
+      "1 tsp Garlic, minced",
+      "1 tsp Ginger, minced",
+      "1–2 Green chilies, finely chopped",
+      "1 tbsp Soy sauce",
+      "Salt to taste",
+      "Black pepper to taste"
+    ],
+    "preparationSteps": [
+      "In a bowl, mix all-purpose flour, salt, and enough water to make a soft dough. Cover and let it rest for 20–30 minutes.",
+      "Heat oil in a pan, add garlic, ginger, and green chilies, and sauté until fragrant.",
+      "Add cabbage, carrot, capsicum, and spring onions. Stir-fry on high heat for 2–3 minutes.",
+      "Add soy sauce, salt, and pepper. Mix well and cook for another minute. Let the filling cool.",
+      "Roll small portions of dough into thin circles. Place a spoonful of filling in the center.",
+      "Fold and pleat the edges to seal the momos.",
+      "Steam in a steamer for 8–10 minutes until the momos turn slightly translucent.",
+      "Serve hot with spicy red chutney."
+    ]
+  },
+
+  {
     "id": "butter-chicken",
     "name": "Butter Chicken",
     "category": "nonveg",
@@ -141,7 +357,7 @@
     "id": "chicken-biryani",
     "name": "Chicken Biryani",
     "category": "nonveg",
-    "image": "/biriyani.jpg",
+    "image": "/chickenBiryani.jpg",
     "about": "A delicious and aromatic rice dish made with marinated chicken, basmati rice, and a blend of fragrant spices.",
     "ingredients": [
       "2 cups Basmati rice",
@@ -167,6 +383,72 @@
       "Stir in biryani masala, then add water or chicken broth",
       "Add soaked rice, cover, and cook on low heat until rice is fluffy and chicken is tender",
       "Garnish with fresh coriander and mint, serve hot"
+    ]
+  },
+  {
+    "id": "mutton-rogan-josh",
+    "name": "Mutton Rogan Josh",
+    "category": "nonveg",
+    "image": "/muttonRoganJosh.jpg",
+    "about": "A rich and aromatic Kashmiri delicacy made with tender mutton pieces slow-cooked in a blend of flavorful spices and yogurt.",
+    "ingredients": [
+      "500g Mutton (goat/lamb), cut into medium pieces",
+      "3 tbsp Mustard oil or ghee",
+      "2 Large onions, thinly sliced",
+      "1 cup Yogurt (curd), whisked",
+      "2-3 Bay leaves",
+      "4-5 Cloves",
+      "2-3 Green cardamoms",
+      "1 Black cardamom",
+      "1-inch Cinnamon stick",
+      "1 tbsp Ginger-garlic paste",
+      "2 tsp Kashmiri red chili powder",
+      "1 tsp Turmeric powder",
+      "1 tsp Fennel powder",
+      "1 tsp Dry ginger powder",
+      "Salt to taste",
+      "Fresh coriander leaves for garnish"
+    ],
+    "preparationSteps": [
+      "Heat mustard oil until it starts smoking. Reduce heat and fry bay leaves, cloves, cardamoms, and cinnamon for a few seconds.",
+      "Add onions and sauté until golden brown.",
+      "Add ginger-garlic paste and cook for 1–2 minutes until raw smell disappears.",
+      "Add mutton pieces and fry on medium heat until they turn brown.",
+      "Mix turmeric powder, Kashmiri red chili powder, fennel powder, and dry ginger powder into whisked yogurt.",
+      "Add the yogurt mixture to the mutton and cook on low heat, stirring continuously to avoid curdling.",
+      "Add salt and 1–2 cups of water, cover, and cook on low flame until mutton is tender (around 45–60 minutes).",
+      "Garnish with fresh coriander and serve hot with steamed rice or naan."
+    ]
+  },
+  {
+    "id": "tandoori-chicken",
+    "name": "Tandoori Chicken",
+    "category": "nonveg",
+    "image": "/tandooriChicken.webp",
+    "about": "A classic North Indian dish where chicken is marinated in yogurt and aromatic spices, then roasted to perfection for a smoky, charred flavor.",
+    "ingredients": [
+      "500g Chicken (with bone, preferably leg and thigh pieces)",
+      "1 cup Thick yogurt (curd)",
+      "2 tbsp Lemon juice",
+      "1 tbsp Ginger-garlic paste",
+      "1 tbsp Kashmiri red chili powder",
+      "1 tsp Turmeric powder",
+      "1 tsp Garam masala powder",
+      "1 tsp Coriander powder",
+      "1 tsp Cumin powder",
+      "2 tbsp Mustard oil",
+      "Salt to taste",
+      "Fresh coriander leaves for garnish",
+      "Onion rings and lemon wedges for serving"
+    ],
+    "preparationSteps": [
+      "Clean and pat dry the chicken pieces. Make deep cuts on them for better marination.",
+      "In a large bowl, mix yogurt, lemon juice, ginger-garlic paste, Kashmiri red chili powder, turmeric, garam masala, coriander powder, cumin powder, mustard oil, and salt.",
+      "Coat the chicken pieces well with the marinade, making sure it enters the cuts. Cover and refrigerate for at least 4–6 hours (overnight is best).",
+      "Preheat the oven to 200°C. Place the marinated chicken on a grill rack over a baking tray.",
+      "Roast for 20–25 minutes, turn the pieces, and roast for another 15–20 minutes until fully cooked and slightly charred.",
+      "Alternatively, cook in a tandoor or on a grill pan for authentic smoky flavor.",
+      "Garnish with fresh coriander and serve hot with onion rings and lemon wedges."
     ]
   },
   {
@@ -235,6 +517,142 @@
       "Garnish with fresh coriander and serve hot with rice or roti"
     ]
   },
+  {
+    "id": "egg-curry",
+    "name": "Egg Curry",
+    "category": "nonveg",
+    "image": "/eggCurry.jpg",
+    "about": "A comforting and flavorful dish made with boiled eggs simmered in a rich, spiced onion-tomato gravy, perfect with rice or roti.",
+    "ingredients": [
+      "6 boiled eggs",
+      "2 tbsp Oil",
+      "1 Large onion, finely chopped",
+      "2 Tomatoes, finely chopped",
+      "1 tbsp Ginger-garlic paste",
+      "2 Green chilies, slit",
+      "1 tsp Turmeric powder",
+      "1 tsp Red chili powder",
+      "1 tsp Coriander powder",
+      "1 tsp Cumin powder",
+      "1 tsp Garam masala",
+      "1/2 tsp Kasuri methi (dried fenugreek leaves)",
+      "Fresh coriander leaves for garnish",
+      "Salt to taste",
+      "Water as needed"
+    ],
+    "preparationSteps": [
+      "Peel the boiled eggs and make small slits on them.",
+      "Heat 1 tbsp oil in a pan, lightly fry the eggs until golden, and set aside.",
+      "In the same pan, add the remaining oil and sauté onions until golden brown.",
+      "Add ginger-garlic paste and green chilies, and cook for 1–2 minutes.",
+      "Add tomatoes and cook until soft and oil starts to separate.",
+      "Mix in turmeric, red chili powder, coriander powder, cumin powder, and salt. Cook the spices for 2 minutes.",
+      "Add a little water to make a thick gravy, then add garam masala and crushed kasuri methi.",
+      "Add the fried eggs to the gravy, gently mix, and simmer for 5 minutes.",
+      "Garnish with fresh coriander leaves and serve hot with steamed rice or roti."
+    ]
+  },
+  {
+    "id": "keema-pav",
+    "name": "Keema Pav",
+    "category": "nonveg",
+    "image": "/keemaPav.webp",
+    "about": "A popular Mumbai street food made with spicy minced meat curry served with buttery pav buns, perfect for a hearty meal.",
+    "ingredients": [
+      "500g minced mutton or chicken",
+      "3 tbsp Oil",
+      "2 Large onions, finely chopped",
+      "2 Tomatoes, finely chopped",
+      "1 tbsp Ginger-garlic paste",
+      "2 Green chilies, chopped",
+      "1 tsp Turmeric powder",
+      "1 tsp Red chili powder",
+      "1 tsp Coriander powder",
+      "1 tsp Cumin powder",
+      "1 tsp Garam masala",
+      "1/2 tsp Kasuri methi",
+      "Fresh coriander leaves for garnish",
+      "Salt to taste",
+      "Water as needed",
+      "6 Pav buns",
+      "Butter for toasting"
+    ],
+    "preparationSteps": [
+      "Heat oil in a pan and sauté onions until golden brown.",
+      "Add ginger-garlic paste and green chilies, cook for 1–2 minutes.",
+      "Add tomatoes and cook until soft and oil separates.",
+      "Mix in turmeric, red chili powder, coriander powder, cumin powder, and salt. Cook for 2 minutes.",
+      "Add minced meat and cook on medium heat until it changes color.",
+      "Pour in some water, cover, and cook for 15–20 minutes until the meat is tender.",
+      "Add garam masala and crushed kasuri methi, mix well, and cook for 2–3 minutes.",
+      "Garnish with fresh coriander leaves.",
+      "Toast pav buns with butter on a hot tawa.",
+      "Serve hot keema with buttery pav and lemon wedges."
+    ]
+  },
+
+  {
+    "id": "grilled-salmon",
+    "name": "Grilled Salmon",
+    "category": "nonveg",
+    "image": "/grilledSalmon.webp",
+    "about": "A healthy and flavorful dish where fresh salmon fillets are marinated with herbs and spices, then grilled to perfection for a smoky, tender finish.",
+    "ingredients": [
+      "4 Salmon fillets (about 150g each)",
+      "2 tbsp Olive oil",
+      "1 tbsp Lemon juice",
+      "1 tsp Garlic, minced",
+      "1 tsp Dried oregano",
+      "1 tsp Paprika",
+      "Salt to taste",
+      "Freshly ground black pepper to taste",
+      "Fresh dill or parsley for garnish",
+      "Lemon wedges for serving"
+    ],
+    "preparationSteps": [
+      "In a small bowl, mix olive oil, lemon juice, garlic, oregano, paprika, salt, and black pepper.",
+      "Brush the marinade over both sides of the salmon fillets and let them rest for 15–20 minutes.",
+      "Preheat a grill or grill pan over medium-high heat.",
+      "Place the salmon fillets skin-side down on the grill and cook for 4–5 minutes.",
+      "Flip and cook for another 3–4 minutes until the salmon is cooked through but still moist inside.",
+      "Remove from the grill and garnish with fresh dill or parsley.",
+      "Serve hot with lemon wedges and your choice of side salad or grilled vegetables."
+    ]
+  },
+  {
+    "id": "chicken-shawarma",
+    "name": "Chicken Shawarma",
+    "category": "nonveg",
+    "image": "/chickenShawarna.jpg",
+    "about": "A Middle Eastern street food favorite where marinated chicken is grilled or roasted, then served with pita bread, fresh veggies, and creamy sauces.",
+    "ingredients": [
+      "500g Boneless chicken thighs or breasts",
+      "3 tbsp Plain yogurt",
+      "2 tbsp Olive oil",
+      "1 tbsp Lemon juice",
+      "3 Garlic cloves, minced",
+      "1 tsp Ground cumin",
+      "1 tsp Ground paprika",
+      "1/2 tsp Ground turmeric",
+      "1/2 tsp Ground coriander",
+      "1/4 tsp Ground cinnamon",
+      "Salt to taste",
+      "Freshly ground black pepper to taste",
+      "Pita bread for serving",
+      "Fresh lettuce, tomatoes, onions for filling",
+      "Garlic sauce or tahini sauce for dressing"
+    ],
+    "preparationSteps": [
+      "In a large bowl, mix yogurt, olive oil, lemon juice, garlic, cumin, paprika, turmeric, coriander, cinnamon, salt, and black pepper.",
+      "Add chicken pieces to the marinade, coat well, and refrigerate for at least 1–2 hours (overnight for best flavor).",
+      "Preheat a grill pan or skillet over medium-high heat.",
+      "Cook the marinated chicken for 5–6 minutes per side until fully cooked and slightly charred.",
+      "Remove from heat and slice into thin strips.",
+      "Warm pita bread and layer with lettuce, tomatoes, onions, and sliced chicken.",
+      "Drizzle with garlic sauce or tahini sauce, wrap, and serve hot."
+    ]
+  },
+
   {
     "id": "gulab-jamun",
     "name": "Gulab Jamun",
@@ -355,10 +773,192 @@
     ]
   },
   {
+    "id": "kheer",
+    "name": "Kheer",
+    "category": "dessert",
+    "image": "/kheer.webp",
+    "about": "A traditional Indian rice pudding made with milk, rice, and sugar, flavored with cardamom and garnished with nuts and dried fruits.",
+    "ingredients": [
+      "1/4 cup Basmati rice",
+      "1 liter Full cream milk",
+      "1/4 cup Sugar (adjust to taste)",
+      "1/4 tsp Cardamom powder",
+      "2 tbsp Chopped almonds",
+      "2 tbsp Chopped cashews",
+      "2 tbsp Raisins",
+      "A few strands of saffron (optional)"
+    ],
+    "preparationSteps": [
+      "Wash the rice thoroughly and soak it in water for 30 minutes.",
+      "In a heavy-bottomed pan, bring the milk to a boil.",
+      "Drain the soaked rice and add it to the boiling milk.",
+      "Cook on low flame, stirring occasionally to prevent sticking, until the rice becomes soft and the milk thickens.",
+      "Add sugar and mix until it dissolves completely.",
+      "Stir in cardamom powder, saffron strands, and half of the chopped nuts.",
+      "Simmer for another 5 minutes, then turn off the heat.",
+      "Garnish with remaining nuts and raisins.",
+      "Serve warm or chilled."
+    ]
+  },
+  {
+    "id": "ladoo",
+    "name": "Ladoo",
+    "category": "dessert",
+    "image": "/laddo.webp",
+    "about": "A popular Indian sweet made from flour, ghee, and sugar, often flavored with cardamom and garnished with nuts.",
+    "ingredients": [
+      "2 cups Besan (gram flour)",
+      "1 cup Powdered sugar",
+      "1/2 cup Ghee (clarified butter)",
+      "1/4 tsp Cardamom powder",
+      "2 tbsp Chopped almonds",
+      "2 tbsp Chopped cashews",
+      "2 tbsp Raisins"
+    ],
+    "preparationSteps": [
+      "Heat ghee in a heavy-bottomed pan on low flame.",
+      "Add the besan and roast it, stirring continuously, until it turns golden brown and releases a nutty aroma.",
+      "Turn off the heat and let it cool slightly.",
+      "Add powdered sugar, cardamom powder, and mix well.",
+      "Stir in chopped nuts and raisins.",
+      "While the mixture is still warm, shape it into round ladoos using your palms.",
+      "Allow them to cool completely before storing.",
+      "Store in an airtight container."
+    ]
+  },
+  {
+    "id": "barfi",
+    "name": "Barfi",
+    "category": "dessert",
+    "image": "/barfi.jpg",
+    "about": "A rich and creamy Indian sweet made with milk solids, sugar, and flavored with cardamom, often garnished with nuts or silver leaf.",
+    "ingredients": [
+      "2 cups Khoya (mawa)",
+      "1 cup Sugar",
+      "1/4 cup Water",
+      "1/4 tsp Cardamom powder",
+      "2 tbsp Chopped almonds",
+      "2 tbsp Chopped pistachios",
+      "Silver leaf (optional)"
+    ],
+    "preparationSteps": [
+      "Crumble the khoya and set aside.",
+      "In a pan, add sugar and water. Boil to make a one-string consistency syrup.",
+      "Add the crumbled khoya to the syrup and mix well.",
+      "Cook the mixture on low flame until it thickens and starts leaving the sides of the pan.",
+      "Add cardamom powder and mix again.",
+      "Grease a tray with ghee and spread the mixture evenly.",
+      "Garnish with chopped nuts and optional silver leaf.",
+      "Let it cool completely, then cut into squares or diamonds."
+    ]
+  },
+  {
+    "id": "kulfi",
+    "name": "Kulfi",
+    "category": "dessert",
+    "image": "/kulfi.webp",
+    "about": "A traditional Indian frozen dessert made with thickened milk, flavored with cardamom, saffron, and nuts for a rich and creamy taste.",
+    "ingredients": [
+      "1 liter Full cream milk",
+      "1/2 cup Sugar",
+      "1/4 cup Condensed milk",
+      "1/4 tsp Cardamom powder",
+      "A few strands of Saffron",
+      "2 tbsp Chopped pistachios",
+      "2 tbsp Chopped almonds"
+    ],
+    "preparationSteps": [
+      "Boil the milk in a heavy-bottomed pan and simmer until it reduces to half, stirring frequently.",
+      "Add sugar, condensed milk, and saffron strands; mix well.",
+      "Add cardamom powder and chopped nuts, then cook for another 5 minutes.",
+      "Let the mixture cool to room temperature.",
+      "Pour into kulfi molds or small cups, cover, and freeze for 6-8 hours or until set.",
+      "To serve, dip the mold in warm water for a few seconds and gently remove the kulfi."
+    ]
+  },
+  {
+    "id": "chocolate-cake",
+    "name": "Chocolate Cake",
+    "category": "dessert",
+    "image": "/chocolateCake.jpg",
+    "about": "A rich and moist chocolate cake made with cocoa powder, layered with creamy chocolate frosting for a decadent dessert.",
+    "ingredients": [
+      "1 and 1/2 cups All-purpose flour (maida)",
+      "1 cup Sugar",
+      "1/2 cup Cocoa powder",
+      "1 tsp Baking powder",
+      "1/2 tsp Baking soda",
+      "1/2 cup Vegetable oil",
+      "1 cup Milk",
+      "1 tsp Vanilla essence",
+      "1 tbsp Vinegar or lemon juice",
+      "1/2 cup Chocolate ganache or frosting"
+    ],
+    "preparationSteps": [
+      "Preheat the oven to 180°C (350°F) and grease a cake tin.",
+      "In a large mixing bowl, sift together flour, cocoa powder, baking powder, and baking soda.",
+      "Add sugar, oil, milk, and vanilla essence; mix until smooth.",
+      "Stir in vinegar and mix gently.",
+      "Pour the batter into the prepared tin and bake for 30-35 minutes or until a toothpick inserted comes out clean.",
+      "Let the cake cool completely before frosting with chocolate ganache or icing."
+    ]
+  },
+  {
+    "id": "peda",
+    "name": "Peda",
+    "category": "dessert",
+    "image": "/peda.jpg",
+    "about": "A soft and sweet Indian milk-based dessert made with khoya, sugar, and flavored with cardamom, often garnished with nuts.",
+    "ingredients": [
+      "1 cup Khoya (mawa)",
+      "1/2 cup Condensed milk",
+      "1/4 cup Milk powder",
+      "1/4 tsp Cardamom powder",
+      "2 tbsp Ghee (clarified butter)",
+      "Chopped nuts (almonds/pistachios) for garnish"
+    ],
+    "preparationSteps": [
+      "In a pan, heat ghee and add khoya, stirring until it melts.",
+      "Add condensed milk and milk powder, mixing well to form a dough-like consistency.",
+      "Cook on low heat for 5-7 minutes until the mixture thickens.",
+      "Remove from heat, add cardamom powder, and let it cool slightly.",
+      "Grease your hands with ghee and shape the mixture into small round balls or discs.",
+      "Garnish with chopped nuts and let them cool completely before serving."
+    ]
+  },
+
+  {
+    "id": "fruit-custard",
+    "name": "Fruit Custard",
+    "category": "dessert",
+    "image": "/fruitCustard.webp",
+    "about": "A creamy dessert made with custard and a variety of fresh fruits, served chilled for a refreshing treat.",
+    "ingredients": [
+      "2 cups Milk",
+      "2 tbsp Custard powder (vanilla flavor)",
+      "3-4 tbsp Sugar",
+      "1/2 cup Apple (chopped)",
+      "1/2 cup Banana (sliced)",
+      "1/2 cup Grapes",
+      "1/2 cup Pomegranate seeds",
+      "Other seasonal fruits of choice"
+    ],
+    "preparationSteps": [
+      "In a small bowl, mix custard powder with 3-4 tablespoons of cold milk to make a smooth paste.",
+      "Boil the remaining milk in a saucepan, add sugar, and stir until dissolved.",
+      "Add the custard paste to the boiling milk, stirring continuously to avoid lumps.",
+      "Cook for 2-3 minutes until the custard thickens, then turn off the heat.",
+      "Let the custard cool to room temperature, then refrigerate for at least 1 hour.",
+      "Before serving, add all the chopped fruits and mix gently.",
+      "Serve chilled."
+    ]
+  },
+
+  {
     "id": "masala-chai",
     "name": "Masala Chai",
     "category": "beverages",
-    "image": "/masala.jpg",
+    "image": "/chai.jpg",
     "about": "A fragrant and spiced Indian tea made by brewing black tea leaves with aromatic spices, milk, and sugar.",
     "ingredients": [
       "2 cups Water",
@@ -458,6 +1058,141 @@
       "Stir in sugar, saffron, and rose water (if using), and let it cool",
       "Refrigerate for 1-2 hours for flavors to blend",
       "Strain (optional) and serve chilled, garnished with chopped nuts"
+    ]
+  },
+  {
+    "id": "cold-coffee",
+    "name": "Cold Coffee",
+    "category": "beverages",
+    "image": "/coldCoffee.jpg",
+    "about": "A chilled, frothy blend of coffee, milk, and sugar, perfect for a refreshing caffeine boost on a hot day.",
+    "ingredients": [
+      "2 cups Cold milk",
+      "2 tbsp Instant coffee powder",
+      "3-4 tbsp Sugar (adjust to taste)",
+      "1/4 cup Cold water",
+      "Ice cubes as needed",
+      "Chocolate syrup (optional)",
+      "Whipped cream (optional)"
+    ],
+    "preparationSteps": [
+      "In a blender, add instant coffee powder, sugar, and cold water. Blend until the mixture becomes frothy.",
+      "Add cold milk and ice cubes, then blend again until smooth and creamy.",
+      "For extra flavor, drizzle chocolate syrup inside the serving glasses.",
+      "Pour the cold coffee into glasses and top with whipped cream if desired.",
+      "Serve immediately."
+    ]
+  },
+  {
+    "id": "nimbu-pani",
+    "name": "Nimbu Pani",
+    "category": "beverages",
+    "image": "/nimbuPani.jpg",
+    "about": "A refreshing Indian lemonade made with fresh lemon juice, water, sugar, and a hint of salt for a perfect summer drink.",
+    "ingredients": [
+      "2 Lemons",
+      "2 cups Cold water",
+      "2-3 tbsp Sugar (adjust to taste)",
+      "1/4 tsp Salt",
+      "1/4 tsp Black salt (optional)",
+      "Mint leaves for garnish",
+      "Ice cubes as needed"
+    ],
+    "preparationSteps": [
+      "Cut the lemons and extract the juice into a bowl.",
+      "In a jug, mix lemon juice, sugar, salt, and black salt.",
+      "Add cold water and stir until the sugar dissolves completely.",
+      "Add ice cubes and garnish with fresh mint leaves.",
+      "Serve chilled."
+    ]
+  },
+  {
+    "id": "mango-shake",
+    "name": "Mango Shake",
+    "category": "beverages",
+    "image": "/mangoShake.jpg",
+    "about": "A rich and creamy summer drink made with fresh ripe mangoes, milk, and sugar — perfect for a refreshing treat.",
+    "ingredients": [
+      "2 Ripe mangoes (peeled and chopped)",
+      "2 cups Chilled milk",
+      "2-3 tbsp Sugar (adjust to taste)",
+      "Ice cubes as needed",
+      "1 scoop Vanilla ice cream (optional)",
+      "Chopped nuts for garnish (optional)"
+    ],
+    "preparationSteps": [
+      "Add chopped mangoes, sugar, and chilled milk to a blender.",
+      "Blend until smooth and creamy.",
+      "Add ice cubes and blend again for a frothy texture.",
+      "Pour into glasses and top with vanilla ice cream if desired.",
+      "Garnish with chopped nuts and serve immediately."
+    ]
+  },
+  {
+    "id": "hot-chocolate",
+    "name": "Hot Chocolate",
+    "category": "beverages",
+    "image": "/hotChocolate.webp",
+    "about": "A rich, velvety drink made with cocoa, milk, and sugar — perfect for cozy evenings.",
+    "ingredients": [
+      "2 cups Milk",
+      "2 tbsp Unsweetened cocoa powder",
+      "2 tbsp Sugar (adjust to taste)",
+      "50g Dark chocolate (chopped, optional for richness)",
+      "Whipped cream for topping (optional)",
+      "Chocolate shavings for garnish"
+    ],
+    "preparationSteps": [
+      "Heat milk in a saucepan over medium heat.",
+      "Whisk in cocoa powder and sugar until well combined.",
+      "Add chopped dark chocolate and stir until melted and smooth.",
+      "Pour into mugs and top with whipped cream.",
+      "Garnish with chocolate shavings and serve hot."
+    ]
+  },
+  {
+    "id": "green-tea",
+    "name": "Green Tea",
+    "category": "beverages",
+    "image": "/greenTea.avif",
+    "about": "A soothing and healthy drink made by steeping green tea leaves, rich in antioxidants.",
+    "ingredients": [
+      "1 cup Water",
+      "1 tsp Green tea leaves (or 1 tea bag)",
+      "Honey or lemon (optional)"
+    ],
+    "preparationSteps": [
+      "Bring water to a gentle boil.",
+      "Remove from heat and add green tea leaves or tea bag.",
+      "Steep for 2–3 minutes (avoid over-steeping to prevent bitterness).",
+      "Strain if using loose leaves.",
+      "Add honey or lemon if desired and serve warm."
+    ]
+  },
+  {
+    "id": "rose-milk",
+    "name": "Rose Milk",
+    "category": "beverages",
+    "image": "/roseMilk.jpg",
+    "about": "A fragrant, sweet drink made with chilled milk and rose syrup, perfect for summer.",
+    "ingredients": ["2 cups Chilled milk", "3 tbsp Rose syrup", "Ice cubes"],
+    "preparationSteps": [
+      "In a glass, add rose syrup.",
+      "Pour in chilled milk and mix well.",
+      "Add ice cubes and stir before serving."
+    ]
+  },
+  {
+    "id": "coconut-water",
+    "name": "Coconut Water",
+    "category": "beverages",
+    "image": "/coconutWater.jpg",
+    "about": "A naturally refreshing drink from tender coconuts, rich in electrolytes and nutrients.",
+    "ingredients": ["1 Fresh tender coconut"],
+    "preparationSteps": [
+      "Cut open the tender coconut carefully.",
+      "Pour the coconut water into a glass.",
+      "Serve chilled for best taste."
     ]
   }
 ]

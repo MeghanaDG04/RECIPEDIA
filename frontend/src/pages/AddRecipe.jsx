@@ -4,7 +4,7 @@ import { FaTrash, FaEdit, FaHeart, FaComment } from 'react-icons/fa';
 import '../styles/AddRecipe.css';
 
 const AddRecipe = () => {
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState([]); // Ensure it's always an array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [newRecipe, setNewRecipe] = useState({
@@ -56,12 +56,31 @@ const AddRecipe = () => {
   const fetchRecipes = async () => {
     try {
       setLoading(true);
+      setError(''); // Clear previous errors
+      
       const response = await fetch(`${API_BASE_URL}/recipes`);
-      if (!response.ok) throw new Error('Failed to fetch recipes');
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch recipes: ${response.status} ${response.statusText}`);
+      }
+      
       const data = await response.json();
-      setRecipes(data);
+      
+      // Ensure data is an array, even if API returns something else
+      if (Array.isArray(data)) {
+        setRecipes(data);
+      } else if (data && Array.isArray(data.recipes)) {
+        // In case API returns { recipes: [...] }
+        setRecipes(data.recipes);
+      } else {
+        console.warn('API did not return an array of recipes:', data);
+        setRecipes([]);
+      }
+      
     } catch (err) {
+      console.error('Error fetching recipes:', err);
       setError('Error fetching recipes: ' + err.message);
+      setRecipes([]); // Ensure recipes is still an array on error
     } finally {
       setLoading(false);
     }
@@ -90,6 +109,8 @@ const AddRecipe = () => {
     }
 
     try {
+      setError(''); // Clear previous errors
+      
       const recipeData = {
         title: newRecipe.title.trim(),
         description: newRecipe.description.trim(),
@@ -118,14 +139,16 @@ const AddRecipe = () => {
         }
 
         if (!response.ok) {
-          const errorData = await response.json();
+          const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.message || 'Failed to update recipe');
         }
         
         const result = await response.json();
-        setRecipes(recipes.map(recipe => 
-          recipe._id === editingRecipe._id ? result.recipe : recipe
-        ));
+        setRecipes(prevRecipes => 
+          prevRecipes.map(recipe => 
+            recipe._id === editingRecipe._id ? result.recipe : recipe
+          )
+        );
         setEditingRecipe(null);
       } else {
         // Add new recipe
@@ -142,17 +165,16 @@ const AddRecipe = () => {
         }
 
         if (!response.ok) {
-          const errorData = await response.json();
+          const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.message || 'Failed to add recipe');
         }
         
         const result = await response.json();
-        setRecipes([...recipes, result.recipe]);
+        setRecipes(prevRecipes => [...prevRecipes, result.recipe]);
       }
 
       // Reset form
       setNewRecipe({ title: "", description: "", ingredients: "", image: "" });
-      setError('');
     } catch (err) {
       console.error('Recipe submission error:', err);
       setError('Error saving recipe: ' + err.message);
@@ -199,11 +221,11 @@ const AddRecipe = () => {
       }
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to delete recipe');
       }
       
-      setRecipes(recipes.filter(recipe => recipe._id !== id));
+      setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe._id !== id));
     } catch (err) {
       console.error('Delete error:', err);
       setError('Error deleting recipe: ' + err.message);
@@ -231,14 +253,16 @@ const AddRecipe = () => {
       }
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to like recipe');
       }
       
       const result = await response.json();
-      setRecipes(recipes.map(recipe => 
-        recipe._id === id ? { ...recipe, likes: result.likes } : recipe
-      ));
+      setRecipes(prevRecipes => 
+        prevRecipes.map(recipe => 
+          recipe._id === id ? { ...recipe, likes: result.likes } : recipe
+        )
+      );
     } catch (err) {
       console.error('Like error:', err);
       setError('Error liking recipe: ' + err.message);
@@ -271,21 +295,32 @@ const AddRecipe = () => {
       }
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Failed to add comment');
       }
       
       const result = await response.json();
-      setRecipes(recipes.map(recipe => 
-        recipe._id === recipeId ? result.recipe : recipe
-      ));
+      setRecipes(prevRecipes => 
+        prevRecipes.map(recipe => 
+          recipe._id === recipeId ? result.recipe : recipe
+        )
+      );
     } catch (err) {
       console.error('Comment error:', err);
       setError('Error adding comment: ' + err.message);
     }
   };
 
-  if (loading) return <div className="loading">Loading recipes...</div>;
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="add-recipe-bg">
+        <div className="recipe-container">
+          <div className="loading">Loading recipes...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="add-recipe-bg">
@@ -352,7 +387,7 @@ const AddRecipe = () => {
         {/* Recipe List */}
         <div className="recipe-list">
           <h2>All Recipes</h2>
-          {recipes.length === 0 ? (
+          {!Array.isArray(recipes) || recipes.length === 0 ? (
             <p>No recipes found. Be the first to add a recipe!</p>
           ) : (
             recipes.map((recipe) => (

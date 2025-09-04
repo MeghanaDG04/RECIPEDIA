@@ -54,7 +54,7 @@ const CategoryCard = ({ category, index }) => {
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
         />
         <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} opacity-60 group-hover:opacity-40 transition-opacity duration-500`} />
-        
+
         {/* Floating Elements */}
         <div className="absolute top-4 right-4">
           <div className={`bg-white/20 backdrop-blur-sm rounded-full p-2 ${isHovered ? 'animate-bounce' : ''}`}>
@@ -87,7 +87,7 @@ const CategoryCard = ({ category, index }) => {
               <span>Trending recipes</span>
             </div>
           </div>
-          
+
           <a 
             href={category.href}
             className={`inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r ${category.gradient} text-white shadow-lg group-hover:shadow-xl transform group-hover:scale-110 transition-all duration-300`}
@@ -123,14 +123,14 @@ const CategoriesSection = () => {
             <Sparkles className="w-4 h-4 mr-2 text-red-500 animate-spin" style={{ animationDuration: '3s' }} />
             <span className="text-sm font-semibold text-red-600 dark:text-red-400">Explore Categories</span>
           </div>
-          
+
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-800 dark:text-white mb-6">
             Browse by{' '}
             <span className="bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent">
               Category
             </span>
           </h2>
-          
+
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Discover your next favorite dish from our carefully curated categories, each packed with authentic recipes from around the world.
           </p>
