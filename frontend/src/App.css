@@ -36,6 +36,14 @@
   margin-bottom: 15px;
   margin-top: 24px;
 }
+/* Style the select placeholder */
+.auth-container select:required:invalid {
+  color: #999; 
+}
+
+.auth-container select option {
+  color: #333;
+}
 
 .auth-container input[type="text"],
 .auth-container input[type="email"],
