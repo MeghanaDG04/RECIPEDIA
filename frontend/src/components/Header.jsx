@@ -159,48 +159,34 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
                 >
                   <FaPlus className="mr-2" /> Add Recipe
                 </Link>
-                
-                {/* Profile Section with Username and Profile Picture */}
-                <div className="flex items-center space-x-3">
-                  <span className="text-gray-700 dark:text-white font-medium">
-                    {username}
-                  </span>
-                  <div className="relative" ref={dropdownRef}>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={toggleProfileDropdown}
+                    aria-label="Open user menu"
+                    className="text-gray-700 hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 rounded-full"
+                  >
+                    <FaUserCircle size={32} />
+                  </button>
+                  <div
+                    className={`absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-xl z-20 py-1 origin-top-right transition-all duration-200 ease-out ${
+                      profileDropdownOpen
+                        ? "opacity-100 scale-100"
+                        : "opacity-0 scale-95 pointer-events-none"
+                    }`}
+                  >
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-700"
+                      onClick={closeProfileDropdown}
+                    >
+                      Profile
+                    </Link>
                     <button
-                      onClick={toggleProfileDropdown}
-                      aria-label="Open user menu"
-                      className="text-gray-700 dark:text-white hover:text-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 rounded-full transition-colors duration-200"
+                      onClick={handleLogout}
+                      className="w-full text-left flex items-center px-4 py-2 text-sm text-red-500 hover:bg-amber-100 dark:hover:bg-slate-700"
                     >
-                      <FaUserCircle size={32} />
+                      <FaSignOutAlt className="mr-2" /> Logout
                     </button>
-                    <div
-                      className={`absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-xl z-20 py-1 origin-top-right transition-all duration-200 ease-out ${
-                        profileDropdownOpen
-                          ? "opacity-100 scale-100"
-                          : "opacity-0 scale-95 pointer-events-none"
-                      }`}
-                    >
-                      <Link
-                        to="/profile"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
-                        onClick={closeProfileDropdown}
-                      >
-                        <FaUser className="mr-2" /> Profile
-                      </Link>
-                      <Link
-                        to="/settings"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
-                        onClick={closeProfileDropdown}
-                      >
-                        <FaCog className="mr-2" /> Settings
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left flex items-center px-4 py-2 text-sm text-red-500 hover:bg-amber-100 dark:hover:bg-slate-600 transition-colors duration-150"
-                      >
-                        <FaSignOutAlt className="mr-2" /> Logout
-                      </button>
-                    </div>
                   </div>
                 </div>
                 <ThemeToggle theme={theme} toggleTheme={toggleTheme} />

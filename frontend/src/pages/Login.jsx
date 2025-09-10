@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, ChefHat } from "lucide-react";
 
 import ErrorAlert from "../components/ErrorAlert";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ const Login = () => {
     password: "",
     agree: false,
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
@@ -53,25 +56,31 @@ const Login = () => {
     }
   };
 
+
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 overflow-auto">
       {/* Back button */}
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-6 flex items-center px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-all shadow-md"
+
       >
         <ArrowLeft className="w-4 h-4 mr-1" />
         Back
       </button>
 
+
       {/* Main Login Card */}
+
       <motion.div
         className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md space-y-5 p-8 border-t-8 border-red-500 relative"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
+
         {/* Header with Chef Hat square logo */}
         <motion.div className="text-center pb-4">
+
           <motion.div
             className="inline-block mb-2"
             whileTap={{ scale: 0.9, rotate: 20, borderRadius: "25%" }}
@@ -107,6 +116,7 @@ const Login = () => {
           {/* Email */}
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+
             <input
               type="email"
               name="email"
@@ -120,9 +130,11 @@ const Login = () => {
             )}
           </div>
 
+
           {/* Password */}
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -140,6 +152,7 @@ const Login = () => {
             {fieldErrors.password && (
               <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>
             )}
+
           </div>
 
           {/* Terms & Conditions */}

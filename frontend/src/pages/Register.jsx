@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+
 import {
   Mail,
   Lock,
@@ -18,6 +19,7 @@ import {
 
 import ErrorAlert from "../components/ErrorAlert";
 
+
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -33,6 +35,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
+
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -68,8 +71,13 @@ const Register = () => {
     } catch (err) {
       console.error(err);
       setGeneralError("Registration failed. Please try again.");
+
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 overflow-auto">
@@ -77,6 +85,7 @@ const Register = () => {
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-6 flex items-center px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-all shadow-md"
+
       >
         <ArrowLeft className="w-4 h-4 mr-1" />
         Back
@@ -123,6 +132,7 @@ const Register = () => {
         {/* Register Form */}
         <form onSubmit={handleRegister} className="space-y-5">
           {/* Username */}
+
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
             <input
@@ -154,6 +164,7 @@ const Register = () => {
             )}
           </div>
 
+
           {/* Password */}
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -162,8 +173,9 @@ const Register = () => {
               name="password"
               placeholder="Enter your password"
               value={formData.password}
-              onChange={handleInputChange}
+
               className="w-full border rounded-xl pl-10 pr-10 py-2 text-sm text-gray-800 placeholder-gray-400 bg-white dark:bg-slate-700 focus:border-red-400 focus:ring-2 focus:ring-red-400 outline-none"
+
             />
             <span
               className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-red-500"
@@ -174,6 +186,7 @@ const Register = () => {
             {fieldErrors.password && (
               <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>
             )}
+
           </div>
 
           {/* Age */}
@@ -224,6 +237,7 @@ const Register = () => {
             />
           </div>
 
+
           {/* Address (optional) */}
           <div className="relative">
             <Home className="absolute left-3 top-3 w-5 h-5 text-gray-500" />
@@ -232,6 +246,7 @@ const Register = () => {
               placeholder="Enter your address (optional)"
               value={formData.address}
               onChange={handleInputChange}
+
               className="w-full border rounded-xl pl-10 pr-4 py-2 text-sm text-gray-800 placeholder-gray-400 bg-white dark:bg-slate-700 focus:border-red-400 focus:ring-2 focus:ring-red-400 outline-none"
             />
           </div>

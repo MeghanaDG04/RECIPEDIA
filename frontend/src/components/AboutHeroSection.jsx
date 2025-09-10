@@ -86,7 +86,7 @@ const AboutHeroSection = () => {
         >
           <Link
             to="/home"
-            className="group inline-flex items-center gap-2 mb-6 text-white hover:text-red-200 transition-all duration-300 mt-8"
+            className="group inline-flex items-center gap-2 mb-6 text-white hover:text-red-200 transition-all duration-300 mt-16 font-semibold"
             aria-label="Back to Home"
           >
             <motion.div
