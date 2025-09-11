@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html {
   scroll-behavior: smooth;
   height: 100%;
@@ -15,6 +19,11 @@ body {
   min-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+/* Dark mode body background (fixed) */
+html.dark body {
+  background-color: #1e293b; /* slate-800 */
 }
 
 #root {
@@ -89,19 +98,20 @@ a {
   text-decoration: none;
 }
 
-/* Tailwind apply directives */
-.ingredientsDiv {
-  @apply dark:bg-slate-800 !text-black dark:!text-white;
+/* Ingredient styles with dark mode fixes */
+.ingrdientsDiv {
+  @apply bg-white dark:bg-slate-800 text-black dark:text-white;
 }
 
 .ingredientsH {
-  @apply text-xl;
+  @apply text-xl text-black dark:text-white;
 }
 
 .ingredientsH2 {
-  @apply !text-red-500 text-xl;
+  @apply text-red-500 text-xl;
 }
 
 .ingredientsUl {
-  @apply list-disc ml-6 marker:text-black dark:marker:text-white;
+  @apply list-disc ml-6 marker:text-black dark:marker:text-white text-black dark:text-white;
 }
+

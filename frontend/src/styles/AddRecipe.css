@@ -8,6 +8,11 @@
     overflow-y: auto;  /* Allows full scrolling */
 }
 
+/* Dark mode support for background */
+.dark .add-recipe-bg {
+    background: linear-gradient(to bottom, #1e293b, #334155);
+}
+
 /* Container */
 .recipe-container {
     max-width: 800px;
@@ -21,6 +26,13 @@
     flex-direction: column;
 }
 
+/* Dark mode support for container */
+.dark .recipe-container {
+    background: #1e293b;
+    color: #f1f5f9;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
 /* Back Button */
 .back-button {
     display: inline-block;
@@ -32,6 +44,14 @@
 }
 .back-button:hover {
     color: #222;
+}
+
+/* Dark mode support for back button */
+.dark .back-button {
+    color: #cbd5e1;
+}
+.dark .back-button:hover {
+    color: #f1f5f9;
 }
 
 /* Recipe Form */
@@ -50,6 +70,19 @@
     margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+}
+
+/* Dark mode support for recipe form */
+.dark .recipe-form {
+    background: #334155;
+}
+.dark .recipe-form input, 
+.dark .recipe-form textarea {
+    background-color: #475569;
+    color: #f1f5f9;
+    border-color: #64748b;
 }
 .recipe-form button {
     width: 100%;
@@ -83,6 +116,12 @@
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode support for recipe card */
+.dark .recipe-card {
+    background: #334155;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
 }
 .recipe-card img {
     width: 100px;

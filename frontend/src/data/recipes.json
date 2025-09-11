@@ -111,7 +111,7 @@
     "id": "rajma-chawal",
     "name": "Rajma Chawal",
     "category": "veg",
-    "image": "/rajma.jpg",
+    "image": "/rajmaChawal.jpg",
     "about": "A comforting North Indian dish made with red kidney beans cooked in a spiced tomato-onion gravy, served with steamed rice.",
     "ingredients": [
       "1 cup Rajma (red kidney beans), soaked overnight",
@@ -144,7 +144,7 @@
     "id": "chole-bhature",
     "name": "Chole Bhature",
     "category": "veg",
-    "image": "/chole-bhature.jpg",
+    "image": "/choleBhature.webp",
     "about": "A popular North Indian dish consisting of spicy chickpea curry (chole) served with deep-fried, fluffy bread (bhature).",
     "ingredients": [
       "1 cup Chickpeas (chole), soaked overnight",
@@ -186,7 +186,7 @@
     "id": "masala-dosa",
     "name": "Masala Dosa",
     "category": "veg",
-    "image": "/masala-dosa.jpg",
+    "image": "/masala.jpg",
     "about": "A crispy South Indian crepe made from fermented rice and lentil batter, stuffed with a spiced potato filling and served with chutneys and sambar.",
     "ingredients": [
       "2 cups Dosa rice",
@@ -224,7 +224,7 @@
     "id": "pav-bhaji",
     "name": "Pav Bhaji",
     "category": "veg",
-    "image": "/pav-bhaji.jpg",
+    "image": "/pavBhaji.jpg",
     "about": "A popular Mumbai street food consisting of a spicy vegetable mash served with butter-toasted bread rolls.",
     "ingredients": [
       "4 Pav bread rolls",
@@ -1064,7 +1064,7 @@
     "id": "cold-coffee",
     "name": "Cold Coffee",
     "category": "beverages",
-    "image": "/cold-coffee.jpg",
+    "image": "/coldCoffee.jpg",
     "about": "A chilled, frothy blend of coffee, milk, and sugar, perfect for a refreshing caffeine boost on a hot day.",
     "ingredients": [
       "2 cups Cold milk",

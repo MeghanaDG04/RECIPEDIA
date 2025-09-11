@@ -16,7 +16,6 @@ const RecipeHome = () => {
       <CategoriesSection />
       <HowItWorksSection />
       <FeaturesSection />
-      <CTASection />
       {/* <Footer/> */}
       </div>
 

@@ -1,8 +1,88 @@
 import React, { useState, useEffect } from 'react';
+import { PlusSquare, Search, UserPlus, CheckCircle, ArrowRight } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from "lucide-react";
-import { steps } from './stepsData';
-import StepCard from './StepCard';
+
+const steps = [
+  {
+    icon: UserPlus,
+    title: "Create an Account",
+    description: "Sign up for free to get your personalized profile and start your collection.",
+    bgColor: "from-red-500 to-pink-600",
+    features: ["Free forever", "Secure profile", "Personal dashboard"]
+  },
+  {
+    icon: PlusSquare,
+    title: "Add Your Recipes",
+    description: "Share your favorite dishes with our community using our simple recipe editor.",
+    bgColor: "from-yellow-500 to-orange-600",
+    features: ["Easy editor", "Photo uploads", "Step-by-step guide"]
+  },
+  {
+    icon: Search,
+    title: "Explore & Interact",
+    description: "Discover new meals, leave comments, and like the recipes that inspire you.",
+    bgColor: "from-green-500 to-emerald-600",
+    features: ["Smart search", "Save favorites", "Community interaction"]
+  }
+];
+
+const StepCard = ({ step, index, isActive, onHover }) => {
+  const IconComponent = step.icon;
+  
+  return (
+    <div 
+      className={`group relative p-8 rounded-2xl transition-all duration-700 transform hover:-translate-y-4 cursor-pointer ${
+        isActive
+          ? 'bg-gray-100 dark:!bg-gray-200 shadow-2xl scale-105 border border-gray-300 dark:border-gray-400'
+          : 'bg-gray-100 dark:!bg-gray-200 shadow-lg hover:bg-gray-200 dark:hover:!bg-gray-300 hover:shadow-xl border border-transparent dark:hover:border-gray-400 dark:hover:ring-1 dark:hover:ring-gray-400/60'
+      }`}
+      onMouseEnter={() => onHover(index)}
+      onMouseLeave={() => onHover(-1)}
+      style={{ animationDelay: `${index * 200}ms` }}
+    >
+      {/* Step Number */}
+      <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-r from-gray-800 to-gray-700 dark:from-white dark:to-gray-200 rounded-full flex items-center justify-center border-4 border-white dark:border-slate-900 shadow-lg">
+        <span className="text-white dark:text-gray-800 font-bold text-lg">{index + 1}</span>
+      </div>
+
+      {/* Animated Background */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${step.bgColor} opacity-0 ${isActive ? 'opacity-5' : ''} dark:hidden rounded-2xl transition-opacity duration-500`} />
+      
+      {/* Icon */}
+      <div className={`relative mb-6 mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br ${step.bgColor} shadow-lg flex items-center justify-center transform transition-all duration-500 ${isActive ? 'scale-110 rotate-3' : ''}`}>
+        <IconComponent className="w-10 h-10 text-white" />
+        
+        {/* Icon Glow Effect */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${step.bgColor} rounded-2xl blur-xl opacity-50 ${isActive ? 'opacity-75' : 'opacity-0'} transition-opacity duration-500`} />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center">
+        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:!text-gray-900 group-hover:!text-gray-900">
+          {step.title}
+        </h3>
+        <p className="text-gray-600 dark:!text-gray-700 group-hover:!text-gray-700 mb-6 leading-relaxed">
+          {step.description}
+        </p>
+
+        {/* Features List */}
+        <div className="space-y-2">
+          {step.features.map((feature, featureIndex) => (
+            <div key={featureIndex} className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:!text-gray-700 group-hover:!text-gray-700">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Hover Arrow */}
+      <div className={`absolute bottom-6 right-6 w-10 h-10 bg-gradient-to-r ${step.bgColor} rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+        <ArrowRight className="w-5 h-5 text-white" />
+      </div>
+    </div>
+  );
+};
 
 const HowItWorksSection = () => {
   const navigate = useNavigate();
