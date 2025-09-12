@@ -14,7 +14,7 @@ const recipeRoutes = require('./routes/recipe.routes'); // ensure file name matc
 const app = express();
 
 // ----- CORS -----
-const defaultAllowedOrigins = ['http://localhost:3001'];
+const defaultAllowedOrigins = ['http://localhost:3001', 'http://localhost:5173'];
 const allowedOrigins = new Set(
   (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [])
     .map(s => s.trim())
@@ -41,9 +41,9 @@ app.set('trust proxy', 1);
 app.get('/', (req, res) => res.send('Welcome to RECIPEDIA'));
 app.get('/healthz', (req, res) => res.status(200).send('ok'));
 
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/recipes', recipeRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/recipes', recipeRoutes);
 
 // ----- Error handler (keep after routes) -----
 app.use(errorHandler);

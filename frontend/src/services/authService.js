@@ -1,13 +1,15 @@
 // src/services/authService.js
+import axios from "./axiosConfig";
+
 export const authService = {
   // Get auth token from sessionStorage
   getToken() {
-    return sessionStorage.getItem('token');
+    return sessionStorage.getItem("token");
   },
 
   // Get user data from sessionStorage
   getUser() {
-    const userStr = sessionStorage.getItem('user');
+    const userStr = sessionStorage.getItem("user");
     return userStr ? JSON.parse(userStr) : null;
   },
 
@@ -26,19 +28,35 @@ export const authService = {
 
   // Store auth data
   setAuth(token, user) {
-    sessionStorage.setItem('token', token);
-    sessionStorage.setItem('user', JSON.stringify(user));
+    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("user", JSON.stringify(user));
   },
 
   // Clear auth data (logout)
   clearAuth() {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('user');
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
   },
 
   // Get username
   getUsername() {
     const user = this.getUser();
-    return user ? user.username : '';
-  }
+    return user ? user.username : "";
+  },
+
+  // ✅ Register user
+  async register(userData) {
+    const res = await axios.post("/auth/register", userData);
+    const { token, user } = res.data.data;
+    this.setAuth(token, user);
+    return res.data;
+  },
+
+  // ✅ Login user
+  async login(credentials) {
+    const res = await axios.post("/auth/login", credentials);
+    const { token, user } = res.data.data;
+    this.setAuth(token, user);
+    return res.data;
+  },
 };
