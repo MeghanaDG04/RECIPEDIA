@@ -10,14 +10,6 @@ import { authService } from "./services/authService.js";
 import RecipeListPage from "./pages/RecipeListPage.jsx";
 import RecipeDetailPage from "./pages/RecipeDetailPage.jsx";
 import RecipeHome from "./pages/RecipeHome.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import UserProfile from "./pages/UserProfile.jsx";
-import AddRecipe from "./pages/AddRecipe.jsx";
-import About from "./pages/About.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import ErrorPage from "./pages/ErrorPage.jsx";
-import Explore from "./pages/Explore.jsx";
 import Foodrecipe from "./pages/Foodrecipe.jsx";
 
 // Components
