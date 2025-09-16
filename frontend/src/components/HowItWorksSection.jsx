@@ -28,30 +28,30 @@ const steps = [
 
 const StepCard = ({ step, index, isActive, onHover }) => {
   const IconComponent = step.icon;
-  
+
   return (
-    <div 
+    <div
       className={`group relative p-8 rounded-2xl transition-all duration-700 transform hover:-translate-y-4 cursor-pointer ${
         isActive
           ? 'bg-gray-100 dark:!bg-gray-200 shadow-2xl scale-105 border border-gray-300 dark:border-gray-400'
-          : 'bg-gray-100 dark:!bg-gray-200 shadow-lg hover:bg-gray-200 dark:hover:!bg-gray-300 hover:shadow-xl border border-transparent dark:hover:border-gray-400 dark:hover:ring-1 dark:hover:ring-gray-400/60'
+          : 'bg-white/50 dark:bg-slate-800/50 shadow-lg hover:shadow-xl'
       }`}
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(-1)}
       style={{ animationDelay: `${index * 200}ms` }}
     >
       {/* Step Number */}
-      <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-r from-gray-800 to-gray-700 dark:from-white dark:to-gray-200 rounded-full flex items-center justify-center border-4 border-white dark:border-slate-900 shadow-lg">
-        <span className="text-white dark:text-gray-800 font-bold text-lg">{index + 1}</span>
+      <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-r from-gray-800 to-gray-700 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+        <span className="text-white font-bold text-lg">{index + 1}</span>
       </div>
 
       {/* Animated Background */}
       <div className={`absolute inset-0 bg-gradient-to-br ${step.bgColor} opacity-0 ${isActive ? 'opacity-5' : ''} dark:hidden rounded-2xl transition-opacity duration-500`} />
-      
+
       {/* Icon */}
       <div className={`relative mb-6 mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br ${step.bgColor} shadow-lg flex items-center justify-center transform transition-all duration-500 ${isActive ? 'scale-110 rotate-3' : ''}`}>
         <IconComponent className="w-10 h-10 text-white" />
-        
+
         {/* Icon Glow Effect */}
         <div className={`absolute inset-0 bg-gradient-to-br ${step.bgColor} rounded-2xl blur-xl opacity-50 ${isActive ? 'opacity-75' : 'opacity-0'} transition-opacity duration-500`} />
       </div>
@@ -61,6 +61,7 @@ const StepCard = ({ step, index, isActive, onHover }) => {
         <h3 className="text-xl font-bold mb-4 text-gray-900 dark:!text-gray-900 group-hover:!text-gray-900">
           {step.title}
         </h3>
+
         <p className="text-gray-600 dark:!text-gray-700 group-hover:!text-gray-700 mb-6 leading-relaxed">
           {step.description}
         </p>
@@ -129,23 +130,14 @@ const HowItWorksSection = () => {
         {/* Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {steps.map((step, index) => (
-  <StepCard 
-    key={index} 
-    step={step} 
-    index={index}
-    isActive={activeStep === index || currentStep === index}
-    onHover={setActiveStep}
-    onIconClick={
-      step.title === "Create an Account"
-        ? () => navigate('/register')
-        : step.title === "Add Your Recipes"
-        ? () => navigate('/recipes')
-        : step.title === "Explore & Interact"
-        ? () => navigate('/explore')
-        : undefined
-    }
-  />
-))}
+            <StepCard
+              key={index}
+              step={step}
+              index={index}
+              isActive={activeStep === index || currentStep === index}
+              onHover={setActiveStep}
+            />
+          ))}
         </div>
 
         {/* Bottom CTA */}
@@ -155,9 +147,9 @@ const HowItWorksSection = () => {
               <div className="text-2xl font-bold text-gray-800 dark:text-white">Ready to start?</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Join thousands of food lovers</div>
             </div>
-            <a 
+            <a
               onClick={() => navigate('/register')}
-              className="bg-gradient-to-r from-red-500 to-pink-600 text-white font-bold px-6 py-3 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+              className="bg-gradient-to-r from-red-500 to-pink-600 text-white font-bold px-6 py-3 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               Get Started Free
               <ArrowRight className="w-4 h-4 ml-2 inline" />

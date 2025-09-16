@@ -44,9 +44,58 @@ export default function Register({ onAuthSuccess }) {
 };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+
+  if (!validateAllFields()) {
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/register`,
+      {
+        username: formData.username.trim(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+        age: parseInt(formData.age),
+        gender: formData.gender,
+        phone: formData.phone.trim() || undefined,
+        address: formData.address.trim() || undefined,
+      }
+    );
+
+    const { token, user } = response.data;
+
+    if (!token || !user) {
+      throw new Error("Invalid response from server");
+    }
+
+    authService.setAuth(token, user);
+
+    if (onAuthSuccess) {
+      onAuthSuccess();
+    }
+
+    navigate("/");
+
+  } catch (err) {
+    console.error("Registration error:", err);
+    if (err.response) {
+      setError(err.response.data?.message || "Registration failed.");
+    } else if (err.request) {
+      setError("Cannot connect to server. Please check your internet connection.");
+    } else {
+      setError("An unexpected error occurred. Please try again.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");

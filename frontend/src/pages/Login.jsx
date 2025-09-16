@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import axios from "axios";
+// CHANGED: No longer importing axios directly.
+// import axios from "axios"; 
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, XCircle, ChefHat, Sparkles, Eye, EyeOff, ChevronLeft, House } from 'lucide-react';
 
 import ErrorAlert from '../components/ErrorAlert';
 import { authService } from '../services/authService';
+
+// CHANGED: Importing our centralized and corrected authAPI.
+// WHY: This ensures we use the configured axios instance with the correct base URL and interceptors.
+import { authAPI } from '../api';
 
 const Login = ({ onAuthSuccess }) => {
   const navigate = useNavigate();
@@ -16,29 +21,24 @@ const Login = ({ onAuthSuccess }) => {
   });
 
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // For password visibility toggle
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
-  // Focus states for inputs to match Register's behavior
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear specific field error when user types
-    if (fieldErrors[name]) {
+   if (fieldErrors[name]) {
   setFieldErrors((prev) => ({ ...prev, [name]: "" }));
 }
 if (generalError) setGeneralError("");
-// / Clear general error on any input change
-  };
 
   const togglePassword = () => setShowPassword((prev) => !prev);
 
-  // Form validation
   const validateForm = () => {
     const { email, password } = formData;
     let errors = {};
@@ -48,71 +48,82 @@ if (!email.trim()) {
 } else if (!emailRegex.test(email.trim())) {
   errors.email = "Please enter a valid email address.";
 }
+
 if (!password) {
   errors.password = "Password is required.";
 }
+
 if (!agreeTerms) {
   errors.agreeTerms = "You must agree to the Terms & Privacy Policy.";
 }
 
 setFieldErrors(errors);
 return Object.keys(errors).length === 0;
- // Return true if no errors
-  };
 
-  // Handle form submit
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    setGeneralError(""); 
-    setFieldErrors({}); 
-if (!validateForm()) return;
+setGeneralError("");
+setFieldErrors({});
+
+if (!validateForm()) {
+  return;
+}
+
 setLoading(true);
 
 try {
- const response = await axios.post(
-  `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
-  {
-    email: formData.email.trim().toLowerCase(),
-    password: formData.password,
+  // CHANGED: Using the authAPI service instead of a direct axios call.
+  const response = await authAPI.login(
+    formData.email.trim().toLowerCase(),
+    formData.password
+  );
+
+  // The response from our API service is the full body: { success, data: { token, user } }
+  if (response.success && response.data.token) {
+    const { token, user } = response.data;
+
+    // Set authentication data
+    authService.setAuth(token, user);
+
+    if (onAuthSuccess) {
+      onAuthSuccess();
+    }
+
+    navigate("/");
+  } else {
+    // Handle cases where API succeeds but returns success: false
+    setGeneralError(response.message || "An unexpected error occurred.");
   }
-);
 
-  console.log("Login response:", response.data);
-  const { token, user } = response.data;
-
-  if (!token || !user) {
-    throw new Error("Invalid response format from server");
-  }
-
-  authService.setAuth(token, user);
-  if (onAuthSuccess) onAuthSuccess();
-
-  navigate("/");
 } catch (err) {
-  console.error("Login error:", err.response?.data || err.message);
+  console.error("Login error:", err);
+  
   if (err.response) {
-    setGeneralError(
-      err.response.data?.message || "Invalid credentials. Please try again."
-    );
+    if (err.response.status === 401 || err.response.status === 400) {
+      setGeneralError(err.response.data?.message || "Invalid credentials. Please try again.");
+    } else {
+      setGeneralError(err.response.data?.message || "Login failed. Please try again.");
+    }
   } else if (err.request) {
-    setGeneralError("Cannot connect to server. Please check your internet.");
+    setGeneralError("Cannot connect to server. Please check your internet connection.");
   } else {
     setGeneralError("An unexpected error occurred. Please try again.");
   }
+
 } finally {
   setLoading(false);
 }
-  };
 
- 
+
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08, // Slightly faster stagger for a snappier feel
-        delayChildren: 0.1, // Slight delay before starting the stagger
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
       },
     },
   };
@@ -159,9 +170,7 @@ try {
         zIndex: 9999
       }}
     >
-      {/* Back Button Container - Positioned at top-left */}
       <div className="absolute top-4 left-4 z-50">
-        {/* Mobile Version: Only Home Icon (visible on mobile, hidden on desktop) */}
         <motion.button
           onClick={handleBack}
           aria-label="Go home"
@@ -175,7 +184,6 @@ try {
           <House className="w-5 h-5" />
         </motion.button>
 
-        {/* Desktop Version: Full Button with Back Arrow and Text (hidden on mobile, visible on desktop) */}
         <motion.button
           onClick={handleBack}
           aria-label="Go back"
@@ -191,20 +199,107 @@ try {
         </motion.button>
       </div>
 
-      {/* Background Decorative Elements */}
-        {/* Card */}
-  <motion.div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border-t-8 border-red-500">
-    {/* Header */}
-    <div className="text-center mb-6">
-      <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl mb-3">
-        <ChefHat className="w-6 h-6 text-white" />
-      </div>
-      <h1 className="text-2xl font-bold text-gray-800">Recipedia</h1>
-      <h2 className="text-lg font-semibold text-gray-700">Welcome Back!</h2>
-      <p className="text-gray-500 text-sm">
-        Sign in to continue your culinary journey
-      </p>
-    </div>
+{/* Background Decorative Elements */}
+<motion.div 
+  className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-red-200/30 to-pink-200/30 rounded-full blur-3xl"
+  variants={floatingVariants}
+  animate="animate"
+  custom={0}
+/>
+<motion.div 
+  className="absolute top-20 right-20 w-24 h-24 bg-gradient-to-r from-orange-200/30 to-yellow-200/30 rounded-full blur-2xl"
+  variants={floatingVariants}
+  animate="animate"
+  custom={1}
+/>
+<motion.div 
+  className="absolute bottom-20 left-20 w-28 h-28 bg-gradient-to-r from-pink-200/30 to-rose-200/30 rounded-full blur-3xl"
+  variants={floatingVariants}
+  animate="animate"
+  custom={2}
+/>
+<motion.div 
+  className="absolute bottom-10 right-10 w-36 h-36 bg-gradient-to-r from-blue-200/30 to-cyan-200/30 rounded-full blur-3xl"
+  variants={floatingVariants}
+  animate="animate"
+  custom={3}
+/>
+
+<motion.div
+  className="absolute top-16 right-16 text-red-300/50"
+  animate={{ 
+    rotate: [0, 360],
+    scale: [1, 1.1, 1]
+  }}
+  transition={{ 
+    duration: 20, 
+    repeat: Infinity, 
+    ease: "linear" 
+  }}
+>
+  <ChefHat className="w-8 h-8" />
+</motion.div>
+<motion.div
+  className="absolute bottom-16 left-16 text-pink-300/50"
+  animate={{ 
+    y: [0, -10, 0],
+    rotate: [0, 15, -15, 0]
+  }}
+  transition={{ 
+    duration: 4, 
+    repeat: Infinity, 
+    ease: "easeInOut" 
+  }}
+>
+  <Sparkles className="w-6 h-6" />
+</motion.div>
+
+{/* Card */}
+<motion.div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md space-y-5 p-8 border-t-8 border-red-500 transform transition-all duration-300 hover:shadow-2xl">
+  <motion.div 
+    className="text-center pb-4"
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.2, duration: 0.5 }}
+  >
+    <motion.div
+      className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl mb-3 shadow-lg"
+      whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <ChefHat className="w-6 h-6 text-white" />
+    </motion.div>
+
+    <motion.h1 
+      className="text-2xl font-bold text-gray-800 dark:text-white mb-1"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+    >
+      <span className="bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
+        Recipedia
+      </span>
+    </motion.h1>
+
+    <motion.h2 
+      className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-1"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.4 }}
+    >
+      Welcome Back!
+    </motion.h2>
+
+    <motion.p 
+      className="text-gray-500 dark:text-gray-400 text-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.5 }}
+    >
+      Sign in to continue your culinary journey
+    </motion.p>
+  </motion.div>
+
 
     <ErrorAlert error={generalError} onDismiss={() => setGeneralError("")} />
 
@@ -243,57 +338,58 @@ try {
           className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
           onClick={togglePassword}
         >
-          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-        </span>
-        {fieldErrors.password && (
-          <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>
-        )}
-      </div>
+{showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+</span>
+{fieldErrors.password && (
+  <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>
+)}
 
-      {/* Terms */}
-      <div className="flex items-center text-xs gap-2">
-        <input
-          type="checkbox"
-          id="agreeTerms"
-          checked={agreeTerms}
-          onChange={(e) => setAgreeTerms(e.target.checked)}
-          className="w-4 h-4"
-        />
-        <label htmlFor="agreeTerms" className="text-gray-700">
-          I agree to the{" "}
-          <Link to="/terms-of-use" className="text-red-500 underline">
-            Terms of Use
-          </Link>{" "}
-          &{" "}
-          <Link to="/privacy-policy" className="text-red-500 underline">
-            Privacy Policy
-          </Link>
-        </label>
-      </div>
-      {fieldErrors.agreeTerms && (
-        <p className="text-xs text-red-600 flex items-center gap-1">
-          <XCircle size={14} /> {fieldErrors.agreeTerms}
-        </p>
-      )}
+{/* Terms */}
+<div className="flex items-center text-xs gap-2">
+  <input
+    type="checkbox"
+    id="agreeTerms"
+    checked={agreeTerms}
+    onChange={(e) => setAgreeTerms(e.target.checked)}
+    className="w-4 h-4"
+  />
+  <label htmlFor="agreeTerms" className="text-gray-700">
+    I agree to the{" "}
+    <Link to="/terms-of-use" className="text-red-500 underline">
+      Terms of Use
+    </Link>{" "}
+    &{" "}
+    <Link to="/privacy-policy" className="text-red-500 underline">
+      Privacy Policy
+    </Link>
+  </label>
+</div>
+{fieldErrors.agreeTerms && (
+  <p className="text-xs text-red-600 flex items-center gap-1">
+    <XCircle size={14} /> {fieldErrors.agreeTerms}
+  </p>
+)}
 
-      {/* Submit */}
-      <button
-        type="submit"
-        className="w-full bg-red-500 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 hover:bg-red-600"
-        disabled={loading}
-      >
-        {loading ? "Signing In..." : <>Sign In <ArrowRight className="w-4 h-4" /></>}
-      </button>
-    </form>
+{/* Submit */}
+<button
+  type="submit"
+  className="w-full bg-red-500 text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 hover:bg-red-600"
+  disabled={loading}
+>
+  {loading ? "Signing In..." : <>Sign In <ArrowRight className="w-4 h-4" /></>}
+</button>
+</form>
 
-    {/* Sign up link */}
-    <div className="text-center mt-6 pt-4 border-t border-gray-200">
-      <p className="text-gray-700 text-sm">
-        New to Recipedia?{" "}
-        <Link to="/register" className="text-red-500 hover:underline">
-          Create Account
-        </Link>
-      </p>
+{/* Sign up link */}
+<div className="text-center mt-6 pt-4 border-t border-gray-200">
+  <p className="text-gray-700 text-sm">
+    New to Recipedia?{" "}
+    <Link to="/register" className="text-red-500 hover:underline">
+      Create Account
+    </Link>
+  </p>
+</div>
+
     </div>
   </motion.div>
 </div>
