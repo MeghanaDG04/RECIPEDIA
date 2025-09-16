@@ -5,7 +5,6 @@ import { FiSearch } from 'react-icons/fi'; // For the search bar icon
 import { GiKnifeFork, GiRoastChicken, GiCakeSlice, GiMartini } from 'react-icons/gi'; // For NoResults icon
 import RecipeCard from '../components/RecipeCard.jsx';
 import allRecipes from '../data/recipes.json';
-
 // --- Animation Variants (Consistent with Explore.jsx) ---
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -14,12 +13,10 @@ const containerVariants = {
     transition: { staggerChildren: 0.1, delayChildren: 0.2 },
   },
 };
-
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
-
 // --- Reusable NoResults Component (Consistent with Explore.jsx) ---
 const NoResults = ({ categoryTitle }) => (
   <motion.div
@@ -36,7 +33,6 @@ const NoResults = ({ categoryTitle }) => (
       {categoryTitle === 'Dessert' && <GiCakeSlice className="mx-auto text-5xl text-gray-400 dark:text-gray-500 mb-4" />}
       {categoryTitle === 'Beverages' && <GiMartini className="mx-auto text-5xl text-gray-400 dark:text-gray-500 mb-4" />}
       {categoryTitle === 'Recipes' && <GiKnifeFork className="mx-auto text-5xl text-gray-400 dark:text-gray-500 mb-4" />} {/* Fallback if no specific icon */}
-
       <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">
         No {categoryTitle.toLowerCase()} recipes found.
       </p>
@@ -44,12 +40,9 @@ const NoResults = ({ categoryTitle }) => (
     </div>
   </motion.div>
 );
-
-
 const RecipeListPage = ({ category }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
-
   // Determine accent color based on category for consistency with ExplorePage cards
   const categoryAccent = useMemo(() => {
     switch (category) {
@@ -60,7 +53,6 @@ const RecipeListPage = ({ category }) => {
       default: return "from-gray-500 to-gray-600"; // Fallback accent
     }
   }, [category]);
-
   // Memoize filtered recipes for performance
   const filteredRecipes = useMemo(() =>
     allRecipes.filter(recipe =>
@@ -69,7 +61,6 @@ const RecipeListPage = ({ category }) => {
     ),
     [allRecipes, category, searchQuery]
   );
-
   const pageTitle = useMemo(() => {
     let title = category.charAt(0).toUpperCase() + category.slice(1);
     // Add full titles for better display, consistent with ExplorePage section titles
@@ -79,8 +70,6 @@ const RecipeListPage = ({ category }) => {
     if (category === 'beverages') return 'Cool Beverages';
     return title + ' Recipes'; // Default if a generic category
   }, [category]);
-
-
   return (
     <main className="relative min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 overflow-x-hidden">
       {/* Animated Aurora Background (Consistent with Explore.jsx) */}
@@ -89,7 +78,6 @@ const RecipeListPage = ({ category }) => {
         <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 dark:opacity-40"></div>
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000 dark:opacity-40"></div>
       </div>
-
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-10 pt-24">
         {/* Header (Consistent with Explore.jsx) */}
         <motion.div
@@ -111,7 +99,6 @@ const RecipeListPage = ({ category }) => {
             Explore all our delicious {pageTitle.toLowerCase()} recipes.
           </motion.p>
         </motion.div>
-
         {/* Search Bar (Consistent with Explore.jsx) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -130,7 +117,6 @@ const RecipeListPage = ({ category }) => {
             />
           </div>
         </motion.div>
-
         <AnimatePresence mode='wait'> {/* AnimatePresence for items entering/leaving the DOM */}
           {filteredRecipes.length > 0 ? (
             <motion.div
@@ -164,5 +150,4 @@ const RecipeListPage = ({ category }) => {
     </main>
   );
 };
-
 export default RecipeListPage;

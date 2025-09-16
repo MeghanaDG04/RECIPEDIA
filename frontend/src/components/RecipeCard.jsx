@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
-
 // Animation Variants (can be moved to a shared file if many components use them)
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -20,8 +19,10 @@ const RecipeCard = ({ recipe, accent, onClick }) => (
     <div className={`absolute inset-0 rounded-2xl ${accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg`} />
     <div className="relative w-full h-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 dark:border-slate-700/50 shadow-xl group-hover:shadow-2xl transition-shadow duration-300 flex flex-col">
       <div className="w-full h-1/2 overflow-hidden">
+
         <img
           src={recipe.imageUrl}
+          //src={recipe.images}
           alt={recipe.title}
           className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
         />
@@ -39,5 +40,4 @@ const RecipeCard = ({ recipe, accent, onClick }) => (
     </div>
   </motion.div>
 );
-
 export default RecipeCard;

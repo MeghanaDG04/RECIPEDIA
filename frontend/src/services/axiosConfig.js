@@ -1,12 +1,21 @@
-// src/services/axiosConfig.js - Axios interceptor for automatic token handling
+// src/services/axiosConfig.js
 import axios from 'axios';
 import { authService } from './authService';
 
+// CHANGED: Create an Axios instance with the base URL.
+// WHY: All API requests will now correctly point to your backend server.
+const instance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL, // e.g., 'http://localhost:3000'
+});
+
 // Request interceptor to add auth token
-axios.interceptors.request.use(
+instance.interceptors.request.use(
   (config) => {
     const authHeaders = authService.getAuthHeader();
-    config.headers = { ...config.headers, ...authHeaders };
+    // CHANGED: A safer way to merge headers
+    if (authHeaders.Authorization) {
+      config.headers['Authorization'] = authHeaders.Authorization;
+    }
     return config;
   },
   (error) => {
@@ -15,7 +24,7 @@ axios.interceptors.request.use(
 );
 
 // Response interceptor to handle token expiration
-axios.interceptors.response.use(
+instance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
@@ -28,6 +37,7 @@ axios.interceptors.response.use(
       // Redirect to login only if not already on login/register page
       const currentPath = window.location.pathname;
       if (currentPath !== '/login' && currentPath !== '/register') {
+        // CHANGED: Use window.location.href for a full page reload to clear all React state
         window.location.href = '/login';
       }
     }
@@ -35,4 +45,5 @@ axios.interceptors.response.use(
   }
 );
 
-export default axios;
+// CHANGED: Export the configured instance as the default
+export default instance;

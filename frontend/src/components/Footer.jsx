@@ -33,12 +33,12 @@ const Footer = () => {
         {/* Categories */}
         <div className="footer-section links">
           <h4 className="text-lg font-semibold text-amber-400 mb-3">Categories</h4>
-         <ul>
-  <li><a href="/veg" className="transition-colors duration-300">Veg</a></li>
-  <li><a href="/nonveg" className="transition-colors duration-300">Non-Veg</a></li>
-  <li><a href="/dessert" className="transition-colors duration-300">Dessert</a></li>
-  <li><a href="/beverages" className="transition-colors duration-300">Beverages</a></li>
-</ul>
+          <ul>
+            <li><a href="/veg" className="transition-colors duration-300">Veg</a></li>
+            <li><a href="/nonveg" className="transition-colors duration-300">Non-Veg</a></li>
+            <li><a href="/dessert" className="transition-colors duration-300">Dessert</a></li>
+            <li><a href="/beverages" className="transition-colors duration-300">Beverages</a></li>
+          </ul>
         </div>
 
         {/* Contact Info */}
@@ -54,16 +54,16 @@ const Footer = () => {
         </div>
       </div>
 
-        {/* Social Icons */}
-        <div className="footer-section mb-6 links">
-          <h4 className="text-lg font-semibold mb-3">Follow Us</h4>
-          <div className="social-icons flex space-x-6 text-2xl ">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaFacebookF /></a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaTwitter /></a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaInstagram /></a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaLinkedinIn /></a>
-          </div>
+      {/* Social Icons */}
+      <div className="footer-section mb-6 links">
+        <h4 className="text-lg font-semibold mb-3">Follow Us</h4>
+        <div className="social-icons flex space-x-6 text-2xl ">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaFacebookF /></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaTwitter /></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaInstagram /></a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors duration-300"><FaLinkedinIn /></a>
         </div>
+      </div>
 
       {/* Bottom Footer */}
       <div className="footer-bottom mt-6 border-t border-gray-700 py-4 text-center text-sm text-gray-500">
