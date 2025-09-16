@@ -14,7 +14,7 @@ const recipeRoutes = require('./routes/recipe.routes'); // ensure file name matc
 const app = express();
 
 // ----- CORS -----
-const defaultAllowedOrigins = ['http://localhost:3001'];
+const defaultAllowedOrigins = ['http://localhost:5173'];
 const allowedOrigins = new Set(
   (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [])
     .map(s => s.trim())
@@ -51,6 +51,7 @@ app.use(errorHandler);
 // ----- DB + Server start -----
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'mySuperSecretKey123!';
 
 if (!MONGO_URI) {
   console.error('Missing MONGO_URI env var. Set it in Render → Environment.');

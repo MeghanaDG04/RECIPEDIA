@@ -1,121 +1,62 @@
-// api.js - Centralized API utility functions
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// api.js - Centralized API utility functions (NOW USING AXIOS)
+import axios from './services/axiosConfig'; // CHANGED: Import the configured axios instance
 
-// Generic API call handler
-const apiCall = async (endpoint, options = {}) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
+// WHY: This entire file now uses your central 'axiosConfig.js'.
+// This means every request made from this file will automatically have the
+// 'Authorization: Bearer <token>' header attached if the user is logged in.
+// It also ensures correct backend route prefixes (e.g., '/auth', '/users') are used.
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+// --- Auth API functions ---
+export const authAPI = {
+  // POST /auth/register
+  register: (userData) => axios.post('/auth/register', userData).then(res => res.data),
 
-    return await response.json();
-  } catch (error) {
-    console.error('API call failed:', error);
-    throw error;
-  }
+  // POST /auth/login
+  login: (email, password) => axios.post('/auth/login', { email, password }).then(res => res.data),
 };
 
-// Recipe API functions
+
+// --- Recipe API functions ---
 export const recipeAPI = {
-  // Get all recipes
-  getAllRecipes: () => apiCall('/recipes'),
+  // GET /recipes
+  getAllRecipes: () => axios.get('/recipes').then(res => res.data),
  
-  // Get recipe by ID
-  getRecipeById: (id) => apiCall(`/recipes/${id}`),
+  // GET /recipes/:id
+  getRecipeById: (id) => axios.get(`/recipes/${id}`).then(res => res.data),
 
-  // Create new recipe
-  createRecipe: (recipeData) => apiCall('/recipes', {
-    method: 'POST',
-    body: JSON.stringify(recipeData),
-  }),
+  // POST /recipes
+  createRecipe: (recipeData) => axios.post('/recipes', recipeData).then(res => res.data),
 
-  // Update recipe
-  updateRecipe: (id, recipeData) => apiCall(`/recipes/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(recipeData),
-  }),
+  // PUT /recipes/:id
+  updateRecipe: (id, recipeData) => axios.put(`/recipes/${id}`, recipeData).then(res => res.data),
 
-  // Delete recipe
-  deleteRecipe: (id) => apiCall(`/recipes/${id}`, {
-    method: 'DELETE',
-  }),
+  // DELETE /recipes/:id
+  deleteRecipe: (id) => axios.delete(`/recipes/${id}`).then(res => res.data),
    
- 
+  // POST /recipes/:id/like
+  likeRecipe: (id) => axios.post(`/recipes/${id}/like`).then(res => res.data),
 
-  // Like recipe
-  likeRecipe: (id) => apiCall(`/recipes/${id}/like`, {
-    method: 'POST',
-  }),
-
-  // Add comment to recipe
-  addComment: (id, userId, text) => apiCall(`/recipes/${id}/comments`, {
-    method: 'POST',
-    body: JSON.stringify({ userId, text }),
-  }),
+  // POST /recipes/:id/comments
+  addComment: (id, userId, text) => axios.post(`/recipes/${id}/comments`, { userId, text }).then(res => res.data),
 };
 
-// User API functions
+
+// --- User API functions ---
 export const userAPI = {
-  // Register user
-  register: (userData) => apiCall('/register', {
-    method: 'POST',
-    body: JSON.stringify(userData),
-  }),
+  // GET /users/profile (CHANGED from email in param)
+  getProfile: () => axios.get(`/users/profile`).then(res => res.data),
 
-  // Login user
-  login: (email, password) => apiCall('/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  }),
+  // PUT /users/profile (CHANGED from email in param)
+  updateProfile: (userData) => axios.put(`/users/profile`, userData).then(res => res.data),
 
-  // Get user profile
-  getProfile: (email) => apiCall(`/profile/${email}`),
+  // DELETE /users/profile (CHANGED from email in param)
+  deleteAccount: () => axios.delete(`/users/profile`).then(res => res.data),
 
-  // Update user profile
-  updateProfile: (email, userData) => apiCall(`/update/${email}`, {
-    method: 'PUT',
-    body: JSON.stringify(userData),
-  }),
-
-  // Delete user account
-  deleteAccount: (email) => apiCall(`/delete/${email}`, {
-    method: 'DELETE',
-  }),
-
-  // Get all users
-  getAllUsers: () => apiCall('/users'),
+  // GET /users (Assuming this is an admin route)
+  getAllUsers: () => axios.get('/users').then(res => res.data),
 };
 
-// Authentication utilities
-export const authUtils = {
-  // Store user session (replace with proper auth solution)
-  setCurrentUser: (userData) => {
-    localStorage.setItem('currentUser', JSON.stringify(userData));
-  },
-
-  // Get current user
-  getCurrentUser: () => {
-    const user = localStorage.getItem('currentUser');
-    return user ? JSON.parse(user) : null;
-  },
-
-  // Remove user session
-  logout: () => {
-    localStorage.removeItem('currentUser');
-  },
-
-  // Check if user is logged in
-  isAuthenticated: () => {
-    return localStorage.getItem('currentUser') !== null;
-  },
-};
-
-export default { recipeAPI, userAPI, authUtils };
+// WHY: The 'authUtils' section was removed from this file.
+// Its functions (setCurrentUser, getCurrentUser) duplicated the logic already present in
+// 'src/services/authService.js' and used 'localStorage' while the rest of the app
+// correctly uses 'sessionStorage'. Removing this duplication prevents bugs and confusion.

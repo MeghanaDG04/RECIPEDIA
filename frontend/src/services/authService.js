@@ -6,10 +6,19 @@ export const authService = {
   },
 
   // Get user data from sessionStorage
-  getUser() {
-    const userStr = sessionStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
-  },
+getUser() {
+  const userStr = sessionStorage.getItem('user');
+  if (!userStr || userStr === 'undefined' || userStr === 'null' || userStr.trim() === '') {
+    return null;
+  }
+  try {
+    return JSON.parse(userStr);
+  } catch (e) {
+    console.error('Parsing user failed:', e, userStr);
+    return null;
+  }
+},
+
 
   // Check if user is authenticated
   isAuthenticated() {

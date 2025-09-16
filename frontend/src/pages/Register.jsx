@@ -60,6 +60,7 @@ const Register = () => {
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register`, {
         name: formData.name,
         email: formData.email,
+
         password: formData.password,
         gender: formData.gender,
         dob: formData.dob,
