@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlusSquare, Search, UserPlus, CheckCircle, ArrowRight } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 const steps = [
   {
     icon: UserPlus,

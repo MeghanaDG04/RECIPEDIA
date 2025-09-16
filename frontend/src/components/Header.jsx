@@ -115,6 +115,7 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
     { title: "Home", path: "/" },
     { title: "Explore", path: "/explore" },
     { title: "About", path: "/about" },
+    { title: "Recipe", path: "/foodrecipe"},
   ];
 
   const getNavLinkClass = ({ isActive }) =>
@@ -136,9 +137,9 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link, index) => (
               <NavLink
-                key={link.title}
+                key={`${link.title}-${index}`}
                 to={link.path}
                 end={link.path === "/"}
                 className={getNavLinkClass}
@@ -236,9 +237,9 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
 >
   <div className="flex flex-col px-6 py-6 space-y-5">
     {/* Navigation Links */}
-    {navLinks.map((link) => (
+    {navLinks.map((link, index) => (
       <NavLink
-        key={link.title}
+        key={`${link.title}-${index}`}
         to={link.path}
         end={link.path === "/"}
         className={({ isActive }) =>

@@ -18,6 +18,7 @@ import About from "./pages/About.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
 import Explore from "./pages/Explore.jsx";
+import Foodrecipe from "./pages/Foodrecipe.jsx";
 
 // Components
 import Navbar from "./components/Header.jsx"; // header component is named Navbar in the import
@@ -116,6 +117,9 @@ function AppContent() {
 
         {/* Dynamic Recipe Detail Page */}
         <Route path="/recipes/:category/:recipeId" element={<RecipeDetailPage />} />
+
+        {/* food recepi in navbar section */}
+        <Route path="/foodrecipe" element={<Foodrecipe />} />
 
         {/* Static / legal */}
         <Route path="/explore" element={<Explore />} />
