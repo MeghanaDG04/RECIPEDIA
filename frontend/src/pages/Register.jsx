@@ -221,7 +221,7 @@ const validateField = (name, value, formData) => {
 
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/register`,
+      `${import.meta.env.VITE_API_BASE_URL}/auth/register`,
       {
         username: formData.username.trim(),
         email: formData.email.trim().toLowerCase(),
