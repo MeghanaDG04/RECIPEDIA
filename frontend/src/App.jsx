@@ -10,7 +10,16 @@ import { authService } from "./services/authService.js";
 import RecipeListPage from "./pages/RecipeListPage.jsx";
 import RecipeDetailPage from "./pages/RecipeDetailPage.jsx";
 import RecipeHome from "./pages/RecipeHome.jsx";
-import Foodrecipe from "./pages/Foodrecipe.jsx";
+import Login from "./pages/Login.jsx";
+ import Register from "./pages/Register.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
+import AddRecipe from "./pages/AddRecipe.jsx";
+import About from "./pages/About.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import ErrorPage from "./pages/ErrorPage.jsx";
+import Explore from "./pages/Explore.jsx";
+import FoodRecipe from "./pages/FoodRecipe.jsx";
+import RecipeDetail from "./pages/RecipeDetail.jsx";
 
 // Components
 import Navbar from "./components/Header.jsx"; // header component is named Navbar in the import
@@ -111,7 +120,9 @@ function AppContent() {
         <Route path="/recipes/:category/:recipeId" element={<RecipeDetailPage />} />
 
         {/* food recepi in navbar section */}
-        <Route path="/foodrecipe" element={<Foodrecipe />} />
+        <Route path="/foodrecipe" element={<FoodRecipe />} />
+        <Route path="/recipe/:id" element={<RecipeDetail />} />
+        
 
         {/* Static / legal */}
         <Route path="/explore" element={<Explore />} />
