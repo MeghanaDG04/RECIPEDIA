@@ -26,8 +26,21 @@ const steps = [
   }
 ];
 
-const StepCard = ({ step, index, isActive, onHover }) => {
+const StepCard = ({ step, index, isActive, onHover, onArrowClick }) => {
   const IconComponent = step.icon;
+
+  const handleArrowClick = (e) => {
+    e.stopPropagation();
+    if (onArrowClick) {
+      onArrowClick(index);
+    }
+  };
+
+  const handleCardClick = () => {
+    if (onArrowClick) {
+      onArrowClick(index);
+    }
+  };
 
   return (
     <div
@@ -38,6 +51,7 @@ const StepCard = ({ step, index, isActive, onHover }) => {
       }`}
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(-1)}
+      onClick={handleCardClick}
       style={{ animationDelay: `${index * 200}ms` }}
     >
       {/* Step Number */}
@@ -78,7 +92,11 @@ const StepCard = ({ step, index, isActive, onHover }) => {
       </div>
 
       {/* Hover Arrow */}
-      <div className={`absolute bottom-6 right-6 w-10 h-10 bg-gradient-to-r ${step.bgColor} rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
+      <div 
+        className={`absolute bottom-6 right-6 w-10 h-10 bg-gradient-to-r ${step.bgColor} rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-50'} hover:scale-110 cursor-pointer`}
+        onClick={handleArrowClick}
+        title={`Click to ${step.title.toLowerCase()}`}
+      >
         <ArrowRight className="w-5 h-5 text-white" />
       </div>
     </div>
@@ -96,6 +114,22 @@ const HowItWorksSection = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleArrowClick = (stepIndex) => {
+    switch (stepIndex) {
+      case 0: // Create an Account
+        navigate('/register');
+        break;
+      case 1: // Add Your Recipes
+        navigate('/add-recipe');
+        break;
+      case 2: // Explore & Interact
+        navigate('/explore');
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <section id="about" className="py-20 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
@@ -136,6 +170,7 @@ const HowItWorksSection = () => {
               index={index}
               isActive={activeStep === index || currentStep === index}
               onHover={setActiveStep}
+              onArrowClick={handleArrowClick}
             />
           ))}
         </div>

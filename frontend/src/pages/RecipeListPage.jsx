@@ -78,13 +78,13 @@ const RecipeListPage = ({ category }) => {
         <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 dark:opacity-40"></div>
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000 dark:opacity-40"></div>
       </div>
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-10 pt-24">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-10 pt-32">
         {/* Header (Consistent with Explore.jsx) */}
         <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="text-center pt-24 pb-12"
+          className="text-center pt-8 pb-12"
         >
           <motion.h1
             variants={itemVariants}

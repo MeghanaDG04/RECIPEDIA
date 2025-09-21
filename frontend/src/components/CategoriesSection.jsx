@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles, TrendingUp } from 'lucide-react';
 
 const categories = [
@@ -38,12 +39,23 @@ const categories = [
 
 const CategoryCard = ({ category, index }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(category.href);
+  };
+
+  const handleArrowClick = (e) => {
+    e.stopPropagation();
+    navigate(category.href);
+  };
 
   return (
     <div 
-      className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500"
+      className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
       style={{ animationDelay: `${index * 150}ms` }}
     >
       {/* Background Image with Overlay */}
@@ -88,12 +100,13 @@ const CategoryCard = ({ category, index }) => {
             </div>
           </div>
 
-          <a 
-            href={category.href}
-            className={`inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r ${category.gradient} text-white shadow-lg group-hover:shadow-xl transform group-hover:scale-110 transition-all duration-300`}
+          <button 
+            onClick={handleArrowClick}
+            className={`inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r ${category.gradient} text-white shadow-lg group-hover:shadow-xl transform group-hover:scale-110 transition-all duration-300 hover:scale-110`}
+            title={`Explore ${category.name} recipes`}
           >
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-          </a>
+          </button>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { createHashRouter, RouterProvider, Outlet, useLocation } from "react-router-dom";
 import { useState, useEffect, lazy, Suspense } from "react";
 import "./styles/animations.css";
 // Axios configuration
@@ -28,13 +28,10 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.jsx"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions.jsx"));
 
-// AppContent handles all routes and layout (must be rendered INSIDE a Router)
-function AppContent() {
+// Layout component for non-auth pages
+function Layout() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Determine if current page is an auth page
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
 
   // Check authentication status on mount and route changes
   useEffect(() => {
@@ -57,6 +54,25 @@ function AppContent() {
     setIsAuthenticated(false);
   };
 
+  return (
+    <div className="app-container min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+      <ScrollToTop />
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        onLogout={handleLogout}
+      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Outlet />
+      </Suspense>
+      <Footer />
+    </div>
+  );
+}
+
+// Auth Layout component for login/register pages
+function AuthLayout() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   // Handle successful login/register
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
@@ -64,93 +80,137 @@ function AppContent() {
 
   // Add/remove body classes for auth pages
   useEffect(() => {
-    if (isAuthPage) {
-      document.body.classList.add("auth-page");
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.classList.remove("auth-page");
-      document.body.style.overflow = "auto";
-    }
+    document.body.classList.add("auth-page");
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.classList.remove("auth-page");
       document.body.style.overflow = "auto";
     };
-  }, [isAuthPage]);
+  }, []);
 
   return (
     <div className="app-container min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
       <ScrollToTop />
-
-      {/* Only show Navbar if NOT on auth pages */}
-      {!isAuthPage && (
-        <Navbar
-          isAuthenticated={isAuthenticated}
-          onLogout={handleLogout}
-        />
-      )}
-
       <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          {/* Core Routes */}
-          <Route path="/" element={<RecipeHome />} />
-
-          {/* Auth Routes - Clean without wrapper divs */}
-          <Route
-            path="/login"
-            element={
-              <div className="login-bg">
-                <Login onAuthSuccess={handleAuthSuccess} />
-              </div>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <div className="register-bg">
-                <Register onAuthSuccess={handleAuthSuccess} />
-              </div>
-            }
-          />
-
-          {/* Protected/User Routes */}
-          <Route path="/profile" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
-          <Route path="/settings" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
-          <Route path="/add-recipe" element={<PrivateRoute><AddRecipe /></PrivateRoute>} />
-
-          {/* Public Pages */}
-          <Route path="/about" element={<About />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms-conditions" element={<TermsConditions />} />
-
-          {/* Category Pages */}
-          <Route path="/veg" element={<RecipeListPage category="veg" />} />
-          <Route path="/nonveg" element={<RecipeListPage category="nonveg" />} />
-          <Route path="/dessert" element={<RecipeListPage category="dessert" />} />
-          <Route path="/beverages" element={<RecipeListPage category="beverages" />} />
-
-          {/* Dynamic Recipe Detail Page */}
-          <Route path="/recipes/:category/:recipeId" element={<RecipeDetailPage />} />
-
-          {/* Error and Fallback Routes */}
-          <Route path="/error" element={<ErrorPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Outlet context={{ onAuthSuccess: handleAuthSuccess }} />
       </Suspense>
-
-      {/* Show Footer only if NOT on auth pages */}
-      {!isAuthPage && <Footer />}
     </div>
   );
 }
 
-// Main App Component: provide the Router here (single source of truth)
+// Create the router configuration
+const router = createHashRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <RecipeHome />
+      },
+      {
+        path: "about",
+        element: <About />
+      },
+      {
+        path: "explore",
+        element: <Explore />
+      },
+      {
+        path: "privacy",
+        element: <PrivacyPolicy />
+      },
+      {
+        path: "terms-conditions",
+        element: <TermsConditions />
+      },
+      {
+        path: "veg",
+        element: <RecipeListPage category="veg" />
+      },
+      {
+        path: "nonveg",
+        element: <RecipeListPage category="nonveg" />
+      },
+      {
+        path: "dessert",
+        element: <RecipeListPage category="dessert" />
+      },
+      {
+        path: "beverages",
+        element: <RecipeListPage category="beverages" />
+      },
+      {
+        path: "recipes/:category/:recipeId",
+        element: <RecipeDetailPage />
+      },
+      {
+        path: "profile",
+        element: (
+          <PrivateRoute>
+            <UserProfile />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: "settings",
+        element: (
+          <PrivateRoute>
+            <UserProfile />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: "add-recipe",
+        element: (
+          <PrivateRoute>
+            <AddRecipe />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: "error",
+        element: <ErrorPage />
+      },
+      {
+        path: "*",
+        element: <NotFound />
+      }
+    ]
+  },
+  {
+    path: "/login",
+    element: <AuthLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <div className="login-bg">
+            <Login />
+          </div>
+        )
+      }
+    ]
+  },
+  {
+    path: "/register",
+    element: <AuthLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <div className="register-bg">
+            <Register />
+          </div>
+        )
+      }
+    ]
+  }
+]);
+
+// Main App Component
 function App() {
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

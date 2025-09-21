@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
   ChevronRight,
@@ -17,7 +18,7 @@ const heroSlides = [
     description:
       "Explore thousands of delicious recipes from around the world, crafted by passionate food lovers just like you.",
     buttonText: "Start Cooking",
-    buttonLink: "#categories",
+    buttonLink: "/explore",
     accent: "from-red-500 to-pink-600",
     stats: { recipes: "10K+", chefs: "2K+" },
   },
@@ -49,8 +50,22 @@ const heroSlides = [
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
   const [isAnimating, setIsAnimating] = useState(false);
   const [showButton, setShowButton] = useState(true);
+
+  const handleButtonClick = (link) => {
+    if (link.startsWith('#')) {
+      // Handle hash links (scroll to section)
+      const element = document.querySelector(link);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // Handle route navigation
+      navigate(link);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -253,20 +268,20 @@ const HeroSection = () => {
                     : "translate-y-0 opacity-100"
                 }`}
               >
-                <a
-                  href={currentSlideData.buttonLink}
+                <button
+                  onClick={() => handleButtonClick(currentSlideData.buttonLink)}
                   className={`group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r ${currentSlideData.accent} text-white font-bold text-lg rounded-full hover:shadow-2xl transform hover:scale-105 transition-all duration-300 hover:-translate-y-1`}
                 >
                   {currentSlideData.buttonText}
                   <Play className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </a>
-                <a
-                  href="/register"
+                </button>
+                <button
+                  onClick={() => handleButtonClick("/register")}
                   className="inline-flex items-center justify-center px-7 py-3 bg-white/10 backdrop-blur-sm text-white font-bold text-lg rounded-full border-2 border-white/30 hover:bg-white hover:text-gray-900 transform hover:scale-105 transition-all duration-300 hover:-translate-y-1"
                 >
                   Join Community
                   <Users className="w-5 h-5 ml-2" />
-                </a>
+                </button>
               </div>
             </div>
 

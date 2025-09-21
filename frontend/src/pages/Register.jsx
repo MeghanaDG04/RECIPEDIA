@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Mail, Lock, Phone, MapPin, Calendar, ArrowRight, Eye, EyeOff, User, ChefHat, XCircle, Sparkles, ChevronLeft, House } from "lucide-react";
@@ -83,6 +83,7 @@ const childVariants = {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { onAuthSuccess } = useOutletContext();
 
   const [formData, setFormData] = useState({
     username: "",

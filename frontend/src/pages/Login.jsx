@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // CHANGED: No longer importing axios directly.
 // import axios from "axios"; 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, XCircle, ChefHat, Sparkles, Eye, EyeOff, ChevronLeft, House } from 'lucide-react';
 
@@ -12,8 +12,9 @@ import { authService } from '../services/authService';
 // WHY: This ensures we use the configured axios instance with the correct base URL and interceptors.
 import { authAPI } from '../api';
 
-const Login = ({ onAuthSuccess }) => {
+const Login = () => {
   const navigate = useNavigate();
+  const { onAuthSuccess } = useOutletContext();
 
   const [formData, setFormData] = useState({
     email: "",
