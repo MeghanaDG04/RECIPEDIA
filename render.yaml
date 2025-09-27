@@ -1,0 +1,32 @@
+services:
+  # Frontend Service
+  - type: web
+    name: recipedia-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # Backend Service
+  - type: web
+    name: recipedia-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: CORS_ORIGIN
+        fromService:
+          type: web
+          name: recipedia-frontend
+          property: host

@@ -1,29 +1,36 @@
-import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import CircularProgress from '@mui/material/CircularProgress';
+import React from 'react';
+import { motion } from 'framer-motion';
 
+const Loader = ({ size = 'medium', message = 'Loading...' }) => {
+  const sizeClasses = {
+    small: 'w-6 h-6',
+    medium: 'w-12 h-12',
+    large: 'w-16 h-16'
+  };
 
-// From https://github.com/mui/material-ui/issues/9496#issuecomment-959408221
-
-function GradientCircularProgress() {
   return (
-    <React.Fragment>
-      <svg width={0} height={0}>
-        <defs>
-          <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#e01cd5" />
-            <stop offset="100%" stopColor="#1CB5E0" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <CircularProgress sx={{ 'svg circle': { stroke: 'url(#my_gradient)' } }} />
-    </React.Fragment>
+    <div className="flex flex-col items-center justify-center p-8">
+      <motion.div
+        className={`${sizeClasses[size]} border-4 border-gray-200 border-t-blue-500 rounded-full`}
+        animate={{ rotate: 360 }}
+        transition={{
+          duration: 1,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      />
+      {message && (
+        <motion.p
+          className="mt-4 text-gray-600 dark:text-gray-400 text-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          {message}
+        </motion.p>
+      )}
+    </div>
   );
-}
-export default function CustomizedProgressBars() {
-  return (
-    <Stack spacing={2} sx={{ flexGrow: 1 }}>
-      <GradientCircularProgress />
-    </Stack>
-  );
-}
+};
+
+export default Loader;

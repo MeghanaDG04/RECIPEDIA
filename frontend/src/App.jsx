@@ -4,10 +4,10 @@ import "./styles/animations.css";
 // Axios configuration
 import "./services/axiosConfig.js";
 import { authService } from "./services/authService.js";
-// Page Imports
+// Page Imports with optimized lazy loading
 const RecipeListPage = lazy(() => import("./pages/RecipeListPage.jsx"));
 const RecipeDetailPage = lazy(() => import("./pages/RecipeDetailPage.jsx"));
-import RecipeHome from "./pages/RecipeHome.jsx";
+const RecipeHome = lazy(() => import("./pages/RecipeHome.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const UserProfile = lazy(() => import("./pages/UserProfile.jsx"));
@@ -18,13 +18,11 @@ const ErrorPage = lazy(() => import("./pages/ErrorPage.jsx"));
 const Explore = lazy(() => import("./pages/Explore.jsx"));
 import * as Sentry from "@sentry/react";
 
-// Components
-import Navbar from "./components/Header.jsx"; // header component is named Navbar in the import
-import ScrollToTop from "./components/ScrollToTop.jsx";
-import Footer from "./components/Footer.jsx";
-// import CustomizedProgressBars from "./components/Loader.jsx";
-import ScrollReset from "./components/ScrollReset.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx";
+// Components with optimized imports
+const Navbar = lazy(() => import("./components/Header.jsx"));
+const ScrollToTop = lazy(() => import("./components/ScrollToTop.jsx"));
+const Footer = lazy(() => import("./components/Footer.jsx"));
+const PrivateRoute = lazy(() => import("./components/PrivateRoute.jsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.jsx"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions.jsx"));
 
@@ -56,15 +54,19 @@ function Layout() {
 
   return (
     <div className="app-container min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
-      <ScrollToTop />
-      <Navbar
-        isAuthenticated={isAuthenticated}
-        onLogout={handleLogout}
-      />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
+        <ScrollToTop />
+        <Navbar
+          isAuthenticated={isAuthenticated}
+          onLogout={handleLogout}
+        />
+      </Suspense>
+      <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading page...</div>}>
         <Outlet />
       </Suspense>
-      <Footer />
+      <Suspense fallback={<div className="flex justify-center items-center h-32">Loading...</div>}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }
@@ -90,8 +92,10 @@ function AuthLayout() {
 
   return (
     <div className="app-container min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
-      <ScrollToTop />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
+        <ScrollToTop />
+      </Suspense>
+      <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading auth page...</div>}>
         <Outlet context={{ onAuthSuccess: handleAuthSuccess }} />
       </Suspense>
     </div>

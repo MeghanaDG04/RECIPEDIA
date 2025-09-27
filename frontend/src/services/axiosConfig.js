@@ -5,7 +5,11 @@ import { authService } from './authService';
 // CHANGED: Create an Axios instance with the base URL.
 // WHY: All API requests will now correctly point to your backend server.
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // e.g., 'http://localhost:3000'
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  timeout: import.meta.env.VITE_API_TIMEOUT || 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
 });
 
 // Request interceptor to add auth token

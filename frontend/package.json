@@ -31,7 +31,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "echo \"No tests yet\" && exit 0"
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext js,jsx --fix",
+    "test": "echo \"No tests yet\" && exit 0",
+    "clean": "rm -rf dist",
+    "build:analyze": "npm run build && npx vite-bundle-analyzer dist/assets/*.js"
   },
   "eslintConfig": {
     "extends": [
