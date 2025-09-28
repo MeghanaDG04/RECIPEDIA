@@ -29,31 +29,6 @@ const steps = [
 const StepCard = ({ step, index, isActive, onHover, onArrowClick }) => {
   const IconComponent = step.icon;
 
-  const handleArrowClick = (e) => {
-    e.stopPropagation();
-    if (onArrowClick) {
-      onArrowClick(index);
-    }
-  };
-
-  const handleCardClick = () => {
-    if (onArrowClick) {
-      onArrowClick(index);
-    }
-  };
-
-  return (
-    <div
-      className={`group relative p-8 rounded-2xl transition-all duration-700 transform hover:-translate-y-4 cursor-pointer ${
-        isActive
-          ? 'bg-gray-100 dark:!bg-gray-200 shadow-2xl scale-105 border border-gray-300 dark:border-gray-400'
-          : 'bg-white/50 dark:bg-slate-800/50 shadow-lg hover:shadow-xl'
-      }`}
-      onMouseEnter={() => onHover(index)}
-      onMouseLeave={() => onHover(-1)}
-      onClick={handleCardClick}
-      style={{ animationDelay: `${index * 200}ms` }}
-    >
       {/* Step Number */}
       <div className="absolute -top-4 -left-4 w-12 h-12  dark:bg-gradient-to-r from-gray-800 to-gray-700 bg-white dark:from-white dark:to-gray-200 rounded-full flex items-center justify-center border-4 border-white dark:border-slate-900 shadow-lg">
         <span className="text-black dark:text-gray-800 font-bold text-lg">{index + 1}</span>
