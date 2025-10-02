@@ -47,7 +47,7 @@ const StepCard = ({ step, index, isActive, onHover, onArrowClick }) => {
       className={`group relative p-8 rounded-2xl transition-all duration-700 transform hover:-translate-y-4 cursor-pointer ${
         isActive
           ? 'bg-gray-100 dark:!bg-gray-200 shadow-2xl scale-105 border border-gray-300 dark:border-gray-400'
-          : 'bg-white/50 dark:bg-slate-800/50 shadow-lg hover:shadow-xl'
+          : 'bg-white bg-opacity-50 dark:bg-slate-800 dark:bg-opacity-50 shadow-lg hover:shadow-xl'
       }`}
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(-1)}
@@ -143,7 +143,7 @@ const HowItWorksSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 border border-blue-200 dark:border-blue-800 mb-8">
+            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900 dark:bg-opacity-30 dark:to-cyan-900 dark:bg-opacity-30 border border-blue-200 dark:border-blue-800 mb-8">
             <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-600 animate-pulse mr-3" />
             <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">How It Works</span>
           </div>
@@ -177,7 +177,7 @@ const HowItWorksSection = () => {
 
         {/* Bottom CTA */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-4 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl px-8 py-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+          <div className="inline-flex items-center gap-4 bg-white bg-opacity-70 dark:bg-slate-800 dark:bg-opacity-70 backdrop-blur-sm rounded-2xl px-8 py-6 border border-gray-200 dark:border-gray-700 shadow-lg">
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-800 dark:text-white">Ready to start?</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Join thousands of food lovers</div>
