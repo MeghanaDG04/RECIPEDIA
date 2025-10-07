@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import { IoSunnySharp } from "react-icons/io5";
 import { authService } from '../services/authService';
+import recipediaLogo from '../../Recipedia logo.png';
 
 // ThemeToggle extracted
 const ThemeToggle = ({ theme, toggleTheme }) => (
@@ -129,9 +130,10 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
           {/* Logo */}
           <Link
             to="/"
-            className="text-3xl font-bold text-red-500 hover:text-red-600 transition-colors duration-300"
+            className="flex items-center gap-2 text-3xl font-bold text-red-500 hover:text-red-600 transition-colors duration-300"
           >
-            Recipedia
+            <img src={recipediaLogo} alt="Recipedia logo" className="h-8 w-8 rounded-sm" />
+            <span>Recipedia</span>
           </Link>
 
           {/* Desktop Navigation Links */}
