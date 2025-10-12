@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, BookOpen, Settings, Edit, Save, X, Trash2, PlusCircle, AlertTriangle } from 'lucide-react';
+import { User, BookOpen, Settings, Edit, Save, X, Trash2, PlusCircle, AlertTriangle, Heart } from 'lucide-react';
 
 import { userAPI } from '../api'; // Your centralized API service
 import { authService } from '../services/authService';
@@ -68,6 +68,32 @@ const UserProfile = () => {
     fetchProfile();
   }, []);
 
+  const [favorites, setFavorites] = useState([]);
+  const [loadingFavorites, setLoadingFavorites] = useState(false);
+
+  const fetchFavorites = async () => {
+    try {
+      setLoadingFavorites(true);
+      const response = await userAPI.getFavorites(); // Make sure this endpoint exists in backend
+      if (response.success) {
+        setFavorites(response.data);
+      } else {
+        console.error('Failed to load favorites:', response.message);
+      }
+    } catch (err) {
+      console.error('Error fetching favorites:', err);
+    } finally {
+      setLoadingFavorites(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'favorites') {
+      fetchFavorites();
+    }
+  }, [activeTab]);
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -107,6 +133,7 @@ const UserProfile = () => {
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'recipes', label: 'My Recipes', icon: BookOpen },
+    { id: 'favorites', label: 'Favorites', icon: Heart },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
@@ -399,6 +426,61 @@ const UserProfile = () => {
                   </motion.div>
                 )}
                 
+                {activeTab === 'favorites' && (
+                  <motion.div
+                    key="favorites"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">My Favorites</h2>
+
+                    {loadingFavorites ? (
+                      <Loader />
+                    ) : favorites.length === 0 ? (
+                      <div className="text-center py-16 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-xl bg-gray-50/50 dark:bg-slate-800/20">
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">
+                          You haven't added any favorite recipes yet.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {favorites.map((recipe) => (
+                          <motion.div
+                            key={recipe._id}
+                            whileHover={{ scale: 1.03 }}
+                            className="bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-slate-700"
+                          >
+                            <img
+                              src={recipe.image || '/default-recipe.jpg'}
+                              alt={recipe.title}
+                              className="w-full h-40 object-cover"
+                            />
+                            <div className="p-4">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                {recipe.title}
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                                {recipe.description || 'No description available.'}
+                              </p>
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => navigate(`/recipe/${recipe._id}`)}
+                                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-pink-500 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                              >
+                                <BookOpen size={14} /> View Recipe
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+
                 {activeTab === 'settings' && (
                   <motion.div
                     key="settings"
