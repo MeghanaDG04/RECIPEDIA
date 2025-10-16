@@ -97,45 +97,6 @@ const handleSubmit = async (e) => {
 };
 
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/register`,
-        {
-          username: formData.username.trim(),
-          email: formData.email.trim().toLowerCase(),
-          password: formData.password,
-          age: parseInt(formData.age),
-          gender: formData.gender,
-          phone: formData.phone.trim() || undefined,
-          address: formData.address.trim() || undefined,
-        }
-      );
-
-      console.log("Register response:", response.data);
-
-      const { token, user } = response.data.data || response.data;
-      if (token && user) {
-        authService.setAuth(token, user);
-        onAuthSuccess?.();
-        navigate("/");
-      } else {
-        navigate("/login");
-      }
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Cannot connect to the server. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-slate-900 text-white px-4">
