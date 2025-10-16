@@ -11,6 +11,7 @@ const sanitizeUser = (user) => {
   return userObj;
 };
 
+//added this
 exports.register = asyncHandler(async (req, res, next) => {
   const { username, email, password, age, gender, address, phone } = req.body;
    console.log("Incoming register request body:", req.body);

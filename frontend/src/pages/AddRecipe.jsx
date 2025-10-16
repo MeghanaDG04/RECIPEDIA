@@ -1,10 +1,29 @@
+// src/AddRecipe.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaTrash, FaEdit, FaHeart, FaComment } from 'react-icons/fa';
-import '../styles/AddRecipe.css';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { ref } from 'react'; // Note: This should be from 'react', but for useInView, it's from framer-motion if using that variant.
+import RecipeForm from '../components/RecipeForm';
+import RecipeCard from '../components/AddRecipeCard';
+import * as recipeService from '../services/recipeService';
+import { authService } from '../services/authService';
+import { ChefHat, UtensilsCrossed } from 'lucide-react'; // Added icons for enhancement
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+  }
+};
+
+const childVariants = {
+  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } }
+};
 
 const AddRecipe = () => {
-  const [recipes, setRecipes] = useState([]); // Ensure it's always an array
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [newRecipe, setNewRecipe] = useState({
@@ -15,180 +34,70 @@ const AddRecipe = () => {
   });
   const [editingRecipe, setEditingRecipe] = useState(null);
   const navigate = useNavigate();
-
-  // API base URL
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-  // Get authentication token
-  const getAuthToken = () => {
-    return sessionStorage.getItem('token');
-  };
-
-  // Get current user
-  const getCurrentUser = () => {
-    const user = sessionStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  };
-
-  // Check if user is authenticated
-  const isAuthenticated = () => {
-    return !!getAuthToken() && !!getCurrentUser();
-  };
-
-  // Get authorization headers
-  const getAuthHeaders = () => {
-    const token = getAuthToken();
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
-    };
-  };
+  const sectionRef = React.useRef(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!isAuthenticated()) {
+    if (!authService.isAuthenticated()) {
       navigate('/login');
       return;
     }
   }, [navigate]);
 
-  // Fetch all recipes (public endpoint)
-  const fetchRecipes = async () => {
-    try {
-      setLoading(true);
-      setError(''); // Clear previous errors
-      
-      const response = await fetch(`${API_BASE_URL}/recipes`);
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch recipes: ${response.status} ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      
-      // Ensure data is an array, even if API returns something else
-      if (Array.isArray(data)) {
-        setRecipes(data);
-      } else if (data && Array.isArray(data.recipes)) {
-        // In case API returns { recipes: [...] }
-        setRecipes(data.recipes);
-      } else {
-        console.warn('API did not return an array of recipes:', data);
-        setRecipes([]);
-      }
-      
-    } catch (err) {
-      console.error('Error fetching recipes:', err);
-      setError('Error fetching recipes: ' + err.message);
-      setRecipes([]); // Ensure recipes is still an array on error
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Load recipes on component mount
+  // Fetch all recipes
   useEffect(() => {
-    if (isAuthenticated()) {
-      fetchRecipes();
+    if (authService.isAuthenticated()) {
+      const loadRecipes = async () => {
+        try {
+          setLoading(true);
+          setError('');
+          const data = await recipeService.fetchRecipes();
+          setRecipes(Array.isArray(data) ? data : []);
+        } catch (err) {
+          setError('Error fetching recipes: ' + err.message);
+          setRecipes([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadRecipes();
     }
   }, []);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    setNewRecipe({ ...newRecipe, [e.target.name]: e.target.value });
-  };
-
-  // Add or Update Recipe
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!isAuthenticated()) {
+  // Handle form submission (add or update)
+  const handleSubmit = async (recipeData) => {
+    if (!authService.isAuthenticated()) {
       setError('Please log in to add recipes');
       navigate('/login');
       return;
     }
 
     try {
-      setError(''); // Clear previous errors
-      
-      const recipeData = {
-        title: newRecipe.title.trim(),
-        description: newRecipe.description.trim(),
-        ingredients: newRecipe.ingredients.split(',').map(item => item.trim()).filter(item => item),
-        image: newRecipe.image.trim()
-      };
-
-      // Validate recipe data
-      if (!recipeData.title || !recipeData.description || !recipeData.ingredients.length) {
-        setError('Please fill in all required fields');
-        return;
-      }
-
+      setError('');
       if (editingRecipe) {
-        // Update existing recipe
-        const response = await fetch(`${API_BASE_URL}/recipes/${editingRecipe._id}`, {
-          method: 'PUT',
-          headers: getAuthHeaders(),
-          body: JSON.stringify(recipeData)
-        });
-
-        if (response.status === 401) {
-          setError('Session expired. Please log in again.');
-          navigate('/login');
-          return;
-        }
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Failed to update recipe');
-        }
-        
-        const result = await response.json();
-        setRecipes(prevRecipes => 
-          prevRecipes.map(recipe => 
-            recipe._id === editingRecipe._id ? result.recipe : recipe
-          )
-        );
+        // Update recipe
+        const updatedRecipe = await recipeService.updateRecipe(editingRecipe._id, recipeData);
+        setRecipes(prev => prev.map(r => r._id === editingRecipe._id ? updatedRecipe : r));
         setEditingRecipe(null);
       } else {
         // Add new recipe
-        const response = await fetch(`${API_BASE_URL}/recipes`, {
-          method: 'POST',
-          headers: getAuthHeaders(),
-          body: JSON.stringify(recipeData)
-        });
-
-        if (response.status === 401) {
-          setError('Session expired. Please log in again.');
-          navigate('/login');
-          return;
-        }
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Failed to add recipe');
-        }
-        
-        const result = await response.json();
-        setRecipes(prevRecipes => [...prevRecipes, result.recipe]);
+        const addedRecipe = await recipeService.addRecipe(recipeData);
+        setRecipes(prev => [...prev, addedRecipe]);
       }
-
-      // Reset form
       setNewRecipe({ title: "", description: "", ingredients: "", image: "" });
     } catch (err) {
-      console.error('Recipe submission error:', err);
       setError('Error saving recipe: ' + err.message);
     }
   };
 
-  // Edit Recipe
+  // Handle edit
   const handleEdit = (recipe) => {
-    const currentUser = getCurrentUser();
+    const currentUser = authService.getUser();
     if (!currentUser || recipe.userId !== currentUser.id) {
       setError('You can only edit your own recipes');
       return;
     }
-
     setNewRecipe({
       title: recipe.title,
       description: recipe.description,
@@ -198,115 +107,49 @@ const AddRecipe = () => {
     setEditingRecipe(recipe);
   };
 
-  // Delete Recipe
+  // Handle delete
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this recipe?')) return;
-    
-    if (!isAuthenticated()) {
+    if (!authService.isAuthenticated()) {
       setError('Please log in to delete recipes');
       navigate('/login');
       return;
     }
-    
     try {
-      const response = await fetch(`${API_BASE_URL}/recipes/${id}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders()
-      });
-
-      if (response.status === 401) {
-        setError('Session expired. Please log in again.');
-        navigate('/login');
-        return;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to delete recipe');
-      }
-      
-      setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe._id !== id));
+      await recipeService.deleteRecipe(id);
+      setRecipes(prev => prev.filter(r => r._id !== id));
     } catch (err) {
-      console.error('Delete error:', err);
       setError('Error deleting recipe: ' + err.message);
     }
   };
 
-  // Like Recipe
+  // Handle like
   const handleLike = async (id) => {
-    if (!isAuthenticated()) {
+    if (!authService.isAuthenticated()) {
       setError('Please log in to like recipes');
       navigate('/login');
       return;
     }
-
     try {
-      const response = await fetch(`${API_BASE_URL}/recipes/${id}/like`, {
-        method: 'POST',
-        headers: getAuthHeaders()
-      });
-
-      if (response.status === 401) {
-        setError('Session expired. Please log in again.');
-        navigate('/login');
-        return;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to like recipe');
-      }
-      
-      const result = await response.json();
-      setRecipes(prevRecipes => 
-        prevRecipes.map(recipe => 
-          recipe._id === id ? { ...recipe, likes: result.likes } : recipe
-        )
-      );
+      const updatedLikes = await recipeService.likeRecipe(id);
+      setRecipes(prev => prev.map(r => r._id === id ? { ...r, likes: updatedLikes } : r));
     } catch (err) {
-      console.error('Like error:', err);
       setError('Error liking recipe: ' + err.message);
     }
   };
 
-  // Add Comment
+  // Handle add comment
   const handleAddComment = async (recipeId, commentText) => {
     if (!commentText.trim()) return;
-    
-    if (!isAuthenticated()) {
+    if (!authService.isAuthenticated()) {
       setError('Please log in to add comments');
       navigate('/login');
       return;
     }
-    
     try {
-      const response = await fetch(`${API_BASE_URL}/recipes/${recipeId}/comments`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          text: commentText.trim()
-        })
-      });
-
-      if (response.status === 401) {
-        setError('Session expired. Please log in again.');
-        navigate('/login');
-        return;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to add comment');
-      }
-      
-      const result = await response.json();
-      setRecipes(prevRecipes => 
-        prevRecipes.map(recipe => 
-          recipe._id === recipeId ? result.recipe : recipe
-        )
-      );
+      const updatedRecipe = await recipeService.addComment(recipeId, commentText);
+      setRecipes(prev => prev.map(r => r._id === recipeId ? updatedRecipe : r));
     } catch (err) {
-      console.error('Comment error:', err);
       setError('Error adding comment: ' + err.message);
     }
   };
@@ -314,189 +157,99 @@ const AddRecipe = () => {
   // Show loading state
   if (loading) {
     return (
-      <div className="add-recipe-bg">
-        <div className="recipe-container">
-          <div className="loading">Loading recipes...</div>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 flex items-center justify-center">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full shadow-lg"
+        />
       </div>
     );
   }
 
   return (
-    <div className="add-recipe-bg">
-      <div className="recipe-container">
-        {/* Back to Home */}
-        <Link to="/home" className="back-button">← Back to Home</Link>
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8"> {/* Increased pt-24 to avoid navbar overlap */}
+      <div className="max-w-7xl mx-auto">
+        {/* Header with Icon */}
+        <motion.div 
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-center mb-12"
+        >
+          <ChefHat className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-4xl font-bold text-gray-800">Recipe Creator</h1>
+          <p className="text-lg text-gray-600 mt-2">Share your culinary masterpieces</p>
+        </motion.div>
 
         {/* Error Display */}
-        {error && <div className="error-message">{error}</div>}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="bg-red-100 text-red-700 p-4 rounded-xl mb-8 shadow-md flex items-center justify-center gap-2"
+            >
+              <AlertTriangle className="w-5 h-5" /> {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Recipe Form */}
-        <div className="recipe-form">
-          <h2>{editingRecipe ? "Edit Recipe" : "Add New Recipe"}</h2>
-          <form onSubmit={handleSubmit}>
-            <input 
-              type="text" 
-              name="title" 
-              placeholder="Recipe Title" 
-              value={newRecipe.title} 
-              onChange={handleChange} 
-              required 
-            />
-            <textarea 
-              name="description" 
-              placeholder="Description" 
-              value={newRecipe.description} 
-              onChange={handleChange} 
-              required
-              rows="4"
-            />
-            <textarea 
-              name="ingredients" 
-              placeholder="Ingredients (comma separated)" 
-              value={newRecipe.ingredients} 
-              onChange={handleChange} 
-              required 
-              rows="3"
-            />
-            <input 
-              type="url" 
-              name="image" 
-              placeholder="Image URL (optional)" 
-              value={newRecipe.image} 
-              onChange={handleChange} 
-            />
-            <button type="submit">
-              {editingRecipe ? "Update Recipe" : "Add Recipe"}
-            </button>
-            {editingRecipe && (
-              <button 
-                type="button" 
-                onClick={() => {
-                  setEditingRecipe(null);
-                  setNewRecipe({ title: "", description: "", ingredients: "", image: "" });
-                }}
-                className="cancel-button"
-              >
-                Cancel
-              </button>
-            )}
-          </form>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <RecipeForm
+            newRecipe={newRecipe}
+            setNewRecipe={setNewRecipe}
+            editingRecipe={editingRecipe}
+            onSubmit={handleSubmit}
+            onCancel={() => {
+              setEditingRecipe(null);
+              setNewRecipe({ title: "", description: "", ingredients: "", image: "" });
+            }}
+          />
+        </motion.div>
 
         {/* Recipe List */}
-        <div className="recipe-list">
-          <h2>All Recipes</h2>
-          {!Array.isArray(recipes) || recipes.length === 0 ? (
-            <p>No recipes found. Be the first to add a recipe!</p>
+        <motion.div 
+          ref={sectionRef}
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="mt-16"
+        >
+          <div className="flex items-center justify-center mb-8">
+            <UtensilsCrossed className="w-8 h-8 text-pink-500 mr-3" />
+            <h2 className="text-3xl font-bold text-gray-800">All Recipes</h2>
+          </div>
+          {recipes.length === 0 ? (
+            <motion.p 
+              variants={childVariants}
+              className="text-center text-gray-600 text-lg italic"
+            >
+              No recipes yet. Start creating!
+            </motion.p>
           ) : (
-            recipes.map((recipe) => (
-              <RecipeCard 
-                key={recipe._id} 
-                recipe={recipe} 
-                currentUser={getCurrentUser()}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onLike={handleLike}
-                onAddComment={handleAddComment}
-              />
-            ))
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Separate Recipe Card Component
-const RecipeCard = ({ recipe, currentUser, onEdit, onDelete, onLike, onAddComment }) => {
-  const [showComments, setShowComments] = useState(false);
-  const [newComment, setNewComment] = useState('');
-
-  const handleCommentSubmit = (e) => {
-    e.preventDefault();
-    onAddComment(recipe._id, newComment);
-    setNewComment('');
-  };
-
-  const isOwner = currentUser && recipe.userId === currentUser.id;
-  const authorName = recipe.userId?.username || 'Unknown Author';
-
-  return (
-    <div className="recipe-card">
-      {recipe.image && (
-        <img 
-          src={recipe.image} 
-          alt={recipe.title} 
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }} 
-        />
-      )}
-      <div className="recipe-info">
-        <h3>{recipe.title}</h3>
-        <p className="recipe-author">By: {authorName}</p>
-        <p>{recipe.description}</p>
-        <div className="ingredients">
-          <strong>Ingredients:</strong>
-          <ul>
-            {(Array.isArray(recipe.ingredients) ? recipe.ingredients : []).map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
-        </div>
-        
-        {isOwner && (
-          <div className="recipe-actions">
-            <button onClick={() => onEdit(recipe)}>
-              <FaEdit /> Edit
-            </button>
-            <button onClick={() => onDelete(recipe._id)} className="delete">
-              <FaTrash /> Delete
-            </button>
-          </div>
-        )}
-        
-        <div className="recipe-meta">
-          <button 
-            className="like-button" 
-            onClick={() => onLike(recipe._id)}
-          >
-            <FaHeart /> {recipe.likes || 0}
-          </button>
-          <button 
-            className="comment-button"
-            onClick={() => setShowComments(!showComments)}
-          >
-            <FaComment /> {recipe.comments?.length || 0} Comments
-          </button>
-        </div>
-
-        {showComments && (
-          <div className="comments-section">
-            <div className="comments-list">
-              {recipe.comments?.map((comment, index) => (
-                <div key={index} className="comment">
-                  <p>{comment.text}</p>
-                  <small>
-                    {comment.user?.username || 'Anonymous'} - {new Date(comment.createdAt).toLocaleDateString()}
-                  </small>
-                </div>
-              )) || <p>No comments yet.</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {recipes.map((recipe) => (
+                <motion.div key={recipe._id} variants={childVariants}>
+                  <RecipeCard
+                    recipe={recipe}
+                    currentUser={authService.getUser()}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onLike={handleLike}
+                    onAddComment={handleAddComment}
+                  />
+                </motion.div>
+              ))}
             </div>
-            
-            <form onSubmit={handleCommentSubmit} className="comment-form">
-              <input
-                type="text"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Add a comment..."
-                required
-              />
-              <button type="submit">Post</button>
-            </form>
-          </div>
-        )}
+          )}
+        </motion.div>
       </div>
     </div>
   );

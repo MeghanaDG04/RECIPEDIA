@@ -16,53 +16,38 @@ const About = lazy(() => import("./pages/About.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage.jsx"));
 const Explore = lazy(() => import("./pages/Explore.jsx"));
-import * as Sentry from "@sentry/react";
-
-// Components
-import Navbar from "./components/Header.jsx"; // header component is named Navbar in the import
-import ScrollToTop from "./components/ScrollToTop.jsx";
-import Footer from "./components/Footer.jsx";
-// import CustomizedProgressBars from "./components/Loader.jsx";
-import ScrollReset from "./components/ScrollReset.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx";
+const ForgotPass = lazy(() => import("./pages/ForgotPass.jsx"));
+const ContactUs = lazy(() => import("./pages/ContactUs.jsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.jsx"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions.jsx"));
 
-// AppContent handles all routes and layout (must be rendered INSIDE a Router)
+// Components
+import Navbar from "./components/Header.jsx"; 
+import ScrollToTop from "./components/ScrollToTop.jsx";
+import Footer from "./components/Footer.jsx";
+import ScrollReset from "./components/ScrollReset.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
+
 function AppContent() {
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Determine if current page is an auth page
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register" ||  location.pathname === "/forgot-password";
 
-  // Check authentication status on mount and route changes
   useEffect(() => {
     const checkAuth = () => {
       const authStatus = authService.isAuthenticated();
       setIsAuthenticated(authStatus);
     };
     checkAuth();
-    // Listen for storage changes (in case user logs out in another tab)
-    const handleStorageChange = () => {
-      checkAuth();
-    };
+    const handleStorageChange = () => { checkAuth(); };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, [location.pathname]);
 
-  // Handle logout
-  const handleLogout = () => {
-    authService.clearAuth();
-    setIsAuthenticated(false);
-  };
+  const handleLogout = () => { authService.clearAuth(); setIsAuthenticated(false); };
+  const handleAuthSuccess = () => { setIsAuthenticated(true); };
 
-  // Handle successful login/register
-  const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-  };
-
-  // Add/remove body classes for auth pages
   useEffect(() => {
     if (isAuthPage) {
       document.body.classList.add("auth-page");
@@ -80,37 +65,16 @@ function AppContent() {
   return (
     <div className="app-container min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
       <ScrollToTop />
-
-      {/* Only show Navbar if NOT on auth pages */}
-      {!isAuthPage && (
-        <Navbar
-          isAuthenticated={isAuthenticated}
-          onLogout={handleLogout}
-        />
-      )}
-
+      {!isAuthPage && <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />}
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Core Routes */}
           <Route path="/" element={<RecipeHome />} />
 
-          {/* Auth Routes - Clean without wrapper divs */}
-          <Route
-            path="/login"
-            element={
-              <div className="login-bg">
-                <Login onAuthSuccess={handleAuthSuccess} />
-              </div>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <div className="register-bg">
-                <Register onAuthSuccess={handleAuthSuccess} />
-              </div>
-            }
-          />
+          {/* Auth Routes */}
+          <Route path="/login" element={<div className="login-bg"><Login onAuthSuccess={handleAuthSuccess} /></div>} />
+          <Route path="/register" element={<div className="register-bg"><Register onAuthSuccess={handleAuthSuccess} /></div>} />
+          <Route path="/forgot-password" element={<div className="login-bg"><ForgotPass /></div>} />
 
           {/* Protected/User Routes */}
           <Route path="/profile" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
@@ -122,6 +86,7 @@ function AppContent() {
           <Route path="/explore" element={<Explore />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsConditions />} />
+          <Route path="/contactus" element={<ContactUs />} />
 
           {/* Category Pages */}
           <Route path="/veg" element={<RecipeListPage category="veg" />} />
@@ -138,13 +103,11 @@ function AppContent() {
         </Routes>
       </Suspense>
 
-      {/* Show Footer only if NOT on auth pages */}
       {!isAuthPage && <Footer />}
     </div>
   );
 }
 
-// Main App Component: provide the Router here (single source of truth)
 function App() {
   return (
     <Router>

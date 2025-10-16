@@ -10,10 +10,8 @@ const sanitizeUser = (user) => {
   return userObj;
 };
 
-// GET /users/profile
 exports.getProfile = asyncHandler(async (req, res) => {
-  // WHY: We get the user's ID from 'req.user', which was added by the
-  // 'authenticateToken' middleware. This is secure and reliable.
+  // The user's ID comes from the validated token, not a URL parameter
   const user = await User.findById(req.user.userId);
 
   if (!user) {
@@ -24,7 +22,10 @@ exports.getProfile = asyncHandler(async (req, res) => {
 
 // PUT /users/profile
 exports.updateProfile = asyncHandler(async (req, res) => {
-  const updatedUser = await User.findByIdAndUpdate(req.user.userId, req.body, {
+  // IMPORTANT: Prevent users from updating their email or password through this route
+  const { email, password, ...updateData } = req.body;
+
+  const updatedUser = await User.findByIdAndUpdate(req.user.userId, updateData, {
     new: true,
     runValidators: true,
   });
@@ -37,6 +38,9 @@ exports.updateProfile = asyncHandler(async (req, res) => {
 
 // DELETE /users/profile
 exports.deleteAccount = asyncHandler(async (req, res) => {
-  await User.findByIdAndDelete(req.user.userId);
+  const user = await User.findByIdAndDelete(req.user.userId);
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
   res.status(200).json({ success: true, message: 'Account deleted successfully' });
 });

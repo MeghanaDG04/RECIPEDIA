@@ -115,6 +115,7 @@ const Navbar = ({ isAuthenticated,isLoggedIn, setIsLoggedIn,onLogout}) => {
     { title: "Home", path: "/" },
     { title: "Explore", path: "/explore" },
     { title: "About", path: "/about" },
+    { title: "Contact ", path: "/ContactUs" },
   ];
 
   const getNavLinkClass = ({ isActive }) =>
