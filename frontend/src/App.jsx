@@ -22,11 +22,12 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.jsx"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions.jsx"));
 
 // Components
-import Navbar from "./components/Header.jsx"; 
+import Navbar from "./components/Header.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollReset from "./components/ScrollReset.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import Chatbot from "./components/Chatbot.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -104,6 +105,7 @@ function AppContent() {
       </Suspense>
 
       {!isAuthPage && <Footer />}
+      {!isAuthPage && <Chatbot />}
     </div>
   );
 }
