@@ -22,7 +22,7 @@ export default function ContactUs() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 flex items-center justify-center px-4 py-12 font-poppins">
+    <div className="min-h-screen mt-10 bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 flex items-center justify-center px-4 py-12 font-poppins">
       <div className="w-full max-w-5xl bg-white dark:bg-zinc-900 rounded-2xl shadow-xl grid md:grid-cols-2 overflow-hidden border border-gray-200 dark:border-zinc-800">
         
         {/* LEFT SIDE INFO */}
@@ -93,6 +93,7 @@ export default function ContactUs() {
               >
                 Name
                 <input
+                  placeholder="Enter the Name"
                   id="name"
                   type="text"
                   name="name"
@@ -110,6 +111,7 @@ export default function ContactUs() {
               >
                 Email
                 <input
+                  placeholder="Enter the Email"
                   id="email"
                   type="email"
                   name="email"
@@ -127,6 +129,7 @@ export default function ContactUs() {
               >
                 Message
                 <textarea
+                  placeholder="Enter the Message"
                   id="message"
                   name="message"
                   value={form.message}
