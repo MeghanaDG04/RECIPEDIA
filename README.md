@@ -224,23 +224,7 @@ This project is licensed under the MIT License - see the [`License`](https://git
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
 
-<h2>🧑‍💻Project Admin:</h2>
-<table>
-<tr>
-<td align="center">
-<a href="https://github.com/MeghanaDG04"><img src="https://avatars.githubusercontent.com/u/165665405?v=4" height="140px" width="140px" alt="Meghana Gaonkar"></a><br><sub><b>Meghana Gaonkar</b><br><a href="https://www.linkedin.com/in/meghana-gaonkar-415653282/"><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/73993775/278833250-adb040ea-e3ef-446e-bcd4-3e8d7d4c0176.png" width="45px" height="45px"></a></sub>
-</td>
-</tr>
-</table>
-
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
-
-**👨‍🏫 Mentors – RECIPEDIA (GSSoC'25)**
-
-| Role          | Name               | GitHub Profile                                      | LinkedIn Profile                                                        |
-| ------------- | ------------------ | --------------------------------------------------- | ----------------------------------------------------------------------- |
-| Mentor 1   | Arish Singh | [Arishsingh](https://github.com/Arishsingh)  | [arish-singh](https://www.linkedin.com/in/arish-singh-63a5b732a/) |
-| Mentor 2     | Krishna Sen |  [KrishnaSen01](https://github.com/KrishnaSen01)   | [krishna-sen](https://www.linkedin.com/in/krishna-sen-5bb829304/)    |
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
 
